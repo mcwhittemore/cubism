@@ -1,0 +1,23 @@
+{
+  "name": "image-plagiarism",
+  "version": "1.0.0",
+  "description": "",
+  "main": "merge.js",
+  "scripts": {
+    "test": "node ./img-to-sentence.js ./pattern-builder/test.jpg bits > ./pattern-builder/bits.js",
+    "sentences": "for i in $(ls -1 ./images/); do node ./img-to-sentence.js ./images/$i > ./sentences/$i.json; done;"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mcwhittemore/city-color.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mcwhittemore/city-color/issues"
+  },
+  "homepage": "https://github.com/mcwhittemore/city-color",
+  "dependencies": {
+    "get-pixels": "^3.2.2"
+  }
+}
