@@ -4,7 +4,7 @@
   "description": "",
   "main": "merge.js",
   "scripts": {
-    "test": "node ./img-to-sentence.js ./pattern-builder/test.jpg bits > ./pattern-builder/bits.js",
+    "test": "node ./img-to-sentence.js ./pattern-builder/test.jpg list > ./pattern-builder/list.js",
     "sentences": "for i in $(ls -1 ./images/); do node ./img-to-sentence.js ./images/$i > ./sentences/$i.json; done;"
   },
   "repository": {
