@@ -13,17 +13,19 @@ getPixels(process.argv[2], function(err, pixels) {
   var ll = 640;
   var bs = 4;
 
+  var breakDown = 16;
+
   for(var i=0; i<pattern.length; i++){
   		var block = pattern[i];
   		var x = block[0];
   		var y = block[1];
   		var pos = (y*ll*4)+(x*bs);
 
-  		var r = Math.floor(pixels.data[pos]/10)*10;
-      var g = Math.floor(pixels.data[pos+1]/10)*10;
-      var b = Math.floor(pixels.data[pos+2]/10)*10;
+  		var r = Math.floor(pixels.data[pos]/breakDown)*breakDown;
+      var g = Math.floor(pixels.data[pos+1]/breakDown)*breakDown;
+      var b = Math.floor(pixels.data[pos+2]/breakDown)*breakDown;
 
-  		var rgb = "rgb("+r+","+g+","+b+")";
+  		var rgb = "#"+r.toString(16)+g.toString(16)+b.toString(16);
   		list.push([block[0],block[1],rgb]);
   		sentence.push(rgb);
   }
