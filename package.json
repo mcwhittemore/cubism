@@ -5,7 +5,8 @@
   "main": "merge.js",
   "scripts": {
     "test": "node ./img-to-sentence.js ./pattern-builder/test.jpg list > ./pattern-builder/list.js",
-    "sentences": "for i in $(ls -1 ./images/); do node ./img-to-sentence.js ./images/$i > ./sentences/$i.json; done;"
+    "sentences": "for i in $(ls -1 ./images/ | cut -f1 -d'.'); do node ./img-to-sentence.js ./images/$i.jpg > ./sentences/$i.json; done;",
+    "phrase-map": "for i in $(ls -1 ./sentences/ | cut -f1 -d'.'); do node sentence-to-phrase-map.js ./sentences/$i.json > ./phrase-maps/$i.json; done;"
   },
   "repository": {
     "type": "git",
