@@ -40,12 +40,13 @@ var findChoice = function*(search){
 		var out = cache[search] || blank;
 		if(keys.length>0){
 			out = keys[0];
-			var count = map[keys[0]];
+			var count = parseInt(keys[0].split(".")[5].split("0")[0], 16);
 
 			for(var i=1; i<keys.length; i++){
-				if(map[keys[i]]>count){
+				var blueValue = parseInt(keys[i].split(".")[5].split("0")[0], 16);
+				if(blueValue<count){
 					out = keys[i];
-					count = map[keys[i]];
+					count = blueValue;
 				}
 			}
 		}
