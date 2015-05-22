@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/mcwhittemore/city-color",
   "dependencies": {
-    "get-pixels": "^3.2.2"
+    "co": "^4.5.4",
+    "get-pixels": "^3.2.2",
+    "level": "^1.0.0"
   }
 }
