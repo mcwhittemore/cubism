@@ -1,109 +1,94 @@
-var sourceImages = require("./"+process.argv[2]+"/source-images.json");
-var pattern = require("./"+process.argv[3]+"/pattern.json");
+var co = require("co");
+var level = require("level");
+var db = level("./"+process.argv[2]+"/gpm");
+
+var get = function*(name){
+	var promise = new Promise(function(resolve, reject){
+		db.get(name, function(err, value){
+			if(err){
+				resolve({});
+			}
+			else{
+				resolve(JSON.parse(value));
+			}
+		});
+	});
+	return promise;
+}
 
 var cache = {};
-var phraseMap = {};
-var topKey = null;
+var blank = "#ffffff.#ffffff.#ffffff.#ffffff.#ffffff.#ffffff";
+var findChoice = function*(search){
 
-var phraseMaps = [];
-var phraseMapKeys = [];
-
-console.error("NUMBER OF IMAGES", sourceImages.length);
-
-console.error("LOADING PHRASE MAPS");
-for(var i=0; i<9; i++){
-	var imgKey = sourceImages[i];
-	var mapPath = "./phrase-maps/"+imgKey+".json";
-
-	console.error("\t", mapPath, i);
-	var start = Date.now();
-	var smallMap = require(mapPath);
-	var keys = Object.keys(smallMap);
-	phraseMaps.push(smallMap);
-	phraseMapKeys.push(keys);
-	console.error("\t\t", Date.now()-start);
-}
-
-topKey = keys[0];
-
-var keyBits = topKey.split(".");
-var list = [
-	[pattern[0][0], pattern[0][1], keyBits[0]],
-	[pattern[1][0], pattern[1][1], keyBits[1]],
-	[pattern[2][0], pattern[2][1], keyBits[2]],
-	[pattern[3][0], pattern[3][1], keyBits[3]],
-	[pattern[4][0], pattern[4][1], keyBits[4]],
-	[pattern[5][0], pattern[5][1], keyBits[5]],
-];
-
-console.error("BUILDING LIST", 16);
-var onlyWhite = false;
-for(var i=6; i<pattern.length; i++){
-	var baseKey = findChoice(topKey, i);
-	var baseBits = baseKey.split(".");
-	topKey = baseKey;
-
-	list.push([pattern[i][0], pattern[i][1], baseBits[5]]);
-}
-
-console.log(JSON.stringify(list));
-
-function findChoice(topKey){
-
-	if(cache[topKey]){
-		return cache[topKey];
+	if(cache[search] == blank){
+		return blank;
 	}
 	else{
+		var map = yield get(search);
+		var size = map.size || 0;
+		if(map.size){
+			delete map.size;
+			delete map[search];
+		}
 
-		var scores = {};
-		var allKeys = [];
+		if(cache[search]){
+			delete map[cache[search]];
+		}
 
-		for(var i=0; i<phraseMaps.length; i++){
-			var phraseMap = phraseMaps[i];
-			var keys = phraseMapKeys[i];
-			for(var j=0; j<keys.length; j++){
-				var key = keys[j];
-				if(key !== topKey && key!=="size"){
-					var score = 0;
-					if(phraseMap[topKey]!==undefined && phraseMap[topKey][key] !== undefined){
-						score = phraseMap[topKey][key];
-					}
+		var keys = Object.keys(map);
 
-					if(scores[key] === undefined){
-						allKeys.push(key);
-						scores[key] = 0;
-					}
+		var out = cache[search] || blank;
+		if(keys.length>0){
+			out = keys[0];
+			var count = map[keys[0]];
 
-					scores[key] = scores[key] + score;
+			for(var i=1; i<keys.length; i++){
+				if(map[keys[i]]>count){
+					out = keys[i];
+					count = map[keys[i]];
 				}
 			}
 		}
 
-		var out = allKeys[0];
-		var size = scores[out];
+		cache[search] = out;
+		return cache[search];
+	}
 
-		for(var i=1; i<allKeys.length; i++){
-			var key = allKeys[i];
-			if(scores[key] > size){
-				size = scores[key];
-				out = key;
-			}
+
+}
+
+co(function*(){
+	var pattern = require("./"+process.argv[3]+"/pattern.json");
+
+	var topKey = "#a0b090.#a0b090.#a0b0a0.#a0b090.#a0b0a0.#a0b0a0";
+
+	var keyBits = topKey.split(".");
+	var list = [
+		[pattern[0][0], pattern[0][1], keyBits[0]],
+		[pattern[1][0], pattern[1][1], keyBits[1]],
+		[pattern[2][0], pattern[2][1], keyBits[2]],
+		[pattern[3][0], pattern[3][1], keyBits[3]],
+		[pattern[4][0], pattern[4][1], keyBits[4]],
+		[pattern[5][0], pattern[5][1], keyBits[5]]
+	];
+
+	var tenp = Math.floor(pattern.length / 10);
+
+	for(var i=6; i<pattern.length; i++){
+		var baseKey = yield findChoice(topKey, i);
+		var baseBits = baseKey.split(".");
+		topKey = baseKey;
+
+		list.push([pattern[i][0], pattern[i][1], baseBits[5]]);
+
+		if(i%tenp==0){
+			console.error((100/pattern.length)*i);
 		}
-
-
-		console.error("\t\t", topKey, "FRESH", i);
-		cache[topKey] = out || "#ffffff.#ffffff.#ffffff.#ffffff.#ffffff.#ffffff";
-		return cache[topKey];
-	}
-}
-
-function merge(a, b){
-	var keys = Object.keys(b);
-
-	for(var i=0; i<keys.length; i++){
-		var key = keys[i];
-		a[key] = (a[key] || 0) + b[key];
 	}
 
-	return a;
-}
+	console.log("window.list = ", JSON.stringify(list));
+}).catch(function(err){
+	console.error(err.stack);
+	throw err;
+});
+
