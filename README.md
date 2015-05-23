@@ -1,12 +1,11 @@
 # Cubsim
 
-Something to explain what this is all about.
+Can a non-random [Markov chain](http://en.wikipedia.org/wiki/Markov_chain) produce interesting works of art when seeded with Instagram photos?
 
-# Photo One
+## [Photo One](./photo-one)
 
 * Pattern: Fork
-* [Source Images](./photo-one/source-images.json)
-* Instagram Users:
-	* [benjaminhole](https://instagram.com/benjaminhole/)
+* Filter: 16 bit color
+* Pixel picking process: least blue
 
-![](./photo-one/photo.jpg)
+![](./photos/one/img.jpg)

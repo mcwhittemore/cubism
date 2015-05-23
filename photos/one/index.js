@@ -8,7 +8,7 @@ var pattern = require("../../patterns/fork/pattern.json");
 var pixelPicker = require("./pixel-picker");
 var phraseLength = 6;
 var destPath = "./img.jpg";
-var seed = "#a0b090.#a0b090.#a0b0a0.#a0b090.#a0b0a0.#a0b0a0";
+var seed = "a0-b0-90.a0-b0-90.a0-b0-a0.a0-b0-90.a0-b0-a0.a0-b0-a0";
 
 
 co(function*(){
