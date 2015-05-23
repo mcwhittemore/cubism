@@ -21,6 +21,8 @@
   "dependencies": {
     "co": "^4.5.4",
     "get-pixels": "^3.2.2",
-    "level": "^1.0.0"
+    "level": "^1.0.0",
+    "ndarray": "^1.0.17",
+    "save-pixels": "^2.2.0"
   }
 }
