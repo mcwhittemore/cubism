@@ -1,0 +1,77 @@
+<style type="text/css">
+	body{
+		background: #efefef;
+	}
+
+	#img{
+		opacity: .5;
+	}
+
+	.thing{
+		position: absolute;
+		top:0px;
+		left:0px;
+	}
+</style>
+
+<canvas id="canvas" class="thing" width="640" height="640"></canvas>
+
+<script type="text/javascript">
+var bits = [[]];
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+
+canvas.onmousemove = function(me){
+	var x = Math.floor(me.offsetX/8);
+	var y = Math.floor(me.offsetY/8);
+    var i = bits.length-1;
+    var bit = [
+    	[x-2,y],
+    	[x-1,y],
+    	[x,y],
+    	[x,y-1],
+    	[x,y+1],
+    	[x+1,y+1]
+    ];
+    bits[i]=bit;
+    draw();
+}
+
+canvas.onmousedown = function(me){
+	if(me.shiftKey){
+		bits.splice(bits.length-2,1);
+	}
+	else{
+		bits.push([]);
+	}
+}
+
+var colors = [
+	"red",
+	"green",
+	"black",
+	"blue"
+];
+
+function draw(){
+	ctx.fillStyle = "white";
+	ctx.fillRect(0,0,640,640);
+	block(40,40,"black");
+	for(var i=0; i<bits.length; i++){
+		var bit = bits[i];
+		var color = colors[i%colors.length];
+		for(var j=0; j<bit.length; j++){
+			var ccc = bit[j][2] || color;
+			block(bit[j][0], bit[j][1], ccc);
+		}
+	}
+}
+
+function block(x, y, color){
+	ctx.fillStyle = color;
+	ctx.fillRect((x*8)-4,(y*8)-4,8,8);
+}
+
+draw();
+
+</script>
