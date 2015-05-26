@@ -6,15 +6,22 @@ var listOfImages = require("./source-images.json");
 var db = require("../../lib/db")("./gpm");
 var pattern = require("../../patterns/fork/pattern.json");
 var pixelPicker = require("./pixel-picker");
-var phraseLength = 18;
-var seed = "50-70-40.60-70-40.60-70-40.60-70-40.60-70-40.60-70-40.50-70-40.60-70-50.60-70-40.60-70-50.60-70-50.60-70-50.60-70-40.70-80-50.60-70-40.70-80-50.70-80-50.60-70-50";
+var phraseLength = 6;
+var destPath = "./img.jpg";
+var seed = "e0-a0-80.b0-70-50.a0-70-60.a0-70-60.b0-70-60.a0-70-50";
 
 
 //I THINK THIS MIGHT REALLY BE LESS RED
 
 co(function*(){
 
-	yield processImages(pattern, listOfImages, phraseLength, db);
+	//yield processImages(pattern, listOfImages, phraseLength, db);
+	
+	var gen = require("random-seed");
+	var rand = gen.create("123");
+	yield buildImage(pattern, seed, makePixelPicker(function(key){
+		return rand(1000);
+	}), db, "./rand-123.jpg");
 
 	yield buildImage(pattern, seed, makePixelPicker(function(key){
 		var red = getRed(key);
