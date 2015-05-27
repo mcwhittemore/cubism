@@ -1,5 +1,5 @@
 var co = require("co");
-var processImages = require("../../lib/process-images");
+var processImages = require("../../lib/image-tokenizer/markov-chain");
 var buildImage = require("../../lib/build-image");
 
 var listOfImages = require("./source-images.json");
