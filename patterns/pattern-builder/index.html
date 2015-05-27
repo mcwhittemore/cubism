@@ -26,12 +26,35 @@ canvas.onmousemove = function(me){
 	var y = Math.floor(me.offsetY/8);
     var i = bits.length-1;
     var bit = [
+    	[x-2,y-2],
+    	[x-1,y-2],
+    	[x,y-2],
+    	[x+1,y-2],
+    	[x+2,y-2],
+
+    	[x-2,y-1],
+    	[x-1,y-1],
+    	[x,y-1],
+    	[x+1,y-1],
+    	[x+2,y-1],
+
     	[x-2,y],
     	[x-1,y],
     	[x,y],
-    	[x,y-1],
+    	[x+1,y],
+    	[x+2,y],
+
+    	[x-2,y+2],
+    	[x-1,y+2],
+    	[x,y+2],
+    	[x+1,y+2],
+    	[x+2,y+2],
+
+    	[x-2,y+1],
+    	[x-1,y+1],
     	[x,y+1],
-    	[x+1,y+1]
+    	[x+1,y+1],
+    	[x+2,y+1]
     ];
     bits[i]=bit;
     draw();

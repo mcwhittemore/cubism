@@ -1,7 +1,7 @@
 var cache = {};
 var blank = "ff-ff-ff.ff-ff-ff.ff-ff-ff.ff-ff-ff.ff-ff-ff.ff-ff-ff";
 
-module.exports = function*(search, db){
+module.exports = function*(search, db, getVal){
 
 	if(cache[search] == blank){
 		return blank;
@@ -23,10 +23,10 @@ module.exports = function*(search, db){
 		var out = cache[search] || blank;
 		if(keys.length>0){
 			out = keys[0];
-			var count = parseInt(keys[0].split(".")[5].split("-")[0], 16);
+			var count = getVal(out);
 
 			for(var i=1; i<keys.length; i++){
-				var blueValue = parseInt(keys[i].split(".")[5].split("-")[0], 16);
+				var blueValue = getVal(keys[i]);
 				if(blueValue<count){
 					out = keys[i];
 					count = blueValue;
