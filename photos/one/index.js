@@ -1,5 +1,5 @@
 var co = require("co");
-var processImages = require("../../lib/process-images");
+var processImages = require("../../lib/image-tokenizer/markov-chain");
 var buildImage = require("../../lib/build-image");
 
 var listOfImages = require("./source-images.json");
@@ -15,7 +15,7 @@ var seed = "a0-b0-90.a0-b0-90.a0-b0-a0.a0-b0-90.a0-b0-a0.a0-b0-a0";
 
 co(function*(){
 
-	// yield processImages(pattern, listOfImages, phraseLength, db);
+	yield processImages(pattern, listOfImages, phraseLength, db);
 
 	yield buildImage(pattern, seed, makePixelPicker(function(key){
 		var red = getRed(key);
