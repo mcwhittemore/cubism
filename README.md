@@ -1,7 +1,36 @@
 # Cubsim
 
-Can a non-random [Markov chain](http://en.wikipedia.org/wiki/Markov_chain) produce interesting works of art when seeded with Instagram photos?
+## Photo Set One
 
-# Photos 1, 2 & 3
+![](./photos/one/aqua.jpg)
+![](./photos/one/space.jpg)
+![](./photos/one/white.jpg)
 
-Fork, markov chain, different set subsets of the same photos
+## Photo Set Two
+
+![](./photos/two/aqua.jpg)
+
+## Photo Set Three
+
+![](./photos/three/rand-123.jpg)
+
+## Photo Set Four
+
+![](./photos/four/space.jpg)
+
+## Photo Set Six
+
+![](./photos/six/redOverBlue.jpg)
+
+## Photo Set Eight
+
+![](./photos/eight/test.jpg)
+
+## Photo Set Nine
+
+![](./photos/nine/test.jpg)
+
+## Photo Set Eight-Night
+
+![](./photos/eight-nine/test.jpg)
+
