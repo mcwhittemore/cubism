@@ -20,7 +20,9 @@
   "homepage": "https://github.com/mcwhittemore/city-color",
   "dependencies": {
     "co": "^4.5.4",
+    "dotenv": "^1.1.0",
     "get-pixels": "^3.2.2",
+    "instagram-node": "^0.5.7",
     "level": "^1.0.0",
     "ndarray": "^1.0.17",
     "random-seed": "^0.2.0",
