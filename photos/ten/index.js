@@ -14,9 +14,11 @@ var pixelToColor = function(pixel){
 		return parseInt(v, 16);
 	});
 
-	var cut = ((256*256*256)/2);
+	var cut = 3.5;
+	var first = ((256*256*256)/cut);
+	var second = first/cut;
 
-	return Math.abs(Math.abs((channels[0] << 16) | (channels[1] << 8) | (channels[2]) - cut));
+	return Math.abs(Math.abs((channels[0] << 16) | (channels[1] << 8) | (channels[2]) - first) - second);
 }
 
 var lastPos = -1;
@@ -49,7 +51,7 @@ var pickBlock = function*(id){
 
 co(function*(){
 
-	//yield processImages(pattern, listOfImages, blockLength, db);
+	yield processImages(pattern, listOfImages, blockLength, db);
 
 	var pixels = ndarray([], [640, 640, 3]);
 	for(var i=0; i<pattern.length; i+=blockLength){
