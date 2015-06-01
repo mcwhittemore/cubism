@@ -26,6 +26,10 @@
 
 ![](./photos/eight/test.jpg)
 
+## Photo Set Eight-Blue
+
+![](./photos/eight-blue/test.jpg)
+
 ## Photo Set Nine
 
 ![](./photos/nine/test.jpg)
