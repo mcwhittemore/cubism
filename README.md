@@ -30,6 +30,16 @@
 
 ![](./photos/eight-blue/test.jpg)
 
+## Photo Set Eight-Red
+
+![](./photos/eight-blue/test.jpg)
+
+![](./photos/smudge-others/results/one.jpg)
+
+## Photo Set Eight-Green
+
+![](./photos/eight-blue/test.jpg)
+
 ## Photo Set Nine
 
 ![](./photos/nine/test.jpg)
