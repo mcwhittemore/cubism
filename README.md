@@ -48,7 +48,7 @@
 
 ![](./photos/nine/test.jpg)
 
-## Photo Set Eight-Night
+## Photo Set Eight-Nine
 
 ![](./photos/eight-nine/test.jpg)
 
