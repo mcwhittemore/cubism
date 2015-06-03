@@ -26,7 +26,7 @@
 
 ![](./photos/eight/test.jpg)
 
-![](./photos/smudge-others/results/eight.jpg)
+![](./photos/smudge-others/results/seven.jpg)
 
 ## Photo Set Eight-Blue
 
