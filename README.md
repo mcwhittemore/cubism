@@ -26,6 +26,8 @@
 
 ![](./photos/eight/test.jpg)
 
+![](./photos/smudge-others/results/eight.jpg)
+
 ## Photo Set Eight-Blue
 
 ![](./photos/eight-blue/test.jpg)

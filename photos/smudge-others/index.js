@@ -35,11 +35,15 @@ co(function*(){
 	// five = smudgeImage(five, box(3));
 	// savePixels(five, "jpg").pipe(fs.createWriteStream("./results/five.jpg"));
 
-	var six = yield getPixels("../eight-blue/test.jpg");
-	six = smudgeImage(six, box(3));
-	six = smudgeImage(six, box(2));
-	six = smudgeImage(six, box(2));
-	savePixels(six, "jpg").pipe(fs.createWriteStream("./results/six.jpg"));
+	// var six = yield getPixels("../eight-blue/test.jpg");
+	// six = smudgeImage(six, box(3));
+	// six = smudgeImage(six, box(2));
+	// six = smudgeImage(six, box(2));
+	// savePixels(six, "jpg").pipe(fs.createWriteStream("./results/six.jpg"));
+
+	var seven = yield getPixels("../eight/test.jpg");
+	seven = smudgeImage(seven, box(3));
+	savePixels(seven, "jpg").pipe(fs.createWriteStream("./results/seven.jpg"));
 
 }).catch(function(err){
 	console.error(err);
