@@ -1,3 +1,3 @@
 # Cubsim
 
-![](./works/final-one/blending/results/fifteen.jpg)
+![](./works/one/blending/results/fifteen.jpg)
