@@ -9,6 +9,11 @@ var increaseContrast = require("./increase-contrast");
 var box = require("./selectors/box");
 var cross = require("./selectors/cross");
 
+var lessFog = require("./lessFog");
+var moreLight = require("./moreLight");
+
+var blend = require("./blend");
+
 
 co(function*(){
 
@@ -45,13 +50,67 @@ co(function*(){
 	// seven = smudgeImage(seven, box(3));
 	// savePixels(seven, "jpg").pipe(fs.createWriteStream("./results/seven.jpg"));
 
-	var eight = yield getPixels("../nine/test.jpg");
-	eight = smudgeImage(eight, box(3));
-	savePixels(eight, "jpg").pipe(fs.createWriteStream("./results/eight.jpg"));
+	// var eight = yield getPixels("../nine/test.jpg");
+	// eight = smudgeImage(eight, box(3));
+	// savePixels(eight, "jpg").pipe(fs.createWriteStream("./results/eight.jpg"));
 
-	var nine = yield getPixels("../eight-green/test.jpg");
-	nine = smudgeImage(nine, box(3));
-	savePixels(nine, "jpg").pipe(fs.createWriteStream("./results/nine.jpg"));
+	// var nine = yield getPixels("../eight-green/test.jpg");
+	// nine = smudgeImage(nine, box(3));
+	// savePixels(nine, "jpg").pipe(fs.createWriteStream("./results/nine.jpg"));
+
+	// var ten = yield getPixels("../eight-blue/test.jpg");
+	// ten = smudgeImage(ten, box(2));
+	// ten = smudgeImage(ten, box(2));
+	// ten = smudgeImage(ten, box(2));
+	// ten = lessFog(ten);
+	// savePixels(ten, "jpg").pipe(fs.createWriteStream("./results/ten.jpg"));
+
+	// var eleven = yield getPixels("../eight-blue/test.jpg");
+	// eleven = smudgeImage(eleven, cross(3));
+	// eleven = smudgeImage(eleven, cross(2));
+	// eleven = smudgeImage(eleven, box(2));
+	// eleven = smudgeImage(eleven, box(2));
+	// eleven = smudgeImage(eleven, box(2));
+	// eleven = lessFog(eleven);
+	// savePixels(eleven, "jpg").pipe(fs.createWriteStream("./results/eleven.jpg"));
+
+	// var twelve = yield getPixels("../eight-blue/test.jpg");
+	// twelve = smudgeImage(twelve, box(2));
+	// twelve = smudgeImage(twelve, box(2));
+	// twelve = smudgeImage(twelve, box(2));
+	// twelve = lessFog(twelve);
+	// twelve = moreLight(twelve);
+	// savePixels(twelve, "jpg").pipe(fs.createWriteStream("./results/twelve.jpg"));
+
+	// var thirteen = yield getPixels("../eight-blue/test.jpg");
+	
+	// var thirteenBright = smudgeImage(thirteen, cross(5));
+	// thirteenBright = smudgeImage(thirteenBright, box(5));
+	// thirteenBright = smudgeImage(thirteenBright, box(5));
+	// thirteenBright = lessFog(thirteenBright);
+	// thirteenBright = moreLight(thirteenBright);
+
+	// var thirteenDim = smudgeImage(thirteen, box(3));
+	// thirteenDim = smudgeImage(thirteenDim, box(2));
+	// thirteenDim = smudgeImage(thirteenDim, box(2));
+
+	// var thirteenMerged = blend(thirteenDim, thirteenBright);
+	// savePixels(thirteenMerged, "jpg").pipe(fs.createWriteStream("./results/thirteenMerged.jpg"));
+
+	// var fourteen = yield getPixels("../eight-blue/test.jpg");
+	// for(var i=0; i<7; i++){
+	// 	fourteen = smudgeImage(fourteen, box(5));
+	// 	fourteen = lessFog(fourteen);
+	// 	fourteen = moreLight(fourteen);
+	// }
+	// savePixels(fourteen, "jpg").pipe(fs.createWriteStream("./results/fourteen.jpg"));
+
+	var fifteen = yield getPixels("../eight-blue/test.jpg");
+	fifteen = smudgeImage(fifteen, box(3));
+	fifteen = smudgeImage(fifteen, box(2));
+	fifteen = smudgeImage(fifteen, box(2));
+	fifteen = lessFog(fifteen, 2.75);
+	savePixels(fifteen, "jpg").pipe(fs.createWriteStream("./results/fifteen.jpg"));
 
 }).catch(function(err){
 	console.error(err);

@@ -32,7 +32,7 @@
 
 ![](./photos/eight-blue/test.jpg)
 
-![](./photos/smudge-others/results/six.jpg)
+![](./photos/smudge-others/results/fifteen.jpg)
 
 ## Photo Set Eight-Red
 
@@ -56,6 +56,6 @@
 
 ![](./photos/eleven/test.jpg)
 
-## Photo Set Fourtenn
+## Photo Set Fourteen
 
 ![](./photos/fourteen/test.jpg)
