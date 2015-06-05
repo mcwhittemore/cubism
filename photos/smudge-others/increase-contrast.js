@@ -4,24 +4,35 @@ module.exports = function(srcImg, minPoint, maxPoint){
 
 	var destImg = ndarray([], [640, 640, 3]);
 
-	var vals = [];
+	var min = 256;
+	var max = 0;
 
 	for(var x = 0; x<640; x++){
 		for(var y = 0; y<640; y++){
-			var r = srcImg.get(x, y, 0);
-			var g = srcImg.get(x, y, 1);
-			var b = srcImg.get(x, y, 2);
+			var pmin = Math.min(
+				srcImg.get(x, y, 0),
+				srcImg.get(x, y, 1),
+				srcImg.get(x, y, 2)
+			);
 
-			vals.push(r);
-			vals.push(g);
-			vals.push(b);
+			if(pmin<min){
+				min = pmin;
+			}
+
+			var pmax = Math.max(
+				srcImg.get(x, y, 0),
+				srcImg.get(x, y, 1),
+				srcImg.get(x, y, 2)
+			);
+
+			if(pmax>max){
+				max = pmax;
+			}
 		}
 	}
 
-	vals.sort();
-
-	var min = vals[Math.floor(vals.length*minPoint)];
-	var max = vals[Math.ceil(vals.length*maxPoint)];
+	console.log("min", min);
+	console.log("max", max);
 
 	var fullScope = max-min;
 	var scale = (1/fullScope)*255;
