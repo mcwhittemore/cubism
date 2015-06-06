@@ -1,8 +1,8 @@
 var co = require("co");
-var processImages = require("../../lib/image-tokenizer/cordinate-blocks");
-var pattern = require("../../patterns/fork/pattern.json");
+var processImages = require("../../../lib/image-tokenizer/cordinate-blocks");
+var pattern = require("../../../patterns/fork/pattern.json");
 var listOfImages = require("./source-images.json");
-var db = require("../../lib/db")("./gpm");
+var db = require("../../../lib/db")("./gpm");
 var blockLength = 6;
 
 var ndarray = require("ndarray");
@@ -43,7 +43,7 @@ var pickBlock = function*(id){
 
 co(function*(){
 
-	//yield processImages(pattern, listOfImages, blockLength, db);
+	yield processImages(pattern, listOfImages, blockLength, db);
 
 	var pixels = ndarray([], [640, 640, 3]);
 	for(var i=0; i<pattern.length; i+=blockLength){
@@ -63,7 +63,11 @@ co(function*(){
 		}
 
 	}
-	savePixels(pixels, "jpg").pipe(fs.createWriteStream("./test.jpg"));
+	savePixels(pixels, "jpg").pipe(fs.createWriteStream("./test.jpg")).end(function(){
+		require("child_process").exec("rm -rf ./gpm", function(err, stdout, stderr){
+			console.log(err, stdout);
+		});
+	});
 
 }).catch(function(err){
 	console.error(err);
