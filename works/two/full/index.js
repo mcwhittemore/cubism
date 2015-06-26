@@ -23,7 +23,7 @@ var getBasePixels = function*(imgPath){
 
 co(function*(){
 
-	var IMG_SIZE = 3600;
+	var IMG_SIZE = 640;
 	var numImgs = listOfImages.length;
 	var imgLength = IMG_SIZE * IMG_SIZE;
 	var fivePercent = imgLength/20;
@@ -31,7 +31,7 @@ co(function*(){
 
 	for(var b=0; b<numImgs; b++){
 		var imgId = listOfImages[b];
-		var imgPath = path.join(__dirname, "../../../instagrams", imgId+"-large.jpg");
+		var imgPath = path.join(__dirname, "../../../instagrams", imgId+".jpg");
 		console.log("parse "+imgPath+" "+b+" of "+numImgs);
 		console.time("report");
 		var img = yield getBasePixels(imgPath);
@@ -111,7 +111,7 @@ co(function*(){
 	}
 	
 
-	savePixels(pixels, "jpg").pipe(fs.createWriteStream("./final.jpg"));
+	savePixels(pixels, "jpg").pipe(fs.createWriteStream("./web.jpg"));
 
 }).catch(function(err){
 	console.error(err);
