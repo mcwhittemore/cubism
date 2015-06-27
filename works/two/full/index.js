@@ -23,7 +23,7 @@ var getBasePixels = function*(imgPath){
 
 co(function*(){
 
-	var IMG_SIZE = 640;
+	var IMG_SIZE = 3600;
 	var numImgs = listOfImages.length;
 	var imgLength = IMG_SIZE * IMG_SIZE;
 	var fivePercent = imgLength/20;
@@ -31,7 +31,7 @@ co(function*(){
 
 	for(var b=0; b<numImgs; b++){
 		var imgId = listOfImages[b];
-		var imgPath = path.join(__dirname, "../../../instagrams", imgId+".jpg");
+		var imgPath = path.join(__dirname, "../../../instagrams", imgId+"-large.jpg");
 		console.log("parse "+imgPath+" "+b+" of "+numImgs);
 		console.time("report");
 		var img = yield getBasePixels(imgPath);
@@ -86,6 +86,7 @@ co(function*(){
 	console.log("averaging the pixels");
 	var lastReport = 0;
 	var fork = pattern(IMG_SIZE);
+	var min = 300;
 	for(var i=0; i<imgLength; i++){
 		var newPos = fork.next().value;
 
@@ -100,6 +101,38 @@ co(function*(){
 		green = Math.floor(green / numImgs);
 		blue = Math.floor(blue / numImgs);
 
+		min = Math.min(red, green, blue, min);
+
+		pixels.set(x, y, 0, red);
+		pixels.set(x, y, 1, green);
+		pixels.set(x, y, 2, blue);
+
+		if(i>lastReport+fivePercent){
+			console.log((100/imgLength)*i);
+			lastReport = i;
+		}
+	}
+
+	console.log("darken image", min);
+	var lastReport = 0;
+	var fork = pattern(IMG_SIZE);
+	min = min / 2.5;
+	for(var i=0; i<imgLength; i++){
+		var newPos = fork.next().value;
+
+		var x = newPos[0];
+		var y = newPos[1];
+
+		red = pixels.get(x, y, 0);
+		green = pixels.get(x, y, 1);
+		blue = pixels.get(x, y, 2);
+
+		red = red - min;
+		green = green - min;
+		blue = blue - min;
+
+		min = Math.min(red, green, blue, min);
+
 		pixels.set(x, y, 0, red);
 		pixels.set(x, y, 1, green);
 		pixels.set(x, y, 2, blue);
@@ -111,7 +144,7 @@ co(function*(){
 	}
 	
 
-	savePixels(pixels, "jpg").pipe(fs.createWriteStream("./web.jpg"));
+	savePixels(pixels, "jpg").pipe(fs.createWriteStream("./dark-final.jpg"));
 
 }).catch(function(err){
 	console.error(err);
