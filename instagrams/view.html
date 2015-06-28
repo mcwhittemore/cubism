@@ -1,0 +1,57 @@
+<div id="left">
+	<textarea id="json"></textarea>
+	<button id="button">Refresh</button>
+</div>
+<div id="block">hi</div>
+
+<script>
+	var ta = document.getElementById("json");
+	var block = document.getElementById("block");
+	var button = document.getElementById("button");
+	button.onclick = function(){
+		imgs = JSON.parse(ta.value);
+		render();
+	}
+
+	var imgs = [];
+
+	var remove = function(id){
+		imgs = imgs.filter(function(img){
+			return img != id;
+		});
+		render();
+	}
+
+	var render = function(){
+		
+		block.innerHTML = "";
+
+		imgs.forEach(function(imgId){
+			var img = document.createElement("img");
+			img.src = "./"+imgId+".jpg";
+
+			img.onclick = function(){
+				remove(imgId);
+			}
+
+			block.appendChild(img);
+		});
+
+		
+		ta.value = JSON.stringify(imgs, null, 2);
+	}
+
+	render();
+</script>
+
+<style>
+	img {
+		width: 125px;
+	}
+
+	#left{
+		width: 300px;
+  		float: left;
+  		height: 100%;
+	}
+</style>
