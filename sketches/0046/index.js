@@ -14,8 +14,8 @@ co(function*(){
 		var imgId = listOfImages[b];
 		var imgPath = path.join(__dirname, "../../instagrams", imgId+".jpg");
 		console.log(imgPath);
-		var img = yield monocrome(imgPath);
-		savePixels(img, "jpg").pipe(fs.createWriteStream("./imgs/"+imgId+".jpg"));
+		var img = yield monocrome(imgPath, 4);
+		savePixels(img, "jpg").pipe(fs.createWriteStream("./imgs/"+imgId+"-fourth.jpg"));
 	}
 
 }).catch(function(err){
