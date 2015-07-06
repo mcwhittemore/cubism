@@ -123,3 +123,10 @@ iterations: 1840 training error: 0.04458649542867436
 iterations: 1860 training error: 0.04458649543399339
 iterations: 1880 training error: 0.04458649543917441
 iterations: 1900 training error: 0.044586495444222725
+iterations: 1920 training error: 0.0445864954491431
+iterations: 1940 training error: 0.04458649545394012
+iterations: 1960 training error: 0.04458649545861871
+iterations: 1980 training error: 0.04458649546318277
+TRAINING INFO { error: 0.04458649546741602, iterations: 2000 }
+start
+end
