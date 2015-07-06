@@ -1,0 +1,3 @@
+# 0059
+
+In this one the input with be a hash of left and right and the output will be a center. The hope here is that we can use left and right to predict a center. In the last bunch of attemps we have found that while there is some sort of understanding of the way data falls it is still lacking. I think this is because in our past sketches the left and the right have been only identified by index in the array and the center has been included as well. I'm hoping that by removing the center we will find it is more predictable.

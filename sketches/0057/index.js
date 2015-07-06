@@ -118,8 +118,8 @@ co(function*(){
 				pixels.set(xx, yy, 2, blue);
 			}
 
-			get = [];
-			xy = [];
+			get = data.splice(1);
+			xy = xy.splice(1);
 		}
 		
 		next = fork.next();

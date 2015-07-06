@@ -27,7 +27,7 @@ co(function*(){
 	var numImgs = listOfImages.length;
 	
 	var trainData = [];
-	var SHIFT_WEIGHT = 1/16777216;
+	var SHIFT_WEIGHT = 1/256;
 	var BLOCK_SIZE = parseInt(process.argv[2]);
 	console.log("BLOCK_SIZE:", BLOCK_SIZE);
 
@@ -47,7 +47,7 @@ co(function*(){
 			var green = img.get(x, y, 1);
 			var blue = img.get(x, y, 2);
 
-			current.push((red << 16 | green << 8 | blue) * SHIFT_WEIGHT);
+			current.push(Math.max(red, green, blue) * SHIFT_WEIGHT);
 
 			if(current.length === BLOCK_SIZE){
 				trainData.push({input:current, output:current});
@@ -93,10 +93,8 @@ co(function*(){
 		var red = img.get(x, y, 0);
 		var green = img.get(x, y, 1);
 		var blue = img.get(x, y, 2);
-
-		var seed = (red << 16 | green << 8 | blue) * SHIFT_WEIGHT;
+		var seed = Math.max(red, green, blue) * SHIFT_WEIGHT;
 		get.push(seed);
-
 		xy.push({
 			x: x,
 			y: y
@@ -108,18 +106,13 @@ co(function*(){
 				var xx = xy[i].x;
 				var yy = xy[i].y;
 				var val = Math.floor(data[i] / SHIFT_WEIGHT);
-
-				var red = val >> 16;
-				var green = (val - (red << 16)) >> 8;
-				var blue = val - (red << 16) - (green << 8);
-
-				pixels.set(xx, yy, 0, red);
-				pixels.set(xx, yy, 1, green);
-				pixels.set(xx, yy, 2, blue);
+				pixels.set(xx, yy, 0, val);
+				pixels.set(xx, yy, 1, val);
+				pixels.set(xx, yy, 2, val);
 			}
 
-			get = [];
-			xy = [];
+			get = data.splice(1);
+			xy = xy.splice(1);
 		}
 		
 		next = fork.next();
