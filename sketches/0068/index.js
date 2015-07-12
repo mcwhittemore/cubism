@@ -75,14 +75,13 @@ co(function*(){
 		var row = [].concat(basic);
 		for(var i = 0; i<imgs.length; i++){
 			var imgRow = imgs[i][b];
-			for(var j=0; j<NUM_BLOCKS; j++){
+			for(var j=0; j<BLOCK_SIZE; j++){
 				row[j] = row[j] + imgRow[j];
-				if(j == NUM_BLOCKS-1){
-					row[j] = row[j] / NUM_BLOCKS;
-					if(isNaN(row[j])){
-						console.log(row[j], NUM_BLOCKS, imgRow[j]);
-						return;
-					}
+				if(j == BLOCK_SIZE-1){
+					console.log("before", row[j]);
+					row[j] = row[j] / BLOCK_SIZE;
+					console.log("after", row[j]);
+					return;
 				}
 			}
 		}
