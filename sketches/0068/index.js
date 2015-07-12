@@ -34,7 +34,7 @@ co(function*(){
 	var imgs = [];
 
 	for(var b=1; b<numImgs; b++){
-		imgs[b] = [];
+		imgs[b-1] = [];
 		var imgId = listOfImages[b];
 		var imgPath = path.join(__dirname, "../../instagrams", imgId+".jpg");
 		console.log("parse "+imgPath+" "+b+" of "+numImgs);
@@ -55,7 +55,7 @@ co(function*(){
 			current.push(blue);
 
 			if(current.length === BLOCK_SIZE){
-				imgs[b].push(current);
+				imgs[b-1].push(current);
 				current = [];
 			}
 
@@ -68,12 +68,13 @@ co(function*(){
 		basic.push(0);
 	}
 
-	for(var b = 1; b<imgs[1].length; b++){
+	var NUM_BLOCKS = imgs[1].length;
+	for(var b = 0; b<NUM_BLOCKS; b++){
 		var row = [].concat(basic);
 		for(var i = 0; i<imgs.length; i++){
 			var imgRow = imgs[i][b];
 			for(var j=0; j<imgRow.length; j++){
-				row[j] = row[j]+ (imgRow[j] / imgs[0].length);
+				row[j] = row[j]+ (imgRow[j] / NUM_BLOCKS);
 			}
 		}
 		
