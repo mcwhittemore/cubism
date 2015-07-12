@@ -101,18 +101,17 @@ co(function*(){
 
 			if(get.length == BLOCK_SIZE){
 				var data = net.run(get);
-				for(var i=0; i<data.length; i++){
+				for(var i=0; i<xy.length; i++){
 					var xx = xy[i].x;
 					var yy = xy[i].y;
-					var val = Math.floor(data[i] / SHIFT_WEIGHT);
+					
+					var j = i*3;
 
-					var red = val >> 16;
-					var green = (val - (red << 16)) >> 8;
-					var blue = val - (red << 16) - (green << 8);
+					for(var k=0; k<3; k++){
+						var val = Math.floor((data[j+k] / SHIFT_WEIGHT) * 16);
+						pixels.set(xx, yy, k, val);
+					}
 
-					pixels.set(xx, yy, 0, red);
-					pixels.set(xx, yy, 1, green);
-					pixels.set(xx, yy, 2, blue);
 				}
 
 				get = [];
