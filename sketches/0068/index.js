@@ -70,7 +70,7 @@ co(function*(){
 		basic.push(0);
 	}
 
-	var NUM_BLOCKS = imgs[1].length;
+	var NUM_BLOCKS = imgs[0].length;
 	for(var b = 0; b<NUM_BLOCKS; b++){
 		var row = [].concat(basic);
 		for(var i = 0; i<imgs.length; i++){
