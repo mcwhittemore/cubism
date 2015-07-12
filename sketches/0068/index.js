@@ -55,7 +55,7 @@ co(function*(){
 			current.push(blue);
 
 			if(current.length === BLOCK_SIZE){
-				imgs[b].push(current);
+				imgs[b-1].push(current);
 				current = [];
 			}
 
