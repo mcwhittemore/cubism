@@ -65,7 +65,7 @@ co(function*(){
 
 	var net = new fann.standard(BLOCK_SIZE, 16, BLOCK_SIZE)
 
-	var info = net.train(trainData, {error: 0.005});
+	var info = net.train(trainData, {error: 0.005, epochs_between_reports: 10});
 
 	var imgId = listOfImages[0];
 	var imgPath = path.join(__dirname, "../../instagrams", imgId+".jpg");
