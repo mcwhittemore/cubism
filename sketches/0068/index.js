@@ -80,7 +80,7 @@ co(function*(){
 				if(j == BLOCK_SIZE-1){
 					console.log("before", row[j]);
 					row[j] = row[j] / BLOCK_SIZE;
-					console.log("after", row[j]);
+					console.log("after", row[j], imgRow);
 					return;
 				}
 			}
