@@ -77,19 +77,15 @@ co(function*(){
 			var imgRow = imgs[i][b];
 			for(var j=0; j<BLOCK_SIZE; j++){
 				row[j] = row[j] + imgRow[j];
-				if(j == BLOCK_SIZE-1){
-					console.log("before", row[j]);
-					row[j] = row[j] / BLOCK_SIZE;
-					console.log("after", row[j], imgRow);
-					return;
-				}
 			}
 		}
+
+		for(var i=0; i<BLOCK_SIZE; i++){
+			row[i] = row[i] / imgs.length;
+		}
 		
-		console.log(row.join(" "));
 		for(var i=0; i<imgs.length; i++){
 			var imgRow = imgs[i][b];
-			console.log("\t"+imgRow.join(" "));
 			trainData.push([imgRow, row]);
 		}
 	}
