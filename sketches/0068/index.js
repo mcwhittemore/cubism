@@ -63,6 +63,8 @@ co(function*(){
 		}
 	}
 
+	var trainData = [];
+
 	var basic = [];
 	for(var i=0; i<BLOCK_SIZE; i++){
 		basic.push(0);
@@ -73,14 +75,22 @@ co(function*(){
 		var row = [].concat(basic);
 		for(var i = 0; i<imgs.length; i++){
 			var imgRow = imgs[i][b];
-			for(var j=0; j<imgRow.length; j++){
-				row[j] = row[j]+ (imgRow[j] / NUM_BLOCKS);
+			for(var j=0; j<NUM_BLOCKS; j++){
+				row[j] = row[j] + imgRow[j];
+				if(j == NUM_BLOCKS-1){
+					row[j] = row[j] / NUM_BLOCKS;
+					if(isNaN(row[j])){
+						console.log(row[j], NUM_BLOCKS);
+						return;
+					}
+				}
 			}
 		}
 		
+		console.log(row.join(" "));
 		for(var i=0; i<imgs.length; i++){
 			var imgRow = imgs[i][b];
-			console.log(imgRow, row);
+			console.log("\t"+imgRow.join(" "));
 			trainData.push([imgRow, row]);
 		}
 	}
