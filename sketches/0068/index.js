@@ -80,7 +80,7 @@ co(function*(){
 				if(j == NUM_BLOCKS-1){
 					row[j] = row[j] / NUM_BLOCKS;
 					if(isNaN(row[j])){
-						console.log(row[j], NUM_BLOCKS);
+						console.log(row[j], NUM_BLOCKS, imgRow[j]);
 						return;
 					}
 				}
