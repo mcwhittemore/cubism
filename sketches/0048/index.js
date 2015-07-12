@@ -1,3 +1,4 @@
+var sketchSaver = require("../../lib/sketch-saver");
 var co = require("co");
 var listOfImages = require("./source-images.json");
 var savePixels = require("save-pixels");
@@ -109,6 +110,7 @@ co(function*(){
 
 	savePixels(pixels, "jpg").pipe(fs.createWriteStream("./test.jpg"));
 
-}).catch(function(err){
-	console.log(err);
+}).then(sketchSaver).catch(function(err){
+	console.log(err.stack);
+	sketchSaver();
 });

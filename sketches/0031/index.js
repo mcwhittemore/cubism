@@ -1,3 +1,4 @@
+var sketchSaver = require("../../lib/sketch-saver");
 var co = require("co");
 var pattern = require("../../patterns/fork");
 var smudge = require("../../lib/blending/smudger");
@@ -139,10 +140,9 @@ co(function*(){
 
 	savePixels(pixels, "jpg").pipe(fs.createWriteStream("./test.jpg"));
 
-}).catch(function(err){
-	console.error(err);
-	console.error(err.stack);
-	throw err;
+}).then(sketchSaver).catch(function(err){
+	console.log(err.stack);
+	sketchSaver();
 });
 
 

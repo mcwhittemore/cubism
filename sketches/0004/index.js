@@ -1,3 +1,4 @@
+var sketchSaver = require("../../lib/sketch-saver");
 var co = require("co");
 var processImages = require("../../lib/image-tokenizer/markov-blocks");
 var buildImage = require("../../lib/build-image");
@@ -24,9 +25,9 @@ co(function*(){
 		return Math.floor((green+red)/2);
 	}), db, "./space.jpg", phraseLength);
 
-}).catch(function(err){
-	console.error(err.stack);
-	throw err;
+}).then(sketchSaver).catch(function(err){
+	console.log(err.stack);
+	sketchSaver();
 });
 
 

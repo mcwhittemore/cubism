@@ -1,4 +1,5 @@
 var co = require("co");
+var sketchSaver = require("../../lib/sketch-saver");
 var listOfImages = require("./source-images.json");
 var savePixels = require("save-pixels");
 var pattern = require("../../patterns/fork");
@@ -165,6 +166,7 @@ co(function*(){
 		savePixels(pixels, "jpg").pipe(fs.createWriteStream("./test-"+tag+".jpg"));
 	}
 
-}).catch(function(err){
+}).then(sketchSaver).catch(function(err){
 	console.log(err.stack);
+	sketchSaver();
 });

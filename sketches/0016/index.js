@@ -1,3 +1,4 @@
+var sketchSaver = require("../../lib/sketch-saver");
 var co = require("co");
 var processImages = require("../../lib/image-tokenizer/cordinate-blocks");
 var pattern = require("../../patterns/fork/pattern.json");
@@ -76,10 +77,9 @@ co(function*(){
 	var pixels = yield crushIt(1, 2);
 	savePixels(pixels, "jpg").pipe(fs.createWriteStream("./test.jpg"));
 
-}).catch(function(err){
-	console.error(err);
-	console.error(err.stack);
-	throw err;
+}).then(sketchSaver).catch(function(err){
+	console.log(err.stack);
+	sketchSaver();
 });
 
 

@@ -1,3 +1,4 @@
+var sketchSaver = require("../../lib/sketch-saver");
 var co = require("co");
 var processImages = require("../../lib/image-tokenizer/cordinate-blocks");
 var buildImage = require("./build");
@@ -15,10 +16,9 @@ co(function*(){
 	yield buildImage(db, 3.5, pattern, blockLength, "./test.jpg");
 	
 
-}).catch(function(err){
-	console.error(err);
-	console.error(err.stack);
-	throw err;
+}).then(sketchSaver).catch(function(err){
+	console.log(err.stack);
+	sketchSaver();
 });
 
 

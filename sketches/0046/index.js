@@ -1,3 +1,4 @@
+var sketchSaver = require("../../lib/sketch-saver");
 var co = require("co");
 var monocrome = require("../../lib/filters/monocrome");
 var listOfImages = require("./source-images.json");
@@ -18,6 +19,7 @@ co(function*(){
 		savePixels(img, "jpg").pipe(fs.createWriteStream("./imgs/"+imgId+"-fourth.jpg"));
 	}
 
-}).catch(function(err){
-	console.log(err);
+}).then(sketchSaver).catch(function(err){
+	console.log(err.stack);
+	sketchSaver();
 });

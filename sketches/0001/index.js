@@ -1,3 +1,4 @@
+var sketchSaver = require("../../lib/sketch-saver");
 var co = require("co");
 var processImages = require("../../lib/image-tokenizer/markov-chain");
 var buildImage = require("../../lib/build-image");
@@ -49,9 +50,9 @@ co(function*(){
 	// 	return red/blue;
 	// }), db, "./redOverBlue.jpg");
 
-}).catch(function(err){
-	console.error(err.stack);
-	throw err;
+}).then(sketchSaver).catch(function(err){
+	console.log(err.stack);
+	sketchSaver();
 });
 
 
