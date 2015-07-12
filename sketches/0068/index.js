@@ -55,7 +55,7 @@ co(function*(){
 			current.push(blue);
 
 			if(current.length === BLOCK_SIZE){
-				imgs[b-1].push(current);
+				imgs[b].push(current);
 				current = [];
 			}
 
@@ -68,7 +68,7 @@ co(function*(){
 		basic.push(0);
 	}
 
-	for(var b = 0; b<imgs[0].length; b++){
+	for(var b = 1; b<imgs[1].length; b++){
 		var row = [].concat(basic);
 		for(var i = 0; i<imgs.length; i++){
 			var imgRow = imgs[i][b];
