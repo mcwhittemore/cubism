@@ -75,8 +75,7 @@ co(function*(){
 
 	for(var trip=1; trip<ITTERATIONS+1; trip++){
 
-		var keep = KEEP_FROM - Math.floor(KEEP_FROM_IT * trip);
-		console.log("start", trip, keep);
+		console.log("start", trip);
 		var fork = pattern(640);
 		var next = fork.next();
 		var p = 0;
