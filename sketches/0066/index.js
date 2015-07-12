@@ -136,6 +136,6 @@ co(function*(){
 
 
 }).then(sketchSaver).catch(function(err){
-	console.log(err);
+	console.log(err.stack);
 	sketchSaver();
 });
