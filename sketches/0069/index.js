@@ -35,7 +35,11 @@ co(function*(){
 	}
 
 	var results = groupCrome(imgs, 8, 12, function(a){
-		return Math.max.apply(null, a)+"-";
+		var out = 0;
+		for(var i=0; i<a.length; i++){
+			out += a[i];
+		}
+		return out+"-";
 	}, 20, 20);
 
 	for(var i=0; i<numImgs; i++){
