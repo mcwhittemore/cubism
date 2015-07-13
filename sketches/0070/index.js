@@ -23,16 +23,14 @@ var getBasePixels = function*(imgPath){
 }
 
 var getColor = function(id, colors){
-	var minId = Math.min(id);
-	var maxId = Math.max(id);
+	var minId = Math.floor(id);
+	var maxId = Math.ceil(id);
 
 	var maxPart = id - minId;
 	var minPart = 1 - maxPart;
 
 	var minColor = colors[minId];
 	var maxColor = colors[maxId];
-
-	console.log(minId, maxId, colors.length);
 
 	var color = [];
 	for(var i=0; i<minColor.length; i++){
@@ -131,6 +129,8 @@ co(function*(){
 			xys = [];
 			current = [];
 		}
+
+		var next = fork.next();
 	}
 
 	console.log("image built");
