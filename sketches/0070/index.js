@@ -66,23 +66,32 @@ co(function*(){
 
 	var trainData = [];
 
+	var SHIFT_COLOR = 1/NUM_COLORS;
+	var SHIFT_RGB = 1/256;
+
 	for(var i=0; i<NUM_COLORS; i++){
 		var members = results.members[i];
 		for(var j=0; j<members.length; j++){
-			trainData.push([members[j], [i]]);
+			var train = [];
+
+			for(var k = 0; k<BLOCK_SIZE*3; k++){
+				train.push(members[j][k] * SHIFT_RGB);
+			}
+
+			trainData.push([train, [i*SHIFT_COLOR]]);
 		}
 	}
 
 	console.log(trainData[0][0].length, BLOCK_SIZE);
 	console.log(trainData[0][1].length, 1);
 
-	var net = new fann.standard(BLOCK_SIZE, NUM_COLORS, 1);
+	var net = new fann.standard(BLOCK_SIZE * 3, NUM_COLORS, 1);
 
 	console.log("training_algorithm", net.training_algorithm);
 	console.log("learning_rate", net.learning_rate);
 	console.log("learning_momentum", net.learning_momentum);
 
-	net.train(trainData, {error: 0.005, epochs_between_reports: 10});
+	net.train(trainData, {error: 0.015, epochs_between_reports: 10});
 
 	console.log("loading new img");
 	var newImg = yield getBasePixels(path.join(__dirname, "../../instagrams", listOfImages[0]+".jpg"));
@@ -104,7 +113,7 @@ co(function*(){
 		current = current.concat([red, green, blue]);
 
 		if(xys.length == BLOCK_SIZE){
-			var colorId = net.run(current);
+			var colorId = net.run(current) / SHIFT_COLOR;
 
 			var color = getColor(colorId, results.colors);
 
