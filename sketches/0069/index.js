@@ -34,7 +34,9 @@ co(function*(){
 		imgs.push(img);
 	}
 
-	var results = groupCrome(imgs, 8, 12, undefined, 20, 20);
+	var results = groupCrome(imgs, 8, 12, function(a){
+		return Math.max.apply(null, a)+"-";
+	}, 20, 20);
 
 	for(var i=0; i<numImgs; i++){
 		savePixels(results.imgs[i], "jpg").pipe(fs.createWriteStream("./imgs/"+listOfImages[i]+".jpg"));
