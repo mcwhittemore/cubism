@@ -41,6 +41,8 @@ co(function*(){
 
 	var results = groupCrome(imgs, 8, BLOCK_SIZE, undefined, 20, 20);
 
+	console.log(results.members);
+
 	var trainData = [];
 
 	for(var i=0; i<NUM_COLORS; i++){
