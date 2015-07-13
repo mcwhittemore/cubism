@@ -63,7 +63,15 @@ co(function*(){
 
 	console.log("Train!", trainData.length);
 
-	var net = new fann.standard(BLOCK_SIZE, 16, BLOCK_SIZE)
+	var net = new fann.standard(BLOCK_SIZE, 16, BLOCK_SIZE);
+
+	// net.training_algorithm = "INCREMENTAL";
+	// net.learning_momentum = .2;
+	// net.learning_rate = .5;
+
+	console.log("training_algorithm", net.training_algorithm);
+	console.log("learning_rate", net.learning_rate);
+	console.log("learning_momentum", net.learning_momentum);
 
 	var info = net.train(trainData, {error: 0.005, epochs_between_reports: 10});
 
