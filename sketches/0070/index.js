@@ -40,8 +40,8 @@ co(function*(){
 	var NUM_COLORS = 8;
 
 	var results = groupCrome(imgs, 8, BLOCK_SIZE, undefined, 20, 20);
-
-	console.log(results.members);
+	console.log("received results");
+	imgs = null;
 
 	var trainData = [];
 
@@ -60,6 +60,7 @@ co(function*(){
 
 	net.train(trainData, {error: 0.005, epochs_between_reports: 10});
 
+	console.log("loading new img");
 	var newImg = yield getBasePixels(path.join(__dirname, "../../instagrams", listOfImages[0]+".jpg"));
 
 	var fork = pattern(640);
@@ -96,6 +97,8 @@ co(function*(){
 			current = [];
 		}
 	}
+
+	console.log("image built");
 
 	savePixels(newImg, "jpg").pipe(fs.createWriteStream("./imgs/new.jpg"));
 
