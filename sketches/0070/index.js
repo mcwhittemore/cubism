@@ -121,9 +121,9 @@ co(function*(){
 				var j = i*3;
 				var x = xys[i][0];
 				var y = xys[i][1];
-				newImg.set(x, y, 0, current[j+0]);
-				newImg.set(x, y, 1, current[j+1]);
-				newImg.set(x, y, 2, current[j+2]);
+				newImg.set(x, y, 0, color[j+0]);
+				newImg.set(x, y, 1, color[j+1]);
+				newImg.set(x, y, 2, color[j+2]);
 			}
 
 			xys = [];
