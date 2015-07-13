@@ -32,6 +32,8 @@ var getColor = function(id, colors){
 	var minColor = colors[minId];
 	var maxColor = colors[maxId];
 
+	console.log(id);
+
 	var color = [];
 	for(var i=0; i<minColor.length; i++){
 		var min = minColor[i] * minPart;
