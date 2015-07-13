@@ -22,6 +22,27 @@ var getBasePixels = function*(imgPath){
 	});
 }
 
+var getColor = function(id, colors){
+	var minId = Math.min(id);
+	var maxId = Math.max(id);
+
+	var maxPart = id - minId;
+	var minPart = 1 - maxPart;
+
+	var minColor = colors[minId];
+	var maxColor = colors[maxId];
+
+	var color = [];
+	for(var i=0; i<minColor.length; i++){
+		var min = minColor[i] * minPart;
+		var max = maxColor[i] * maxPart;
+
+		color[i] = Math.floor(min + max); 
+	}
+
+	return color;
+}
+
 co(function*(){
 
 	var numImgs = listOfImages.length;
@@ -51,6 +72,9 @@ co(function*(){
 			trainData.push([members[j], [i]]);
 		}
 	}
+
+	console.log(trainData[0][0].length, BLOCK_SIZE);
+	console.log(trainData[0][1].length, 1);
 
 	var net = new fann.standard(BLOCK_SIZE, NUM_COLORS, 1);
 
