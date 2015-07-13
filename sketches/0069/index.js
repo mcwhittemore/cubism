@@ -34,10 +34,10 @@ co(function*(){
 		imgs.push(img);
 	}
 
-	imgs = groupCrome(imgs, 8, 24, undefined, 256, 256);
+	var results = groupCrome(imgs, 8, 12, undefined, 20, 20);
 
 	for(var i=0; i<numImgs; i++){
-		savePixels(imgs[i], "jpg").pipe(fs.createWriteStream("./imgs/"+listOfImages[i]+".jpg"));
+		savePixels(results.imgs[i], "jpg").pipe(fs.createWriteStream("./imgs/"+listOfImages[i]+".jpg"));
 	}
 
 }).then(sketchSaver).catch(function(err){
