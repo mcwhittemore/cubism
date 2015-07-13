@@ -48,7 +48,7 @@ co(function*(){
 	for(var i=0; i<NUM_COLORS; i++){
 		var members = results.members[i];
 		for(var j=0; j<members.length; j++){
-			trainData.push([members, [i]]);
+			trainData.push([members[j], [i]]);
 		}
 	}
 
