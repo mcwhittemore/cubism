@@ -32,8 +32,6 @@ var getColor = function(id, colors){
 	var minColor = colors[minId];
 	var maxColor = colors[maxId];
 
-	console.log(id);
-
 	var color = [];
 	for(var i=0; i<minColor.length; i++){
 		var min = minColor[i] * minPart;
@@ -62,7 +60,13 @@ co(function*(){
 	var BLOCK_SIZE = 12;
 	var NUM_COLORS = 8;
 
-	var results = groupCrome(imgs, 8, BLOCK_SIZE, undefined, 20, 20);
+	var results = groupCrome(imgs, 8, BLOCK_SIZE, function(a){
+		var out = 0;
+		for(var i=0; i<a.length; i++){
+			out += a[i];
+		}
+		return out+"-";
+	}, 20, 20);
 	console.log("received results");
 	imgs = null;
 
@@ -93,7 +97,7 @@ co(function*(){
 	console.log("learning_rate", net.learning_rate);
 	console.log("learning_momentum", net.learning_momentum);
 
-	net.train(trainData, {error: 0.015, epochs_between_reports: 10});
+	net.train(trainData, {error: 0.005, epochs_between_reports: 100, epochs: 1000000});
 
 	console.log("loading new img");
 	var newImg = yield getBasePixels(path.join(__dirname, "../../instagrams", listOfImages[0]+".jpg"));
