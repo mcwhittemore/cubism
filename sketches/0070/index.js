@@ -32,7 +32,7 @@ var getColor = function(id, colors){
 	var minColor = colors[minId];
 	var maxColor = colors[maxId];
 
-	console.log(minColor, maxColor, colors);
+	console.log(minId, maxId, colors.length);
 
 	var color = [];
 	for(var i=0; i<minColor.length; i++){
