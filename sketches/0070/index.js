@@ -22,6 +22,13 @@ var getBasePixels = function*(imgPath){
 	});
 }
 
+var mash = function(a){
+	var min = Math.min.apply(null, a);
+	var max = Math.max.apply(null, a);
+
+	return Math.floor(max/NUM_COLORS);
+}
+
 var getColor = function(id, colors){
 	var minId = Math.floor(id);
 	var maxId = Math.ceil(id);
@@ -61,87 +68,94 @@ co(function*(){
 	var NUM_COLORS = 10;
 
 	var results = groupCrome(imgs, NUM_COLORS, BLOCK_SIZE, function(a){
-		var min = Math.min.apply(null, a);
-		var max = Math.max.apply(null, a);
-
-		return Math.floor(max/NUM_COLORS)+"-";
+		return mash(a)+"-"
 	}, 20, 20);
 	console.log("received results");
 	imgs = null;
 
-	// var trainData = [];
+	var trainData = [];
 
-	// var SHIFT_COLOR = 1/NUM_COLORS;
-	// var SHIFT_RGB = 1/256;
+	var SHIFT_COLOR = 1/NUM_COLORS;
+	var maxmax = [];
+	for(var i=0; i<BLOCK_SIZE; i++){
+		maxmax.push(256);
+		maxmax.push(256);
+		maxmax.push(256);
+	}
+	var SHIFT_RGB = 1/mash(maxmax);
 
-	// for(var i=0; i<NUM_COLORS; i++){
-	// 	var members = results.members[i];
-	// 	for(var j=0; j<members.length; j++){
-	// 		var train = [];
 
-	// 		for(var k = 0; k<BLOCK_SIZE*3; k++){
-	// 			var ccc = Math.floor(members[j][k] / 32) * 32;
-	// 			train.push(ccc * SHIFT_RGB);
-	// 		}
+	for(var i=0; i<NUM_COLORS; i++){
+		var members = results.members[i];
+		for(var j=0; j<members.length; j++){
+			var train = [];
 
-	// 		trainData.push([train, [i*SHIFT_COLOR]]);
-	// 	}
-	// }
+			for(var k = 0; k<BLOCK_SIZE*3; k++){
+				var ccc = Math.floor(members[j][k] / 2) * 2;
+				train.push(ccc);
+			}
 
-	// console.log(trainData[0][0].length, BLOCK_SIZE);
-	// console.log(trainData[0][1].length, 1);
+			var v = mash(train);
 
-	// var net = new fann.standard(BLOCK_SIZE * 3, NUM_COLORS, 1);
+			trainData.push([[v*SHIFT_RGB], [i*SHIFT_COLOR]]);
+		}
+	}
 
-	// console.log("training_algorithm", net.training_algorithm);
-	// console.log("learning_rate", net.learning_rate);
-	// console.log("learning_momentum", net.learning_momentum);
+	console.log(trainData[0][0].length, BLOCK_SIZE);
+	console.log(trainData[0][1].length, 1);
 
-	// net.train(trainData, {error: 0.005, epochs_between_reports: 100, epochs: 1000000});
+	var net = new fann.standard(1, BLOCK_SIZE, BLOCK_SIZE, 1);
 
-	// console.log("loading new img");
-	// var newImg = yield getBasePixels(path.join(__dirname, "../../instagrams", listOfImages[0]+".jpg"));
+	console.log("training_algorithm", net.training_algorithm);
+	console.log("learning_rate", net.learning_rate);
+	console.log("learning_momentum", net.learning_momentum);
 
-	// var fork = pattern(640);
-	// var next = fork.next();
-	// var current = [];
-	// var xys = [];
-	// while(next.done === false){
-	// 	var x = next.value[0];
-	// 	var y = next.value[1];
+	net.train(trainData, {error: 0.006, epochs_between_reports: 100, epochs: 1000000});
 
-	// 	xys = xys.concat([[x,y]]);
+	console.log("loading new img");
+	var newImg = yield getBasePixels(path.join(__dirname, "../../instagrams", listOfImages[0]+".jpg"));
 
-	// 	var red = newImg.get(x, y, 0);
-	// 	var green = newImg.get(x, y, 1);
-	// 	var blue = newImg.get(x, y, 2);
+	var fork = pattern(640);
+	var next = fork.next();
+	var current = [];
+	var xys = [];
+	while(next.done === false){
+		var x = next.value[0];
+		var y = next.value[1];
 
-	// 	current = current.concat([red, green, blue]);
+		xys = xys.concat([[x,y]]);
 
-	// 	if(xys.length == BLOCK_SIZE){
-	// 		var colorId = net.run(current) / SHIFT_COLOR;
+		var red = newImg.get(x, y, 0);
+		var green = newImg.get(x, y, 1);
+		var blue = newImg.get(x, y, 2);
 
-	// 		var color = getColor(colorId, results.colors);
+		current = current.concat([red, green, blue]);
 
-	// 		for(var i=0; i<BLOCK_SIZE; i++){
-	// 			var j = i*3;
-	// 			var x = xys[i][0];
-	// 			var y = xys[i][1];
-	// 			newImg.set(x, y, 0, color[j+0]);
-	// 			newImg.set(x, y, 1, color[j+1]);
-	// 			newImg.set(x, y, 2, color[j+2]);
-	// 		}
+		if(xys.length == BLOCK_SIZE){
+			current.sort();
+			var colorId = net.run(current) / SHIFT_COLOR;
 
-	// 		xys = [];
-	// 		current = [];
-	// 	}
+			var color = getColor(colorId, results.colors);
 
-	// 	var next = fork.next();
-	// }
+			for(var i=0; i<BLOCK_SIZE; i++){
+				var j = i*3;
+				var x = xys[i][0];
+				var y = xys[i][1];
+				newImg.set(x, y, 0, color[j+0]);
+				newImg.set(x, y, 1, color[j+1]);
+				newImg.set(x, y, 2, color[j+2]);
+			}
 
-	// console.log("image built");
+			xys = [];
+			current = [];
+		}
 
-	// savePixels(newImg, "jpg").pipe(fs.createWriteStream("./imgs/new.jpg"));
+		var next = fork.next();
+	}
+
+	console.log("image built");
+
+	savePixels(newImg, "jpg").pipe(fs.createWriteStream("./imgs/new.jpg"));
 
 	for(var i=0; i<results.imgs.length; i++){
 		savePixels(results.imgs[i], "jpg").pipe(fs.createWriteStream("./imgs/"+i+".jpg"));		
