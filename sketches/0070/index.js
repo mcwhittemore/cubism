@@ -60,88 +60,88 @@ co(function*(){
 	var BLOCK_SIZE = 12;
 	var NUM_COLORS = 8;
 
-	var results = groupCrome(imgs, 8, BLOCK_SIZE, function(a){
-		var out = 0;
-		for(var i=0; i<a.length; i++){
-			out += a[i];
-		}
-		return out+"-";
+	var results = groupCrome(imgs, NUM_COLORS, BLOCK_SIZE, function(a){
+		var min = Math.min.apply(null, a);
+		var max = Math.max.apply(null, a);
+
+		return Math.floor(max/min)+"-";
 	}, 20, 20);
 	console.log("received results");
 	imgs = null;
 
-	var trainData = [];
+	// var trainData = [];
 
-	var SHIFT_COLOR = 1/NUM_COLORS;
-	var SHIFT_RGB = 1/256;
+	// var SHIFT_COLOR = 1/NUM_COLORS;
+	// var SHIFT_RGB = 1/256;
 
-	for(var i=0; i<NUM_COLORS; i++){
-		var members = results.members[i];
-		for(var j=0; j<members.length; j++){
-			var train = [];
+	// for(var i=0; i<NUM_COLORS; i++){
+	// 	var members = results.members[i];
+	// 	for(var j=0; j<members.length; j++){
+	// 		var train = [];
 
-			for(var k = 0; k<BLOCK_SIZE*3; k++){
-				train.push(members[j][k] * SHIFT_RGB);
-			}
+	// 		for(var k = 0; k<BLOCK_SIZE*3; k++){
+	// 			var ccc = Math.floor(members[j][k] / 32) * 32;
+	// 			train.push(ccc * SHIFT_RGB);
+	// 		}
 
-			trainData.push([train, [i*SHIFT_COLOR]]);
-		}
-	}
+	// 		trainData.push([train, [i*SHIFT_COLOR]]);
+	// 	}
+	// }
 
-	console.log(trainData[0][0].length, BLOCK_SIZE);
-	console.log(trainData[0][1].length, 1);
+	// console.log(trainData[0][0].length, BLOCK_SIZE);
+	// console.log(trainData[0][1].length, 1);
 
-	var net = new fann.standard(BLOCK_SIZE * 3, NUM_COLORS, 1);
+	// var net = new fann.standard(BLOCK_SIZE * 3, NUM_COLORS, 1);
 
-	console.log("training_algorithm", net.training_algorithm);
-	console.log("learning_rate", net.learning_rate);
-	console.log("learning_momentum", net.learning_momentum);
+	// console.log("training_algorithm", net.training_algorithm);
+	// console.log("learning_rate", net.learning_rate);
+	// console.log("learning_momentum", net.learning_momentum);
 
-	net.train(trainData, {error: 0.005, epochs_between_reports: 100, epochs: 1000000});
+	// net.train(trainData, {error: 0.005, epochs_between_reports: 100, epochs: 1000000});
 
-	console.log("loading new img");
-	var newImg = yield getBasePixels(path.join(__dirname, "../../instagrams", listOfImages[0]+".jpg"));
+	// console.log("loading new img");
+	// var newImg = yield getBasePixels(path.join(__dirname, "../../instagrams", listOfImages[0]+".jpg"));
 
-	var fork = pattern(640);
-	var next = fork.next();
-	var current = [];
-	var xys = [];
-	while(next.done === false){
-		var x = next.value[0];
-		var y = next.value[1];
+	// var fork = pattern(640);
+	// var next = fork.next();
+	// var current = [];
+	// var xys = [];
+	// while(next.done === false){
+	// 	var x = next.value[0];
+	// 	var y = next.value[1];
 
-		xys = xys.concat([[x,y]]);
+	// 	xys = xys.concat([[x,y]]);
 
-		var red = newImg.get(x, y, 0);
-		var green = newImg.get(x, y, 1);
-		var blue = newImg.get(x, y, 2);
+	// 	var red = newImg.get(x, y, 0);
+	// 	var green = newImg.get(x, y, 1);
+	// 	var blue = newImg.get(x, y, 2);
 
-		current = current.concat([red, green, blue]);
+	// 	current = current.concat([red, green, blue]);
 
-		if(xys.length == BLOCK_SIZE){
-			var colorId = net.run(current) / SHIFT_COLOR;
+	// 	if(xys.length == BLOCK_SIZE){
+	// 		var colorId = net.run(current) / SHIFT_COLOR;
 
-			var color = getColor(colorId, results.colors);
+	// 		var color = getColor(colorId, results.colors);
 
-			for(var i=0; i<BLOCK_SIZE; i++){
-				var j = i*3;
-				var x = xys[i][0];
-				var y = xys[i][1];
-				newImg.set(x, y, 0, color[j+0]);
-				newImg.set(x, y, 1, color[j+1]);
-				newImg.set(x, y, 2, color[j+2]);
-			}
+	// 		for(var i=0; i<BLOCK_SIZE; i++){
+	// 			var j = i*3;
+	// 			var x = xys[i][0];
+	// 			var y = xys[i][1];
+	// 			newImg.set(x, y, 0, color[j+0]);
+	// 			newImg.set(x, y, 1, color[j+1]);
+	// 			newImg.set(x, y, 2, color[j+2]);
+	// 		}
 
-			xys = [];
-			current = [];
-		}
+	// 		xys = [];
+	// 		current = [];
+	// 	}
 
-		var next = fork.next();
-	}
+	// 	var next = fork.next();
+	// }
 
-	console.log("image built");
+	// console.log("image built");
 
-	savePixels(newImg, "jpg").pipe(fs.createWriteStream("./imgs/new.jpg"));
+	// savePixels(newImg, "jpg").pipe(fs.createWriteStream("./imgs/new.jpg"));
 
 	for(var i=0; i<results.imgs.length; i++){
 		savePixels(results.imgs[i], "jpg").pipe(fs.createWriteStream("./imgs/"+i+".jpg"));		
