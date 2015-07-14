@@ -22,13 +22,6 @@ var getBasePixels = function*(imgPath){
 	});
 }
 
-var mash = function(a){
-	var min = Math.min.apply(null, a);
-	var max = Math.max.apply(null, a);
-
-	return Math.floor(max/NUM_COLORS);
-}
-
 var getColor = function(id, colors){
 	var minId = Math.floor(id);
 	var maxId = Math.ceil(id);
@@ -67,6 +60,13 @@ co(function*(){
 	var BLOCK_SIZE = 6;
 	var NUM_COLORS = 10;
 
+	var mash = function(a){
+		var min = Math.min.apply(null, a);
+		var max = Math.max.apply(null, a);
+
+		return Math.floor(max/NUM_COLORS);
+	}
+
 	var results = groupCrome(imgs, NUM_COLORS, BLOCK_SIZE, function(a){
 		return mash(a)+"-"
 	}, 20, 20);
@@ -104,7 +104,7 @@ co(function*(){
 	console.log(trainData[0][0].length, BLOCK_SIZE);
 	console.log(trainData[0][1].length, 1);
 
-	var net = new fann.standard(1, BLOCK_SIZE, BLOCK_SIZE, 1);
+	var net = new fann.standard(1, NUM_COLORS, NUM_COLORS, 1);
 
 	console.log("training_algorithm", net.training_algorithm);
 	console.log("learning_rate", net.learning_rate);
