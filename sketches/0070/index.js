@@ -57,14 +57,14 @@ co(function*(){
 		imgs.push(img);
 	}
 
-	var BLOCK_SIZE = 12;
-	var NUM_COLORS = 8;
+	var BLOCK_SIZE = 6;
+	var NUM_COLORS = 10;
 
 	var results = groupCrome(imgs, NUM_COLORS, BLOCK_SIZE, function(a){
 		var min = Math.min.apply(null, a);
 		var max = Math.max.apply(null, a);
 
-		return Math.floor(max/min)+"-";
+		return Math.floor(max/NUM_COLORS)+"-";
 	}, 20, 20);
 	console.log("received results");
 	imgs = null;
