@@ -49,7 +49,7 @@ var getRoute = function(img, x, y, route){
 		var y2 = y + c[1];
 		if(x2>-1 && x2 < 640 && y2 > -1 && y2 < 640){
 			var key = x2+"-"+y2;
-			var d = diff(img, x, y, x1, y1);
+			var d = diff(img, x, y, x2, y2);
 			diffs.push({
 				x: x2,
 				y: y2,
