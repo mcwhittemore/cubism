@@ -109,15 +109,39 @@ var getRoute = function(img, x, y){
 co(function*(){
 
 	var routes = [];
+	var imgs = [];
 
 	for(var i=0; i<listOfImages.length; i++){
 		var imgId = listOfImages[i];
 		var img = yield getBasePixels(getPath(imgId));
 		var route = getRoute(img, 320, 320);
 		routes.push(route);
+		imgs.push(img);
 	}
 
-	console.log(routes);
+	for(var i=0; i<routes[0].length; i++){
+		var red = 0;
+		var green = 0;
+		var blue = 0;
+		for(var j=0; j<routes.length; j++){
+			var x = routes[j][i][0];
+			var y = routes[j][i][1];
+
+			red += imgs[j].get(x, y, 0);
+			green += imgs[j].get(x, y, 1);
+			blue += imgs[j].get(x, y, 2);
+		}
+
+		red = Math.floor(red / routes.length);
+		green = Math.floor(green / routes.length);
+		blue = Math.floor(blue / routes.length);
+
+		imgs[0].set(routes[0][i][0], routes[0][i][1], 0, red);
+		imgs[0].set(routes[0][i][0], routes[0][i][1], 1, green);
+		imgs[0].set(routes[0][i][0], routes[0][i][1], 2, blue);
+	}
+
+	savePixels(imgs[0], "jpg").pipe(fs.createWriteStream("./test.jpg"));
 
 }).then(sketchSaver).catch(function(err){
 	console.log(err.stack);
