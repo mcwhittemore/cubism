@@ -161,7 +161,7 @@ co(function*(){
 		}
 	}
 
-	var lastColor = [[0, 256, 0]];
+	var lastColor = [[0, 0, 0]];
 	var routeTeam = null;
 	var routeCount = null
 
