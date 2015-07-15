@@ -60,7 +60,7 @@ var getRoute = function(img, x, y, route){
 	}
 
 	diffs.sort(function(a, b){
-		return a.val - b.val;
+		return b.val - a.val;
 	});
 
 	var from = route.length;
