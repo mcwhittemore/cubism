@@ -106,8 +106,6 @@ co(function*(){
 			return mash(a)+"-"
 		}, 20, 20);
 
-		savePixels(result.imgs[0], "jpg").pipe(fs.createWriteStream("./imgs/"+imgId+".jpg"));
-
 		records.push(result.colors);
 	}
 
@@ -151,7 +149,7 @@ co(function*(){
 		}
 	}
 
-	savePixels(newImg, "jpg").pipe(fs.createWriteStream("./others/before.jpg"));
+	savePixels(newImg, "jpg").pipe(fs.createWriteStream("./imgs/before.jpg"));
 
 	var fork = pattern(640);
 	var next = fork.next();
@@ -192,7 +190,7 @@ co(function*(){
 
 	console.log("image built", imgId);
 
-	savePixels(newImg, "jpg").pipe(fs.createWriteStream("./others/after.jpg"));
+	savePixels(newImg, "jpg").pipe(fs.createWriteStream("./imgs/after.jpg"));
 
 }).then(sketchSaver).catch(function(err){
 	console.log(err.stack);
