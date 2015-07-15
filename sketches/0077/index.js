@@ -60,7 +60,6 @@ var getRoute = function(img, x, y){
 			var key = x2+"-"+y2;
 			if(x2>-1 && x2 < 640 && y2 > -1 && y2 < 640 && pending.indexOf(key) == -1){
 				pending.push(key);
-				console.log("add ", key);
 				var d = differ(img, x, y, x2, y2);
 				diffs.push({
 					x: x2,
@@ -78,13 +77,10 @@ var getRoute = function(img, x, y){
 
 			allDiffs.push(diffs);
 		}
-		else {
-			console.log("NO NEW DIFFS");
-		}
 
 		for(var i=allDiffs.length-1; i>-1; i--){
 			var diff = allDiffs[i];
-			if(diff.length === 0){
+			if(diff === undefined || diff.length === 0){
 				allDiffs = allDiffs.splice(i);
 			}
 			else{
