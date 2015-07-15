@@ -119,6 +119,13 @@ co(function*(){
 		imgs.push(img);
 	}
 
+	var len = routes[0].length;
+	for(var i=1; i<routes.length; i++){
+		if(len != routes[i].length){
+			throw new Error("Route Lens");
+		}
+	}
+
 	for(var i=0; i<routes[0].length; i++){
 		var red = 0;
 		var green = 0;
