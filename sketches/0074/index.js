@@ -83,10 +83,10 @@ var getPath = function(imgId){
 co(function*(){
 
 	var BLOCK_SIZE = 6;
-	var NUM_COLORS = 6;
+	var NUM_COLORS = 2;
 
 	var mash = function(a){
-		return Math.max.apply(null, a);
+		return Math.floor(Math.max.apply(null, a) / 16) * 16;
 	}
 
 	var numImgs = listOfImages.length;
@@ -174,7 +174,7 @@ co(function*(){
 
 		console.log("image built", imgId);
 
-		savePixels(newImg, "jpg").pipe(fs.createWriteStream("./imgs/"+imgId+".jpg"));
+		savePixels(newImg, "jpg").pipe(fs.createWriteStream("./others/"+imgId+".jpg"));
 	}
 
 }).then(sketchSaver).catch(function(err){
