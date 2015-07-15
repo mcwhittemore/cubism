@@ -50,7 +50,7 @@ var score = function(a, b){
 		var bi = b[i];
 		var part = Math.abs(ai - bi) / 256;
 		if(isNaN(part)){
-			console.log("PART", part, ai, bi, Math.abs(ai -bi), a);
+			console.log("PART", part, ai, bi, Math.abs(ai -bi), b);
 		}
 		total += part;
 	}
