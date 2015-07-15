@@ -186,7 +186,7 @@ co(function*(){
 			return b.val - a.val;
 		});
 
-		if(difs[0].val < 16){
+		if(difs[0].val < 64){
 			color[difs[0].color] = lastColor[difs[0].color];
 			color[difs[1].color] = lastColor[difs[1].color];
 		}
