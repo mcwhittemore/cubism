@@ -82,13 +82,7 @@ co(function*(){
 	var BACK_TRACK = 2;
 
 	var mash = function(a){
-		var out = 0;
-
-		for(var i=0; i<a.length; i++){
-			out += a[i]
-		}
-
-		return out;
+		return Math.max.apply(null, a);
 	}
 
 	var numImgs = listOfImages.length;
@@ -103,7 +97,7 @@ co(function*(){
 		
 		imgs.push(yield getBasePixels(imgPath));
 
-		var result = groupCrome([img], NUM_COLORS, BLOCK_SIZE, function(a){
+		var result = groupCrome(imgs, NUM_COLORS, BLOCK_SIZE, function(a){
 			return mash(a)+"-"
 		}, 20, 20);
 
@@ -183,7 +177,7 @@ co(function*(){
 			var next = fork.next();
 		}
 
-		console.log("image built");
+		console.log("image built", j);
 
 		savePixels(newImg, "jpg").pipe(fs.createWriteStream("./imgs/new-"+j+".jpg"));
 	}
