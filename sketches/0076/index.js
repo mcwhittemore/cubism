@@ -132,7 +132,7 @@ co(function*(){
 		return nextColor;
 	}
 
-	var imgRed = yield getBasePixels(getPath(others[0]));
+	var imgRed = yield getBasePixels(getPath(others[2]));
 	var imgGreen = yield getBasePixels(getPath(others[1]));
 	var imgBlue = yield getBasePixels(getPath(others[2]));
 	var newImg = yield getBasePixels(getPath(others[0]));
