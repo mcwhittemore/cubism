@@ -187,8 +187,7 @@ co(function*(){
 		});
 
 		if(difs[0].val < 16){
-			color[difs[1].color] = lastColor[difs[1].color];
-			color[difs[2].color] = lastColor[difs[2].color];
+			color = lastColor;
 		}
 
 		img.set(x, y, 0, color.red);
