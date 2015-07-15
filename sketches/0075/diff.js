@@ -50,9 +50,9 @@ co(function*(){
 				var greenDif = r.green - l.green;
 				var blueDif = r.blue - l.blue;
 
-				var red = 128 + Math.floor((redDif)/2);
-				var green = 128 + Math.floor((greenDif)/2);
-				var blue = 128 + Math.floor((blueDif)/2);
+				var red = Math.abs(redDif);
+				var green = Math.abs(greenDif);
+				var blue = Math.abs(blueDif);
 
 				var tDiff = redDif/3 + greenDif/3 + blueDif/3;
 				var tRed = 0;
