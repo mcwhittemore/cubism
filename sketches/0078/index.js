@@ -192,7 +192,7 @@ co(function*(){
 
 		}
 
-		lastColor.push(nc);
+		lastColor.push([].concat(nc));
 
 		if(lastColor.length > BLOCK_SIZE){
 			lastColor = lastColor.splice(1);
