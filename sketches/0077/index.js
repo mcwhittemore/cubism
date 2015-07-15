@@ -42,12 +42,13 @@ var changes = [
 ]
 
 var max = 640 * 640;
-var unit = Math.floor(max / 100);
+var unit = Math.floor(max / 10);
 
 var getRoute = function(img, x, y){
 	var allDiffs = [];
 	var route = [];
 	var found = {};
+	var foundCount = 0;
 	var last = 0;
 	var count = 0;
 
@@ -60,6 +61,7 @@ var getRoute = function(img, x, y){
 			var key = x2+"-"+y2;
 			if(x2>-1 && x2 < 640 && y2 > -1 && y2 < 640 && found[key] === undefined){
 				found[key] = 1;
+				foundCount++;
 				var d = differ(img, x, y, x2, y2);
 				diffs.push({
 					x: x2,
@@ -89,7 +91,7 @@ var getRoute = function(img, x, y){
 		count++;
 
 		if(count >= last+unit){
-			console.log( (1/max) * count, "%", route.length, allDiffs.length);
+			console.log( (1/max) * count, "%", route.length, foundCount, allDiffs.length);
 			last = count;
 		}
 
