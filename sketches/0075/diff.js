@@ -54,25 +54,15 @@ co(function*(){
 				var green = Math.abs(greenDif);
 				var blue = Math.abs(blueDif);
 
-				var tDiff = redDif/3 + greenDif/3 + blueDif/3;
-				var tRed = 0;
-				var tGreen = 0;
-				var tBlue = 0;
-
-				if(tDiff<0){
-					tRed = Math.floor(Math.abs(tDiff));
-				}
-				else{
-					tGreen = Math.floor(Math.abs(tDiff));
-				}
+				var tDiff = red/3 + green/3 + blue/3;
 
 				left.set(x, y, 0, red);
 				left.set(x, y, 1, green);
 				left.set(x, y, 2, blue);
 
-				right.set(x, y, 0, tRed);
-				right.set(x, y, 1, tGreen);
-				right.set(x, y, 2, tBlue);
+				right.set(x, y, 0, 0);
+				right.set(x, y, 1, tDiff);
+				right.set(x, y, 2, 0);
 
 
 			}
