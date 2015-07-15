@@ -90,7 +90,7 @@ co(function*(){
 			return mash(a)+"-"
 		}, 20, 20);
 
-		savePixels(result.imgs[i], "jpg").pipe(fs.createWriteStream("./imgs/"+imgId+".jpg"));
+		savePixels(result.imgs[0], "jpg").pipe(fs.createWriteStream("./imgs/"+imgId+".jpg"));
 
 		records.push(result.colors);
 	}
