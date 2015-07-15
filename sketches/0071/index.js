@@ -156,17 +156,14 @@ co(function*(){
 
 			var color = getColor(current);
 
-			for(var i=0; i<BLOCK_SIZE; i++){
-				var j = i*3;
-				var x = xys[i][0];
-				var y = xys[i][1];
-				newImg.set(x, y, 0, color[j+0]);
-				newImg.set(x, y, 1, color[j+1]);
-				newImg.set(x, y, 2, color[j+2]);
-			}
+			var x = xys[0][0];
+			var y = xys[0][1];
+			newImg.set(x, y, 0, color[0]);
+			newImg.set(x, y, 1, color[1]);
+			newImg.set(x, y, 2, color[2]);
 
-			xys = xys.splice(BACK_TRACK);
-			current = color.splice(BACK_TRACK*3);
+			xys = xys.splice(1);
+			current = color.splice(3);
 
 		}
 
