@@ -47,19 +47,19 @@ var unit = Math.floor(max / 100);
 var getRoute = function(img, x, y){
 	var allDiffs = [];
 	var route = [];
-	var pending = [];
+	var found = {};
 	var last = 0;
 	var count = 0;
 
-	do{
+	do {
 		var diffs = [];
 		for(var i=0; i<changes.length; i++){
 			var c = changes[i];
 			var x2 = x + c[0];
 			var y2 = y + c[1];
 			var key = x2+"-"+y2;
-			if(x2>-1 && x2 < 640 && y2 > -1 && y2 < 640 && pending.indexOf(key) == -1){
-				pending.push(key);
+			if(x2>-1 && x2 < 640 && y2 > -1 && y2 < 640 && found[key] === undefined){
+				found[key] = 1;
 				var d = differ(img, x, y, x2, y2);
 				diffs.push({
 					x: x2,
@@ -72,36 +72,28 @@ var getRoute = function(img, x, y){
 
 		if(diffs.length > 0){
 			diffs.sort(function(a, b){
-				return a.val - b.val;
+				return b.val - a.val;
 			});
 
-			allDiffs.push(diffs);
+			for(var i=0; i<diffs.length; i++){
+				allDiffs.push(diffs[i]);
+			}
 		}
 
-		for(var i=allDiffs.length-1; i>-1; i--){
-			var diff = allDiffs[i];
-			if(diff === undefined || diff.length === 0){
-				allDiffs = allDiffs.splice(i);
-			}
-			else{
-				route.push(diff[0].key.split("-").map(function(a){
-					return parseInt(a);
-				}));
-				x = diff[0].x;
-				y = diff[0].y;
-				allDiffs[i] = diff.splice(1);
-				break;
-			}
-		}
+		var ddd = allDiffs.pop();
+		x = ddd.x;
+		y = ddd.y;
+		route.push(x);
+		route.push(y);
 
 		count++;
 
 		if(count >= last+unit){
-			console.log( (1/max) * count, "%", pending.length);
+			console.log( (1/max) * count, "%", route.length, pending.length, allDiffs.length);
 			last = count;
 		}
 
-	} while(allDiffs.length > 0);
+	} while (allDiffs.length > 0);
 
 	return route;
 }
@@ -127,13 +119,13 @@ co(function*(){
 		}
 	}
 
-	for(var i=0; i<routes[0].length; i++){
+	for(var i=0; i<routes[0].length; i+=2){
 		var red = 0;
 		var green = 0;
 		var blue = 0;
 		for(var j=0; j<routes.length; j++){
-			var x = routes[j][i][0];
-			var y = routes[j][i][1];
+			var x = routes[j][i]
+			var y = routes[j][i+1];
 
 			red += imgs[j].get(x, y, 0);
 			green += imgs[j].get(x, y, 1);
@@ -144,9 +136,9 @@ co(function*(){
 		green = Math.floor(green / routes.length);
 		blue = Math.floor(blue / routes.length);
 
-		imgs[0].set(routes[0][i][0], routes[0][i][1], 0, red);
-		imgs[0].set(routes[0][i][0], routes[0][i][1], 1, green);
-		imgs[0].set(routes[0][i][0], routes[0][i][1], 2, blue);
+		imgs[0].set(routes[0][i], routes[0][i+1], 0, red);
+		imgs[0].set(routes[0][i], routes[0][i+1], 1, green);
+		imgs[0].set(routes[0][i], routes[0][i+1], 2, blue);
 	}
 
 	savePixels(imgs[0], "jpg").pipe(fs.createWriteStream("./test.jpg"));
