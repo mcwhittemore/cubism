@@ -149,7 +149,10 @@ co(function*(){
 			}
 
 			xys = xys.splice(1);
+			console.log("color", color.length);
 			current = color.splice(3);
+
+			console.log("current", current.length);
 		}
 
 		var next = fork.next();
