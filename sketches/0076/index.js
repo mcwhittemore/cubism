@@ -27,27 +27,6 @@ var getBasePixels = function*(imgPath){
 	});
 }
 
-var mergeColors = function(id, colors){
-	var minId = Math.floor(id);
-	var maxId = Math.ceil(id);
-
-	var maxPart = id - minId;
-	var minPart = 1 - maxPart;
-
-	var minColor = colors[minId];
-	var maxColor = colors[maxId];
-
-	var color = [];
-	for(var i=0; i<minColor.length; i++){
-		var min = minColor[i] * minPart;
-		var max = maxColor[i] * maxPart;
-
-		color[i] = Math.floor(min + max); 
-	}
-
-	return color;
-}
-
 var score = function(a, b){
 	var total = 0;
 	for(var i=0; i<a.length; i++){
@@ -93,12 +72,12 @@ co(function*(){
 		return Math.max.apply(null, a);
 	}
 
-	var numImgs = listOfImages.length;
+	var numImgs = others.length;
 	
 	var records = [];
 
 	for(var b=0; b<numImgs; b++){
-		var imgId = listOfImages[b];
+		var imgId = others[b];
 		var imgPath =  getPath(imgId);
 		console.log("parse "+imgPath+" "+b+" of "+numImgs);
 		var img = yield getBasePixels(imgPath);
@@ -143,7 +122,7 @@ co(function*(){
 		
 		var d = a + b + c;
 
-		d = Math.floor(d/3);
+		d = Math.floor(d/3.5);
 
 		return d;
 	}
