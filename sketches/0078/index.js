@@ -198,9 +198,9 @@ co(function*(){
 			lastColor = lastColor.splice(1);
 		}
 
-		imgs[0].set(routes[0][i], routes[0][i+1], 0, imgs[routeTeam].get(x, y, 0));
-		imgs[0].set(routes[0][i], routes[0][i+1], 1, imgs[routeTeam].get(x, y, 1));
-		imgs[0].set(routes[0][i], routes[0][i+1], 2, imgs[routeTeam].get(x, y, 2));
+		imgs[0].set(routes[0][i], routes[0][i+1], 0, nc[0]);
+		imgs[0].set(routes[0][i], routes[0][i+1], 1, nc[1]);
+		imgs[0].set(routes[0][i], routes[0][i+1], 2, nc[2]);
 	}
 
 	savePixels(imgs[0], "jpg").pipe(fs.createWriteStream("./start.jpg"));
