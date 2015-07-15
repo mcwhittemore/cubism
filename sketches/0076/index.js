@@ -65,7 +65,7 @@ var getPath = function(imgId){
 
 co(function*(){
 
-	var BLOCK_SIZE = 18;
+	var BLOCK_SIZE = 6;
 	var NUM_COLORS = 32;
 
 	var mash = function(a){
