@@ -102,7 +102,7 @@ co(function*(){
 
 		for(var i=1; i<records.length; i++){
 			scores.push(scoreGroup(block, records[i]));
-			var pm = min(scores[i]);
+			var pm = getMin(scores[i]);
 			if(pm < min){
 				min = pm;
 				minIndex = i;
