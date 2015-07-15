@@ -143,7 +143,9 @@ co(function*(){
 		
 		var d = a + b + c;
 
-		return Math.floor(d/(256*3));
+		d = Math.floor(d/3);
+
+		return d;
 	}
 
 	for(var x = 0; x<640; x++){
