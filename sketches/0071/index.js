@@ -113,7 +113,11 @@ co(function*(){
 
 		var posOfMin = minScore.indexOf(min);
 
-		return records[minIndex][posOfMin];
+		var nextColor = records[minIndex][posOfMin];
+
+		console.log(min, posOfMin, minScore, nextColor);
+
+		return nextColor;
 	}
 
 	console.log("loading new img");
@@ -139,8 +143,6 @@ co(function*(){
 
 			var color = getColor(current);
 
-			console.log("new color", color.length, color);
-
 			for(var i=0; i<BLOCK_SIZE; i++){
 				var j = i*3;
 				var x = xys[i][0];
@@ -151,10 +153,8 @@ co(function*(){
 			}
 
 			xys = xys.splice(1);
-			console.log("color", color.length);
 			current = color.splice(3);
 
-			console.log("current", current.length);
 		}
 
 		var next = fork.next();
