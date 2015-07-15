@@ -6,6 +6,7 @@ var path = require("path");
 var getPixels = require("get-pixels");
 var savePixels = require("save-pixels");
 var groupCrome = require("../../lib/filters/group-crome");
+var pattern = require("../../patterns/fork");
 
 var getBasePixels = function*(imgPath){
 	return new Promise(function(accept, reject){
