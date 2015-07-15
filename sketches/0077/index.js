@@ -41,18 +41,29 @@ var changes = [
 	[1, 1]
 ]
 
+var max = 640 * 640;
+var unit = Math.floor(max / 100);
+
 var getRoute = function(img, x, y){
 	var allDiffs = [];
 	var route = [];
+	var pending = [];
+	var last = 0;
+	var count = 0;
 
 	do{
 		var diffs = [];
 		for(var i=0; i<changes.length; i++){
+			var iii = pending.indexOf(x+"-"+y);
+			if(iii>-1){
+				pending = pending.splice(iii, 1);
+			}
 			var c = changes[i];
 			var x2 = x + c[0];
 			var y2 = y + c[1];
-			if(x2>-1 && x2 < 640 && y2 > -1 && y2 < 640 && route.indexOf(diffs[i].key) == -1){
-				var key = x2+"-"+y2;
+			var key = x2+"-"+y2;
+			if(x2>-1 && x2 < 640 && y2 > -1 && y2 < 640 && pending.indexOf(key) == -1){
+				pending.push(key);
 				var d = diff(img, x, y, x2, y2);
 				diffs.push({
 					x: x2,
@@ -63,21 +74,35 @@ var getRoute = function(img, x, y){
 			}
 		}
 
-		diffs.sort(function(a, b){
-			return a.val - b.val;
-		});
+		if(diffs.length > 0){
+			diffs.sort(function(a, b){
+				return a.val - b.val;
+			});
 
-		allDiffs = diffs.concat(allDiffs);
+			allDiffs.push(diffs);
+		}
 
-		for(var i=0; i<allDiffs.length; i++){
-			if(route.indexOf(allDiffs[i].key) == -1){
-				route.push(allDiffs[i].key);
-				x = allDiffs[i].x;
-				y = allDiffs[i].y;
+		for(var i=allDiffs.length-1; i>-1; i--){
+			var diff = allDiffs[i];
+			if(diff.length === 0){
 				allDiffs = allDiffs.splice(i);
+			}
+			else{
+				route.push(diff[0].key);
+				x = diff[0].x;
+				y = diff[0].y;
+				allDiffs[i] = diff.splice(0);
 				break;
 			}
 		}
+
+		count++;
+
+		if(count >= last+unit){
+			console.log((100/max)*count, "%", allDiffs.length);
+			last = count;
+		}
+
 	} while(allDiffs.length > 0);
 
 	return route;
