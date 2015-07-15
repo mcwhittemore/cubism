@@ -165,8 +165,7 @@ co(function*(){
 	var routeCount = null
 
 	for(var i=0; i<routes[0].length; i+=2){
-		var min = 10000;
-		var v = null;
+		var min = null;
 		var nc = null;
 
 		for(var j=0; j<routes.length; j++){
@@ -179,29 +178,25 @@ co(function*(){
 
 			var ccc = [red, green, blue];
 
-			var mmm = score(lastColor, ccc);
+			var mmm = 0;
 
-			if(routeCount > 0 && routeTeam == j){
-				mmm = mmm * 2;
+			for(var p=0; p<lastColor.length; p++){
+				var mp = score(lastColor[i], ccc) * (p+1);
+				mmm += mp;
 			}
 
-			if(mmm < min || v === null){
+			if(mmm < min || min === null){
 				min = mmm;
-				v = j;
 				nc = ccc;
 			}
 
 		}
 
-		if(v !== routeTeam){
-			routeCount = BLOCK_SIZE;
-		}
-		else{
-			routeCount--;
-		}
+		lastColor.push(nc);
 
-		routeTeam = v;
-		lastColor = nc;
+		if(lastColor.length > BLOCK_SIZE){
+			lastColor = lastColor.splice(1);
+		}
 
 		imgs[0].set(routes[0][i], routes[0][i+1], 0, imgs[routeTeam].get(x, y, 0));
 		imgs[0].set(routes[0][i], routes[0][i+1], 1, imgs[routeTeam].get(x, y, 1));
