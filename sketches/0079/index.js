@@ -194,6 +194,8 @@ co(function*(){
 		img.set(x, y, 0, color.red);
 		img.set(x, y, 1, color.green);
 		img.set(x, y, 2, color.blue);
+
+		lastColor = color;
 	}
 
 	savePixels(imgs[0], "jpg").pipe(fs.createWriteStream("./end.jpg"));
