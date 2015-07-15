@@ -139,42 +139,13 @@ co(function*(){
 
 	for(var x = 0; x<640; x++){
 		for(var y=0; y<640; y++){
-			var info = {};
-			var reds = [imgRed.get(x, y, 0), imgGreen.get(x, y, 0), imgBlue.get(x, y, 0)].sort();
-			var greens = [imgRed.get(x, y, 1), imgGreen.get(x, y, 1), imgBlue.get(x, y, 1)].sort();
-			var blues = [imgRed.get(x, y, 2), imgGreen.get(x, y, 2), imgBlue.get(x, y, 2)].sort();
+			var red = imgRed.get(x, y, 0);
+			var green = imgGreen.get(x, y, 1);
+			var blue = imgBlue.get(x, y, 2);
 
-			info.red = reds;
-			info.green = greens;
-			info.blue = blues;
-
-			var maxs = [
-				{
-					color: "red",
-					val: reds[0]
-				},
-				{
-					color: "green",
-					val: greens[0]
-				},
-				{
-					color: "blue",
-					val: blues[0]
-				}
-			]
-
-			maxs.sort(function(a, b){
-				return a.val - b.val
-			});
-
-			var colors = {};
-			for(var i=0; i<maxs.length; i++){
-				colors[maxs[i].color] = info[maxs[i].color][i];
-			}
-
-			newImg.set(x, y, 0, colors.red);
-			newImg.set(x, y, 1, colors.green);
-			newImg.set(x, y, 2, colors.blue);
+			newImg.set(x, y, 0, red);
+			newImg.set(x, y, 1, green);
+			newImg.set(x, y, 2, blue);
 		}
 	}
 
