@@ -137,11 +137,15 @@ co(function*(){
 	var imgBlue = yield getBasePixels(getPath(others[1]));
 	var newImg = yield getBasePixels(getPath(others[0]));
 
+	var avg = function(a, b, c){
+		return Math.floor(a/3 + b/3 + c/3);
+	}
+
 	for(var x = 0; x<640; x++){
 		for(var y=0; y<640; y++){
-			var red = imgRed.get(x, y, 0);
-			var green = imgGreen.get(x, y, 1);
-			var blue = imgBlue.get(x, y, 2);
+			var red = avg(imgRed.get(x, y, 0), imgRed.get(x, y, 0), imgRed.get(x, y, 0));
+			var green = avg(imgRed.get(x, y, 1), imgRed.get(x, y, 1), imgRed.get(x, y, 1));
+			var blue = avg(imgRed.get(x, y, 2), imgRed.get(x, y, 2), imgRed.get(x, y, 2));
 
 			newImg.set(x, y, 0, red);
 			newImg.set(x, y, 1, green);
