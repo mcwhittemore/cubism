@@ -228,7 +228,6 @@ co(function*(){
 		return nextColor;
 	}
 
-	var imgId = others[k];
 	console.log("loading new img");
 	var newImg = imgs[0];
 
