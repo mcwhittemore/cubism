@@ -107,7 +107,9 @@ co(function*(){
 
 	for(var i=0; i<listOfImages.length; i++){
 		var imgId = listOfImages[i];
-		var img = yield getBasePixels(getPath(imgId));
+		var imgPath = getPath(imgId);
+		console.log("loading", imgPath, "...");
+		var img = yield getBasePixels(imgPath);
 		var route = getRoute(img, 320, 320);
 		routes.push(route);
 		imgs.push(img);
