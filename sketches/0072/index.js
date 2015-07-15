@@ -138,9 +138,9 @@ co(function*(){
 	console.log("loading new img");
 	var newImg = yield getBasePixels(path.join(__dirname, "../../instagrams", listOfImages[0]+".jpg"));
 
+	var fork = pattern(640);
 	for(var j = 0; j < 10; j++){
 
-		var fork = pattern(640);
 		var next = fork.next();
 		var current = [];
 		var xys = [];
@@ -181,6 +181,11 @@ co(function*(){
 		console.log("image built", j);
 
 		savePixels(newImg, "jpg").pipe(fs.createWriteStream("./imgs/new-"+j+".jpg"));
+
+		fork = pattern(640);
+		for(var p=0; p<=j; p++){
+			fork.next();
+		}
 	}
 
 }).then(sketchSaver).catch(function(err){
