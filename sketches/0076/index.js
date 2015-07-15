@@ -139,9 +139,9 @@ co(function*(){
 
 	for(var x = 0; x<640; x++){
 		for(var y=0; y<640; y++){
-			var red = Math.min(imgRed.get(x, y, 0), imgGreen.get(x, y, 0), imgBlue.get(x, y, 0));
-			var green = Math.min(imgRed.get(x, y, 1), imgGreen.get(x, y, 1), imgBlue.get(x, y, 1));
-			var blue = Math.min(imgRed.get(x, y, 2), imgGreen.get(x, y, 2), imgBlue.get(x, y, 2));
+			var red = [imgRed.get(x, y, 0), imgGreen.get(x, y, 0), imgBlue.get(x, y, 0)].sort()[1];
+			var green = [imgRed.get(x, y, 1), imgGreen.get(x, y, 1), imgBlue.get(x, y, 1)].sort()[1];
+			var blue = [imgRed.get(x, y, 2), imgGreen.get(x, y, 2), imgBlue.get(x, y, 2)].sort()[1];
 
 			newImg.set(x, y, 0, red);
 			newImg.set(x, y, 0, green);
