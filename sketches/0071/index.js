@@ -48,7 +48,11 @@ var score = function(a, b){
 	for(var i=0; i<a.length; i++){
 		var ai = a[i];
 		var bi = b[i];
-		total += Math.abs(ai - bi) / 256;
+		var part = Math.abs(ai - bi) / 256;
+		if(isNaN(part)){
+			console.log("PART", part, ai, bi, Math.abs(ai -bi));
+		}
+		total += part;
 	}
 	var s = total / a.length;
 
