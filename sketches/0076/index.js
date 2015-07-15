@@ -133,8 +133,8 @@ co(function*(){
 	}
 
 	var imgRed = yield getBasePixels(getPath(others[1]));
-	var imgGreen = yield getBasePixels(getPath(others[0]));
-	var imgBlue = yield getBasePixels(getPath(others[2]));
+	var imgGreen = yield getBasePixels(getPath(others[2]));
+	var imgBlue = yield getBasePixels(getPath(others[0]));
 	var newImg = yield getBasePixels(getPath(others[0]));
 
 	for(var x = 0; x<640; x++){
