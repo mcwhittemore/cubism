@@ -61,7 +61,7 @@ var scoreGroup = function(a, group){
 	return records;
 }
 
-var min = function(a){
+var getMin = function(a){
 	return Math.min.apply(null, a);
 }
 
@@ -97,7 +97,7 @@ co(function*(){
 
 	var getColor = function(block){
 		var scores = [scoreGroup(block, records[0])];
-		var min = min(scores[0]);
+		var min = getMin(scores[0]);
 		var minIndex = 0;
 
 		for(var i=1; i<records.length; i++){
