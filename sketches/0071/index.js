@@ -78,18 +78,17 @@ var getMin = function(a){
 co(function*(){
 
 	var BLOCK_SIZE = 320;
-	var NUM_COLORS = 16;
+	var NUM_COLORS = 300;
 	var BACK_TRACK = 160;
 
 	var mash = function(a){
 		var out = 0;
 
 		for(var i=0; i<a.length; i++){
-			var v = Math.floor(a[i]/16) * 16;
-			out += v;
+			out += a[i]
 		}
 
-		return Math.floor( (out/256/a.length) * 256);
+		return out;
 	}
 
 	var numImgs = listOfImages.length;
