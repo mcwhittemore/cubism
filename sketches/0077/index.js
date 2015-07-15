@@ -84,7 +84,9 @@ var getRoute = function(img, x, y){
 				allDiffs = allDiffs.splice(i);
 			}
 			else{
-				route.push(diff[0].key.split("-"));
+				route.push(diff[0].key.split("-").map(function(a){
+					return parseInt(a);
+				}));
 				x = diff[0].x;
 				y = diff[0].y;
 				allDiffs[i] = diff.splice(1);
