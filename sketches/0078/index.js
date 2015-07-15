@@ -137,7 +137,7 @@ var getRoute = function(img, x, y){
 co(function*(){
 
 	var BLOCK_SIZE = 12;
-	var NUM_COLORS = 48;
+	var NUM_COLORS = 256;
 
 	var routes = [];
 	var imgs = [];
