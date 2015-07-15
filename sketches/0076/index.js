@@ -87,13 +87,10 @@ var getPath = function(imgId){
 co(function*(){
 
 	var BLOCK_SIZE = 6;
-	var NUM_COLORS = 256;
+	var NUM_COLORS = 16;
 
 	var mash = function(a){
-		a.sort(function(a, b){
-			return a-b;
-		});
-		return a[0]+a[1]+a[3];
+		return Math.max.apply(null, a);
 	}
 
 	var numImgs = listOfImages.length;
