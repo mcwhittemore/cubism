@@ -39,7 +39,7 @@ co(function*(){
 		var imgId = others[k];
 		console.log("loading new img");
 		var left = yield getBasePixels(getPath(imgId));
-		var right = yield getBasePixels(getPath("../sketches/0075/others/"+k+".jpg"));
+		var right = yield getBasePixels(getPath("../sketches/0075/others/"+k));
 
 		for(var x = 0; x<640; x++){
 			for(var y = 0; y<640; y++){
