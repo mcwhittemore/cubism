@@ -78,7 +78,7 @@ var getMin = function(a){
 co(function*(){
 
 	var BLOCK_SIZE = 32;
-	var NUM_COLORS = 32;
+	var NUM_COLORS = 16;
 	var BACK_TRACK = 16;
 
 	var mash = function(a){
