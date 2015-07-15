@@ -36,6 +36,7 @@ var score = function(a, b){
 
 	if(isNaN(s)){
 		console.log("SCORE", total, a.length, s);
+		throw new Error("wat");
 	};
 
 	return s;
@@ -181,6 +182,7 @@ co(function*(){
 			var mmm = 0;
 
 			for(var p=0; p<lastColor.length; p++){
+				console.log(lastColor[p], p, lastColor.length);
 				var mp = score(lastColor[p], ccc) * (p+1);
 				mmm += mp;
 			}
