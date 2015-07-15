@@ -53,7 +53,7 @@ var score = function(a, b){
 	var s = total / a.length;
 
 	if(isNaN(s)){
-		console.log(total, a.length, s);
+		console.log("SCORE", total, a.length, s);
 	};
 
 	return s;
@@ -120,8 +120,6 @@ co(function*(){
 		var posOfMin = minScore.indexOf(min);
 
 		var nextColor = records[minIndex][posOfMin];
-
-		console.log(min, posOfMin);
 
 		return nextColor;
 	}
