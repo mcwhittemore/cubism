@@ -50,7 +50,13 @@ var score = function(a, b){
 		var bi = b[i];
 		total += Math.abs(ai - bi) / 256;
 	}
-	return total / a.length;
+	var s = total / a.length;
+
+	if(isNaN(s)){
+		console.log(total, a.length, s);
+	};
+
+	return s;
 }
 
 var scoreGroup = function(a, group){
@@ -115,7 +121,7 @@ co(function*(){
 
 		var nextColor = records[minIndex][posOfMin];
 
-		console.log(min, posOfMin, minScore, nextColor);
+		console.log(min, posOfMin);
 
 		return nextColor;
 	}
