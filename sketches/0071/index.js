@@ -139,6 +139,8 @@ co(function*(){
 
 			var color = getColor(current);
 
+			console.log("new color", color.length, color);
+
 			for(var i=0; i<BLOCK_SIZE; i++){
 				var j = i*3;
 				var x = xys[i][0];
