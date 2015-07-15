@@ -173,8 +173,8 @@ co(function*(){
 			}
 
 			newImg.set(x, y, 0, colors.red);
-			newImg.set(x, y, 0, colors.green);
-			newImg.set(x, y, 0, colors.blue);
+			newImg.set(x, y, 1, colors.green);
+			newImg.set(x, y, 2, colors.blue);
 		}
 	}
 
