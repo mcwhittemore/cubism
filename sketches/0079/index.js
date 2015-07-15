@@ -170,15 +170,15 @@ co(function*(){
 		var difs = [
 			{
 				color: "red",
-				val : lastColor.red - color.red
+				val : Math.abs(lastColor.red - color.red)
 			},
 			{
 				color: "green",
-				val : lastColor.green - color.green
+				val : Math.abs(lastColor.green - color.green)
 			},
 			{
 				color: "blue",
-				val : lastColor.blue - color.blue
+				val : Math.abs(lastColor.blue - color.blue)
 			}
 		]
 
