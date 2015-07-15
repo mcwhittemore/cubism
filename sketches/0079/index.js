@@ -183,7 +183,7 @@ co(function*(){
 		]
 
 		difs.sort(function(a, b){
-			return a.val - b.val;
+			return b.val - a.val;
 		});
 
 		if(difs[0].val < 16){
