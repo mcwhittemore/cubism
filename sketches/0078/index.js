@@ -157,26 +157,35 @@ co(function*(){
 		}
 	}
 
+	var lastColor = [0, 256, 0];
+
 	for(var i=0; i<routes[0].length; i+=2){
-		var red = 0;
-		var green = 0;
-		var blue = 0;
+		var min = 10000;
+		var v = null;
 		for(var j=0; j<routes.length; j++){
 			var x = routes[j][i]
 			var y = routes[j][i+1];
 
-			red += imgs[j].get(x, y, 0);
-			green += imgs[j].get(x, y, 1);
-			blue += imgs[j].get(x, y, 2);
+			var red = imgs[j].get(x, y, 0);
+			var green = imgs[j].get(x, y, 1);
+			var blue = imgs[j].get(x, y, 2);
+
+			var ccc = [red, green, blue];
+
+			var mmm = score(lastColor, ccc);
+
+			if(mmm < min || v === null){
+				min = mmm;
+				v = ccc;
+			}
+
 		}
 
-		red = Math.floor(red / routes.length);
-		green = Math.floor(green / routes.length);
-		blue = Math.floor(blue / routes.length);
+		lastColor = v;
 
-		imgs[0].set(routes[0][i], routes[0][i+1], 0, red);
-		imgs[0].set(routes[0][i], routes[0][i+1], 1, green);
-		imgs[0].set(routes[0][i], routes[0][i+1], 2, blue);
+		imgs[0].set(routes[0][i], routes[0][i+1], 0, v[0]);
+		imgs[0].set(routes[0][i], routes[0][i+1], 1, v[1]);
+		imgs[0].set(routes[0][i], routes[0][i+1], 2, v[2]);
 	}
 
 	savePixels(imgs[0], "jpg").pipe(fs.createWriteStream("./start.jpg"));
