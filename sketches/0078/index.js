@@ -271,7 +271,7 @@ co(function*(){
 
 	console.log("image built", imgId);
 
-	savePixels(newImg, "jpg").pipe(fs.createWriteStream("./others/end.jpg"));
+	savePixels(newImg, "jpg").pipe(fs.createWriteStream("./end.jpg"));
 
 }).then(sketchSaver).catch(function(err){
 	console.log(err.stack);
