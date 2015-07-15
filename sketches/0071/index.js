@@ -82,10 +82,14 @@ co(function*(){
 	var BACK_TRACK = 3;
 
 	var mash = function(a){
-		var min = Math.min.apply(null, a);
-		var max = Math.max.apply(null, a);
+		var out = 0;
 
-		return Math.floor(max/NUM_COLORS);
+		for(var i=0; i<a.length; i++){
+			var v = Math.floor(a[i]/16) * 16;
+			out += v;
+		}
+
+		return Math.floor( (out/256/a.length) * 256);
 	}
 
 	var numImgs = listOfImages.length;
