@@ -79,7 +79,7 @@ co(function*(){
 
 	var BLOCK_SIZE = 320;
 	var NUM_COLORS = 16;
-	var BACK_TRACK = 16;
+	var BACK_TRACK = 160;
 
 	var mash = function(a){
 		var out = 0;
