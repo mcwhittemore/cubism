@@ -148,8 +148,8 @@ co(function*(){
 				newImg.set(x, y, 2, color[j+2]);
 			}
 
-			xys = [];
-			current = [];
+			xys = xys.splice(1);
+			current = color.splice(3);
 		}
 
 		var next = fork.next();
