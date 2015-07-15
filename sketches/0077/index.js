@@ -54,7 +54,7 @@ var getRoute = function(img, x, y){
 
 	do {
 		var diffs = [];
-		for(var i=0; i<changes.length; i++){
+		for(var i=0; i<changes.length && foundCount < max; i++){
 			var c = changes[i];
 			var x2 = x + c[0];
 			var y2 = y + c[1];
@@ -91,7 +91,7 @@ var getRoute = function(img, x, y){
 		count++;
 
 		if(count >= last+unit){
-			console.log( (1/max) * count, "%", route.length, foundCount, allDiffs.length);
+			console.log( (1/max) * count, "%");
 			last = count;
 		}
 
