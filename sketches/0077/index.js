@@ -41,34 +41,44 @@ var changes = [
 	[1, 1]
 ]
 
-var getRoute = function(img, x, y, route){
-	var diffs = [];
-	for(var i=0; i<changes.length; i++){
-		var c = changes[i];
-		var x2 = x + c[0];
-		var y2 = y + c[1];
-		if(x2>-1 && x2 < 640 && y2 > -1 && y2 < 640){
-			var key = x2+"-"+y2;
-			var d = diff(img, x, y, x2, y2);
-			diffs.push({
-				x: x2,
-				y: y2,
-				val: d,
-				key: key
-			});
-		}
-	}
+var getRoute = function(img, x, y){
+	var allDiffs = [];
+	var route = [];
 
-	diffs.sort(function(a, b){
-		return a.val - b.val;
-	});
-
-	for(var i=0; i<diffs.length; i++){
-		if(route.indexOf(diffs[i].key) == -1){
-			route.push(diffs[i].key);
-			route = getRoute(img, diffs[i].x, diffs[i].y, route);
+	do{
+		var diffs = [];
+		for(var i=0; i<changes.length; i++){
+			var c = changes[i];
+			var x2 = x + c[0];
+			var y2 = y + c[1];
+			if(x2>-1 && x2 < 640 && y2 > -1 && y2 < 640 && route.indexOf(diffs[i].key) == -1){
+				var key = x2+"-"+y2;
+				var d = diff(img, x, y, x2, y2);
+				diffs.push({
+					x: x2,
+					y: y2,
+					val: d,
+					key: key
+				});
+			}
 		}
-	}
+
+		diffs.sort(function(a, b){
+			return a.val - b.val;
+		});
+
+		allDiffs = diffs.concat(allDiffs);
+
+		for(var i=0; i<allDiffs.length; i++){
+			if(route.indexOf(allDiffs[i].key) == -1){
+				route.push(allDiffs[i].key);
+				x = allDiffs[i].x;
+				y = allDiffs[i].y;
+				allDiffs = allDiffs.splice(i);
+				break;
+			}
+		}
+	} while(allDiffs.length > 0);
 
 	return route;
 }
@@ -80,7 +90,7 @@ co(function*(){
 	for(var i=0; i<listOfImages.length; i++){
 		var imgId = listOfImages[i];
 		var img = yield getBasePixels(getPath(imgId));
-		var route = getRoute(img, 320, 320, []);
+		var route = getRoute(img, 320, 320);
 		routes.push(route);
 	}
 
