@@ -182,7 +182,7 @@ co(function*(){
 			var mmm = score(lastColor, ccc);
 
 			if(routeCount > 0 && routeTeam == j){
-				mmm = mmm / 2;
+				mmm = mmm * 2;
 			}
 
 			if(mmm < min || v === null){
@@ -193,11 +193,15 @@ co(function*(){
 
 		}
 
+		if(v !== routeTeam){
+			routeCount = BLOCK_SIZE;
+		}
+		else{
+			routeCount--;
+		}
+
 		routeTeam = v;
 		lastColor = nc;
-		routeCount = BLOCK_SIZE;
-
-		routeCount--;
 
 		imgs[0].set(routes[0][i], routes[0][i+1], 0, imgs[routeTeam].get(x, y, 0));
 		imgs[0].set(routes[0][i], routes[0][i+1], 1, imgs[routeTeam].get(x, y, 1));
