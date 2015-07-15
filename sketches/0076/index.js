@@ -90,8 +90,10 @@ co(function*(){
 	var NUM_COLORS = 256;
 
 	var mash = function(a){
-		a.sort();
-		return a[0]+a[1];
+		a.sort(function(a, b){
+			return b-a;
+		});
+		return a[0]+a[1]+a[3];
 	}
 
 	var numImgs = listOfImages.length;
@@ -140,13 +142,18 @@ co(function*(){
 
 	for(var x = 0; x<640; x++){
 		for(var y=0; y<640; y++){
-			var red = [imgRed.get(x, y, 0), imgGreen.get(x, y, 0), imgBlue.get(x, y, 0)].sort()[1];
-			var green = [imgRed.get(x, y, 1), imgGreen.get(x, y, 1), imgBlue.get(x, y, 1)].sort()[1];
-			var blue = [imgRed.get(x, y, 2), imgGreen.get(x, y, 2), imgBlue.get(x, y, 2)].sort()[1];
+			var red = [imgRed.get(x, y, 0), imgGreen.get(x, y, 0), imgBlue.get(x, y, 0)].sort();
+			var green = [imgRed.get(x, y, 1), imgGreen.get(x, y, 1), imgBlue.get(x, y, 1)].sort();
+			var blue = [imgRed.get(x, y, 2), imgGreen.get(x, y, 2), imgBlue.get(x, y, 2)].sort();
 
-			newImg.set(x, y, 0, red);
-			newImg.set(x, y, 0, green);
-			newImg.set(x, y, 0, blue);
+			// var maxs = [{
+			// 	color: "red",
+			// 	val: red[0]
+			// }]
+
+			newImg.set(x, y, 0, red[1]);
+			newImg.set(x, y, 0, green[1]);
+			newImg.set(x, y, 0, blue[1]);
 		}
 	}
 
