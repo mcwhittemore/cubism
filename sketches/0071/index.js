@@ -77,8 +77,9 @@ var getMin = function(a){
 
 co(function*(){
 
-	var BLOCK_SIZE = 6;
-	var NUM_COLORS = 10;
+	var BLOCK_SIZE = 32;
+	var NUM_COLORS = 32;
+	var BACK_TRACK = 3;
 
 	var mash = function(a){
 		var min = Math.min.apply(null, a);
@@ -160,8 +161,8 @@ co(function*(){
 				newImg.set(x, y, 2, color[j+2]);
 			}
 
-			xys = xys.splice(1);
-			current = color.splice(3);
+			xys = xys.splice(BACK_TRACK);
+			current = color.splice(BACK_TRACK*3);
 
 		}
 
