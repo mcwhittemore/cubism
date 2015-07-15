@@ -23,7 +23,7 @@ var getPath = function(imgId){
 	return path.join(__dirname, "../../instagrams", imgId+".jpg");
 }
 
-var diff = function(img, x1, y1, x2, y2){
+var differ = function(img, x1, y1, x2, y2){
 	var red = Math.abs(img.get(x1, y1, 0) - img.get(x2, y2, 0));
 	var green = Math.abs(img.get(x1, y1, 1) - img.get(x2, y2, 1));
 	var blue = Math.abs(img.get(x1, y1, 2) - img.get(x2, y2, 2));
@@ -54,17 +54,14 @@ var getRoute = function(img, x, y){
 	do{
 		var diffs = [];
 		for(var i=0; i<changes.length; i++){
-			var iii = pending.indexOf(x+"-"+y);
-			if(iii>-1){
-				pending = pending.splice(iii, 1);
-			}
 			var c = changes[i];
 			var x2 = x + c[0];
 			var y2 = y + c[1];
 			var key = x2+"-"+y2;
 			if(x2>-1 && x2 < 640 && y2 > -1 && y2 < 640 && pending.indexOf(key) == -1){
 				pending.push(key);
-				var d = diff(img, x, y, x2, y2);
+				console.log("add ", key);
+				var d = differ(img, x, y, x2, y2);
 				diffs.push({
 					x: x2,
 					y: y2,
@@ -81,6 +78,9 @@ var getRoute = function(img, x, y){
 
 			allDiffs.push(diffs);
 		}
+		else {
+			console.log("NO NEW DIFFS");
+		}
 
 		for(var i=allDiffs.length-1; i>-1; i--){
 			var diff = allDiffs[i];
@@ -91,7 +91,7 @@ var getRoute = function(img, x, y){
 				route.push(diff[0].key);
 				x = diff[0].x;
 				y = diff[0].y;
-				allDiffs[i] = diff.splice(0);
+				allDiffs[i] = diff.splice(1);
 				break;
 			}
 		}
@@ -99,7 +99,7 @@ var getRoute = function(img, x, y){
 		count++;
 
 		if(count >= last+unit){
-			console.log((100/max)*count, "%", allDiffs.length);
+			console.log( (1/max) * count, "%", pending.length);
 			last = count;
 		}
 
