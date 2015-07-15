@@ -89,7 +89,7 @@ var getRoute = function(img, x, y){
 		count++;
 
 		if(count >= last+unit){
-			console.log( (1/max) * count, "%", route.length, pending.length, allDiffs.length);
+			console.log( (1/max) * count, "%", route.length, allDiffs.length);
 			last = count;
 		}
 
