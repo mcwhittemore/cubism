@@ -100,7 +100,7 @@ co(function*(){
 		var img = yield getBasePixels(imgPath);
 		var result = groupCrome([img], NUM_COLORS, BLOCK_SIZE, function(a){
 			return mash(a)+"-"
-		}, 20, 20);
+		});
 
 		savePixels(result.imgs[0], "jpg").pipe(fs.createWriteStream("./imgs/"+imgId+".jpg"));
 
