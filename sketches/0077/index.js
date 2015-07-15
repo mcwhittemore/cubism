@@ -122,6 +122,7 @@ co(function*(){
 	var len = routes[0].length;
 	for(var i=1; i<routes.length; i++){
 		if(len != routes[i].length){
+			console.log(listOfImages[i], routes[i].length, len);
 			throw new Error("Route Lens");
 		}
 	}
