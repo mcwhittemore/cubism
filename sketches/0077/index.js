@@ -60,13 +60,10 @@ var getRoute = function(img, x, y, route){
 	}
 
 	diffs.sort(function(a, b){
-		return b.val - a.val;
+		return a.val - b.val;
 	});
 
-	var from = route.length;
-
 	for(var i=0; i<diffs.length; i++){
-		console.log(from, diffs[i].val);
 		if(route.indexOf(diffs[i].key) == -1){
 			route.push(diffs[i].key);
 			route = getRoute(img, diffs[i].x, diffs[i].y, route);
