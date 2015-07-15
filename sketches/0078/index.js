@@ -161,7 +161,7 @@ co(function*(){
 		}
 	}
 
-	var lastColor = [0, 256, 0];
+	var lastColor = [[0, 256, 0]];
 	var routeTeam = null;
 	var routeCount = null
 
@@ -182,7 +182,6 @@ co(function*(){
 			var mmm = 0;
 
 			for(var p=0; p<lastColor.length; p++){
-				console.log(lastColor[p], p, lastColor.length);
 				var mp = score(lastColor[p], ccc) * (p+1);
 				mmm += mp;
 			}
