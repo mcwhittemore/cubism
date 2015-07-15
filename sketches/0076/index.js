@@ -87,7 +87,7 @@ var getPath = function(imgId){
 co(function*(){
 
 	var BLOCK_SIZE = 6;
-	var NUM_COLORS = 16;
+	var NUM_COLORS = 4;
 
 	var mash = function(a){
 		return Math.max.apply(null, a);
