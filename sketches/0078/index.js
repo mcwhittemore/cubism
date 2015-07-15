@@ -137,7 +137,7 @@ var getRoute = function(img, x, y){
 co(function*(){
 
 	var BLOCK_SIZE = 12;
-	var NUM_COLORS = 256;
+	var NUM_COLORS = 64;
 
 	var routes = [];
 	var imgs = [];
@@ -165,35 +165,37 @@ co(function*(){
 	var routeCount = null
 
 	for(var i=0; i<routes[0].length; i+=2){
-		if(routeCount == null || routeCount == 0){
-			var min = 10000;
-			var v = null;
-			var nc = null;
+		var min = 10000;
+		var v = null;
+		var nc = null;
 
-			for(var j=0; j<routes.length; j++){
-				var x = routes[j][i]
-				var y = routes[j][i+1];
+		for(var j=0; j<routes.length; j++){
+			var x = routes[j][i]
+			var y = routes[j][i+1];
 
-				var red = imgs[j].get(x, y, 0);
-				var green = imgs[j].get(x, y, 1);
-				var blue = imgs[j].get(x, y, 2);
+			var red = imgs[j].get(x, y, 0);
+			var green = imgs[j].get(x, y, 1);
+			var blue = imgs[j].get(x, y, 2);
 
-				var ccc = [red, green, blue];
+			var ccc = [red, green, blue];
 
-				var mmm = score(lastColor, ccc);
+			var mmm = score(lastColor, ccc);
 
-				if(mmm < min || v === null){
-					min = mmm;
-					v = j;
-					nc = ccc;
-				}
-
+			if(routeCount > 0 && routeTeam == j){
+				mmm = mmm / 2;
 			}
 
-			routeTeam = v;
-			lastColor = nc;
-			routeCount = BLOCK_SIZE;
+			if(mmm < min || v === null){
+				min = mmm;
+				v = j;
+				nc = ccc;
+			}
+
 		}
+
+		routeTeam = v;
+		lastColor = nc;
+		routeCount = BLOCK_SIZE;
 
 		routeCount--;
 
