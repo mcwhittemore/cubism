@@ -182,7 +182,7 @@ co(function*(){
 			var mmm = 0;
 
 			for(var p=0; p<lastColor.length; p++){
-				var mp = score(lastColor[p], ccc) * (lastColor.length - p);
+				var mp = score(lastColor[p], ccc) * (p+1);
 				mmm += mp;
 			}
 
