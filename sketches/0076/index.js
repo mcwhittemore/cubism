@@ -91,7 +91,7 @@ co(function*(){
 
 	var mash = function(a){
 		a.sort(function(a, b){
-			return b-a;
+			return a-b;
 		});
 		return a[0]+a[1]+a[3];
 	}
@@ -142,18 +142,42 @@ co(function*(){
 
 	for(var x = 0; x<640; x++){
 		for(var y=0; y<640; y++){
-			var red = [imgRed.get(x, y, 0), imgGreen.get(x, y, 0), imgBlue.get(x, y, 0)].sort();
-			var green = [imgRed.get(x, y, 1), imgGreen.get(x, y, 1), imgBlue.get(x, y, 1)].sort();
-			var blue = [imgRed.get(x, y, 2), imgGreen.get(x, y, 2), imgBlue.get(x, y, 2)].sort();
+			var info = {};
+			var reds = [imgRed.get(x, y, 0), imgGreen.get(x, y, 0), imgBlue.get(x, y, 0)].sort();
+			var greens = [imgRed.get(x, y, 1), imgGreen.get(x, y, 1), imgBlue.get(x, y, 1)].sort();
+			var blues = [imgRed.get(x, y, 2), imgGreen.get(x, y, 2), imgBlue.get(x, y, 2)].sort();
 
-			// var maxs = [{
-			// 	color: "red",
-			// 	val: red[0]
-			// }]
+			info.red = reds;
+			info.green = greens;
+			info.blue = blues;
 
-			newImg.set(x, y, 0, red[1]);
-			newImg.set(x, y, 0, green[1]);
-			newImg.set(x, y, 0, blue[1]);
+			var maxs = [
+				{
+					color: "red",
+					val: reds[0]
+				},
+				{
+					color: "green",
+					val: greens[0]
+				},
+				{
+					color: "blue",
+					val: blues[0]
+				}
+			]
+
+			maxs.sort(function(a, b){
+				return a.val - b.val
+			});
+
+			var colors = {};
+			for(var i=0; i<maxs.length; i++){
+				colors[maxs[i].color] = info[maxs[i].color][i];
+			}
+
+			newImg.set(x, y, 0, colors.red);
+			newImg.set(x, y, 0, colors.green);
+			newImg.set(x, y, 0, colors.blue);
 		}
 	}
 
