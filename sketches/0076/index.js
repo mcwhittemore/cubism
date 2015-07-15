@@ -138,7 +138,12 @@ co(function*(){
 	var newImg = yield getBasePixels(getPath(others[0]));
 
 	var avg = function(a, b, c){
-		return Math.floor(a/3 + b/3 + c/3);
+		a = a * 2;
+		c = c / 2;
+		
+		var d = a + b + c;
+
+		return Math.floor(d/(256*3));
 	}
 
 	for(var x = 0; x<640; x++){
