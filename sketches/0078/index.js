@@ -137,8 +137,8 @@ var getRoute = function(img, x, y){
 
 co(function*(){
 
-	var BLOCK_SIZE = 3;
-	var NUM_COLORS = 256;
+	var BLOCK_SIZE = 16;
+	var NUM_COLORS = 64;
 
 	var routes = [];
 	var imgs = [];
@@ -207,11 +207,7 @@ co(function*(){
 	savePixels(imgs[0], "jpg").pipe(fs.createWriteStream("./start.jpg"));
 
 	var mash = function(a){
-		var out = 0;
-		for(var i=0; i<a.length; i++){
-			out += a[i];
-		}
-		return out;
+		return Math.max.apply(null, a);
 	}
 
 	var numImgs = listOfImages.length;
