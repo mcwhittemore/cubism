@@ -80,9 +80,13 @@ co(function*(){
 			var imgPath = getPath(imgId);
 			var img = yield getBasePixels(imgPath);
 			if(!isWhite(img, 320, 0) && !isWhite(img, 0, 320)){
+				listOfImages.splice(i,1);
 				imgIds.push(imgId);
 				imgsById[imgId] = img;
 				timesUsed[imgId] = 0;
+			}
+			else{
+				listOfImages.splice(i,1);
 			}
 		}
 	}
