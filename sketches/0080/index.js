@@ -76,13 +76,13 @@ co(function*(){
 		var i = Math.floor(Math.random()*listOfImages.length);
 		var imgId = listOfImages[i];
 		if(imgIds.indexOf(imgId) === -1){
+			var imgPath = getPath(imgId);
 			var img = yield getBasePixels(imgPath);
-			//if(!isWhite(img, 320, 0) && !isWhite(img, 0, 320)){
+			if(!isWhite(img, 320, 0) && !isWhite(img, 0, 320)){
 				imgIds.push(imgId);
-				var imgPath = getPath(imgId);
 				imgsById[imgId] = img;
 				timesUsed[imgId] = 0;
-			//}
+			}
 		}
 	}
 
