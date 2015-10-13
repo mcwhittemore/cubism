@@ -31,7 +31,6 @@ var getPath = function(imgId){
 var timesUsed = {};
 
 var findNext = function(currentId, imgIds, imgsById, x){
-	console.error('\tfinding...');
 	var scores = [];
 	timesUsed[currentId]+=STRIPE_SIZE;
 
@@ -57,8 +56,14 @@ var findNext = function(currentId, imgIds, imgsById, x){
 		return a.value - b.value;
 	});
 
-	console.error('\tfound');
 	return scores[0].id;
+}
+
+var saveImage = function(pixels, imgId){
+	savePixels(pixels, "jpg").pipe(fs.createWriteStream("./data/"+imgId+".jpg"));
+	return new Promise(function(resolve){
+		setTimeout(resolve, 200);
+	});
 }
 
 co(function*(){
@@ -88,25 +93,31 @@ co(function*(){
 		}
 	}
 
-	var pixels = ndarray([], [640, 640, 3]);
+	for(var i=0; i<imgIds.length; i++){
+		var pixels = ndarray([], [640, 640, 3]);
 
-	var currentId = null;
+		var currentId = null;
 
-	for(var xBase=0; xBase<640-STRIPE_SIZE; xBase+=STRIPE_SIZE){
-		console.error('drawing', xBase);
-		currentId = currentId ? findNext(currentId, imgIds, imgsById, xBase) : STARTER_ID;
-		var img = imgsById[currentId];
-		for(var xAdd = 0; xAdd < STRIPE_SIZE; xAdd++){
-			var x = xBase + xAdd;
-			for(var y = 0; y<640; y++){
-				pixels.set(x, y, 0, img.get(x, y, 0));
-				pixels.set(x, y, 1, img.get(x, y, 1));
-				pixels.set(x, y, 2, img.get(x, y, 2));
+		for(var xBase=0; xBase<640-STRIPE_SIZE; xBase+=STRIPE_SIZE){
+			currentId = currentId ? findNext(currentId, imgIds, imgsById, xBase) : imgIds[i];
+			var img = imgsById[currentId];
+			for(var xAdd = 0; xAdd < STRIPE_SIZE; xAdd++){
+				var x = xBase + xAdd;
+				for(var y = 0; y<640; y++){
+					pixels.set(x, y, 0, img.get(x, y, 0));
+					pixels.set(x, y, 1, img.get(x, y, 1));
+					pixels.set(x, y, 2, img.get(x, y, 2));
+				}
 			}
 		}
-	}
 
-	savePixels(pixels, "jpg").pipe(fs.createWriteStream("./end.jpg"));
+		yield saveImage(pixels, imgIds[i])
+
+		if(i % 30 === 0){
+			console.log('\t', (100/NUM_IMAGES)*i+'%');
+		}
+
+	}
 
 }).then(sketchSaver).catch(function(err){
 	console.log(err.message);
