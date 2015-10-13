@@ -61,6 +61,10 @@ var findNext = function(currentId, imgIds, imgsById, x){
 	return scores[0].id;
 }
 
+var isWhite = function(img, x, y){
+	return img.get(x, y, 0) > 250 && img.get(x, y, 1) > 250 && img.get(x, y, 2) > 250;
+}
+
 co(function*(){
 
 	var imgsById = {};
@@ -72,11 +76,13 @@ co(function*(){
 		var i = Math.floor(Math.random()*listOfImages.length);
 		var imgId = listOfImages[i];
 		if(imgIds.indexOf(imgId) === -1){
-			imgIds.push(imgId);
-			var imgPath = getPath(imgId);
 			var img = yield getBasePixels(imgPath);
-			imgsById[imgId] = img;
-			timesUsed[imgId] = 0;
+			if(!isWhite(img, 320, 0) && !isWhite(img, 0, 320)){
+				imgIds.push(imgId);
+				var imgPath = getPath(imgId);
+				imgsById[imgId] = img;
+				timesUsed[imgId] = 0;
+			}
 		}
 	}
 
