@@ -1,6 +1,6 @@
 var sketchSaver = require("../../lib/sketch-saver");
 var co = require("co");
-var listOfImages = Object.keys(require("../../image-sets/washington-monument-8-29-15-9-10-15.json"));
+var listOfImages = require("./image-ids.json");
 var fs = require("fs");
 var path = require("path");
 var getPixels = require("get-pixels");
@@ -24,31 +24,31 @@ var getPath = function(imgId){
 }
 
 co(function*(){
-
-	//7LGTA1q57n.jpg
+	var numImages = 20;
+	var starterId = '7LGTA1q57n';
 
 	var imgs = [];
 
-	// var numImages = 20;
-	// var imgIds = ['7LGTA1q57n'];
-	// while(imgIds.length < numImages){
-	// 	var i = Math.floor(Math.random()*listOfImages.length);
-	// 	var imgId = listOfImages[i];
-	// 	if(imgIds.indexOf(imgId) === -1){
-	// 		imgIds.push(imgId);
-	// 	}
-	// }
-
-	for(var i=0; i<listOfImages.length; i++){
+	var imgIds = [];
+	while(imgIds.length < numImages){
+		var i = Math.floor(Math.random()*listOfImages.length);
 		var imgId = listOfImages[i];
+		if(imgId != starterId && imgIds.indexOf(imgId) === -1){
+			imgIds.push(imgId);
+		}
+	}
+
+	imgIds = [starterId].concat(imgIds.sort());
+
+	for(var i=0; i<imgIds.length; i++){
+		var imgId = imgIds[i];
 		var imgPath = getPath(imgId);
 		
 		try{
 			var img = yield getBasePixels(imgPath);
-			console.log(imgId);
 		}
 		catch(err){
-			console.error('bad image', imgId, i+'/'+listOfImages.length);
+			console.error('bad image', imgId, i+'/'+imgIds.length);
 		}
 		
 		imgs.push(img);
