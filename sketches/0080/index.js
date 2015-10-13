@@ -33,9 +33,14 @@ co(function*(){
 		var imgId = listOfImages[i];
 		var imgPath = getPath(imgId);
 		
-		var img = yield getBasePixels(imgPath);
+		try{
+			var img = yield getBasePixels(imgPath);
+		}
+		catch(err){
+			console.error('bad image', imgId, i+'/'+listOfImages.length);
+		}
 		
-		
+		console.log(imgId);
 		imgs.push(img);
 	}
 
