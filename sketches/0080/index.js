@@ -5,6 +5,7 @@ var fs = require("fs");
 var path = require("path");
 var getPixels = require("get-pixels");
 var savePixels = require("save-pixels");
+var ndarray = require('ndarray');
 
 var getBasePixels = function*(imgPath){
 	return new Promise(function(accept, reject){
@@ -23,38 +24,52 @@ var getPath = function(imgId){
 	return path.join(__dirname, "../../instagrams", imgId+".jpg");
 }
 
-co(function*(){
-	var numImages = 20;
-	var starterId = '7LGTA1q57n';
+var findNext = function(current, imgIds, imgsById, pos){
+	var next = current;
+	while(next === current){
+		var i = Math.floor(Math.random()*imgIds.length);
+		next = imgIds[id];
+	}
+	return next;
+}
 
-	var imgs = [];
+co(function*(){
+	var NUM_IMAGES = 20;
+	var STRIPE_SIZE = 10;
+
+	var imgsById = {};
 
 	var imgIds = [];
-	while(imgIds.length < numImages){
+	while(imgIds.length < NUM_IMAGES){
 		var i = Math.floor(Math.random()*listOfImages.length);
 		var imgId = listOfImages[i];
 		if(imgId != starterId && imgIds.indexOf(imgId) === -1){
 			imgIds.push(imgId);
-		}
-	}
-
-	imgIds = [starterId].concat(imgIds.sort());
-
-	for(var i=0; i<imgIds.length; i++){
-		var imgId = imgIds[i];
-		var imgPath = getPath(imgId);
-		
-		try{
+			var imgPath = getPath(imgId);
 			var img = yield getBasePixels(imgPath);
+			imgsById[imgId] = img;
 		}
-		catch(err){
-			console.error('bad image', imgId, i+'/'+imgIds.length);
-		}
-		
-		imgs.push(img);
 	}
 
-	savePixels(imgs[0], "jpg").pipe(fs.createWriteStream("./end.jpg"));
+	var pixels = ndarray([], [640, 640, 3]);
+
+	var currentId = '7LGTA1q57n';
+
+	for(var xBase=0; xBase<640-STRIPE_SIZE; xBase+=STRIPE_SIZE){
+		var img = imgsById[currentId];
+		for(var xAdd = 0; xAdd < STRIPE_SIZE; x++){
+			var x = xBase + xAdd;
+			for(var y = 0; y<640; y++){
+				pixels.set(x, y, 0, img.get(x, y, 0));
+				pixels.set(x, y, 1, img.get(x, y, 1));
+				pixels.set(x, y, 2, img.get(x, y, 2));
+			}
+		}
+
+		currentId = findNext(currentId, imgIds, imgsById, xBase+STRIPE_SIZE);
+	}
+
+	savePixels(pixels, "jpg").pipe(fs.createWriteStream("./end.jpg"));
 
 }).then(sketchSaver).catch(function(err){
 	console.log(err);
