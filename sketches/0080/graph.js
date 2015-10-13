@@ -45,7 +45,13 @@ co(function*(){
 				resolve(files);
 			}
 		});
-	})
+	}).reduce(function(v, name){
+		var data = name.split('.');
+		if(data[1] === 'jpg'){
+			v.push(data[0]);
+		}
+		return v;
+	}, []);
 
 	console.log(imgIds);
 
