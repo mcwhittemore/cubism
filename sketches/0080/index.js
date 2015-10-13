@@ -43,7 +43,7 @@ co(function*(){
 	while(imgIds.length < NUM_IMAGES){
 		var i = Math.floor(Math.random()*listOfImages.length);
 		var imgId = listOfImages[i];
-		if(imgId != starterId && imgIds.indexOf(imgId) === -1){
+		if(imgIds.indexOf(imgId) === -1){
 			imgIds.push(imgId);
 			var imgPath = getPath(imgId);
 			var img = yield getBasePixels(imgPath);
