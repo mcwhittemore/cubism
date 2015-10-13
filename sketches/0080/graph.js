@@ -36,7 +36,7 @@ var saveImage = function(pixels, imgId){
 
 co(function*(){
 
-	var imgIds = new Promise(function(resolve, reject){
+	var imgIds = yield new Promise(function(resolve, reject){
 		fs.readdir(path.join(__dirname, "down"), function(err, files){
 			if(err){
 				reject(err);
