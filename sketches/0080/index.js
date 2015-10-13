@@ -28,7 +28,7 @@ var findNext = function(current, imgIds, imgsById, pos){
 	var next = current;
 	while(next === current){
 		var i = Math.floor(Math.random()*imgIds.length);
-		next = imgIds[id];
+		next = imgIds[i];
 	}
 	return next;
 }
