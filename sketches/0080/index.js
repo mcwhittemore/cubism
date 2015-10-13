@@ -24,23 +24,43 @@ var getPath = function(imgId){
 	return path.join(__dirname, "../../instagrams", imgId+".jpg");
 }
 
-var findNext = function(current, imgIds, imgsById, pos){
-	var next = current;
-	while(next === current){
-		var i = Math.floor(Math.random()*imgIds.length);
-		next = imgIds[i];
+var findNext = function(currentId, imgIds, imgsById, x){
+	var scores = [];
+
+	for(var i=0; i<imgIds.length; i++){
+		var imgId = imgIds[i];
+		if(imgId !== currentId){
+			var score = 0;
+			for(var y=0; y<640; y++){
+				for(var c=0; c<3; c++){
+					var left = imgsById[currentId].get(x, y, c);
+					var right = imgsById[imgId].get(x, y, c);
+					score += Math.abs(left-right);
+				}
+			}
+			scores.push({
+				value: score,
+				id: imgId
+			});
+		}
 	}
-	return next;
+
+	scores.sort(function(a, b){
+		return a.value - b.value;
+	});
+
+	return scores[0].id;
 }
 
 co(function*(){
 	var NUM_IMAGES = 20;
 	var STRIPE_SIZE = 10;
+	var STARTER_ID = '7LGTA1q57n';
 
 	var imgsById = {};
 
-	var imgIds = ['7LGTA1q57n'];
-	imgsById['7LGTA1q57n'] = yield getBasePixels(getPath('7LGTA1q57n'));
+	var imgIds = [STARTER_ID];
+	imgsById[STARTER_ID] = yield getBasePixels(getPath(STARTER_ID));
 	while(imgIds.length < NUM_IMAGES){
 		var i = Math.floor(Math.random()*listOfImages.length);
 		var imgId = listOfImages[i];
@@ -54,9 +74,10 @@ co(function*(){
 
 	var pixels = ndarray([], [640, 640, 3]);
 
-	var currentId = '7LGTA1q57n';
+	var currentId = null;
 
 	for(var xBase=0; xBase<640-STRIPE_SIZE; xBase+=STRIPE_SIZE){
+		currentId = currentId ? findNext(currentId, imgIds, imgsById, xBase) : STARTER_ID;
 		var img = imgsById[currentId];
 		for(var xAdd = 0; xAdd < STRIPE_SIZE; xAdd++){
 			var x = xBase + xAdd;
@@ -66,8 +87,6 @@ co(function*(){
 				pixels.set(x, y, 2, img.get(x, y, 2));
 			}
 		}
-
-		currentId = findNext(currentId, imgIds, imgsById, xBase+STRIPE_SIZE);
 	}
 
 	savePixels(pixels, "jpg").pipe(fs.createWriteStream("./end.jpg"));
