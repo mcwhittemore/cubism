@@ -67,6 +67,7 @@ co(function*(){
 
 	var imgIds = [STARTER_ID];
 	imgsById[STARTER_ID] = yield getBasePixels(getPath(STARTER_ID));
+	timesUsed[STARTER_ID] = 0
 	while(imgIds.length < NUM_IMAGES){
 		var i = Math.floor(Math.random()*listOfImages.length);
 		var imgId = listOfImages[i];
