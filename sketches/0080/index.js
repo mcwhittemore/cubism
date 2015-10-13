@@ -29,18 +29,28 @@ co(function*(){
 
 	var imgs = [];
 
+	// var numImages = 20;
+	// var imgIds = ['7LGTA1q57n'];
+	// while(imgIds.length < numImages){
+	// 	var i = Math.floor(Math.random()*listOfImages.length);
+	// 	var imgId = listOfImages[i];
+	// 	if(imgIds.indexOf(imgId) === -1){
+	// 		imgIds.push(imgId);
+	// 	}
+	// }
+
 	for(var i=0; i<listOfImages.length; i++){
 		var imgId = listOfImages[i];
 		var imgPath = getPath(imgId);
 		
 		try{
 			var img = yield getBasePixels(imgPath);
+			console.log(imgId);
 		}
 		catch(err){
 			console.error('bad image', imgId, i+'/'+listOfImages.length);
 		}
 		
-		console.log(imgId);
 		imgs.push(img);
 	}
 
