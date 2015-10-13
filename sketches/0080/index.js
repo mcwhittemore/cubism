@@ -8,7 +8,7 @@ var savePixels = require("save-pixels");
 var ndarray = require('ndarray');
 
 var NUM_IMAGES = 'ALL';
-var STRIPE_SIZE = 5;
+var STRIPE_SIZE = 1;
 var STARTER_ID = '7LGTA1q57n';
 
 var getBasePixels = function*(imgPath){
