@@ -24,25 +24,26 @@ var getPath = function(imgId){
 	return path.join(__dirname, "../../instagrams", imgId+".jpg");
 }
 
+var timesUsed = {};
+
 var findNext = function(currentId, imgIds, imgsById, x){
 	var scores = [];
+	timesUsed[currentId]++;
 
 	for(var i=0; i<imgIds.length; i++){
 		var imgId = imgIds[i];
-		if(imgId !== currentId){
-			var score = 0;
-			for(var y=0; y<640; y++){
-				for(var c=0; c<3; c++){
-					var left = imgsById[currentId].get(x, y, c);
-					var right = imgsById[imgId].get(x, y, c);
-					score += Math.abs(left-right);
-				}
+		var score = 0;
+		for(var y=0; y<640; y++){
+			for(var c=0; c<3; c++){
+				var left = imgsById[currentId].get(x, y, c);
+				var right = imgsById[imgId].get(x, y, c);
+				score += Math.abs(left-right);
 			}
-			scores.push({
-				value: score,
-				id: imgId
-			});
 		}
+		scores.push({
+			value: score * (timesUsed[currentId]+1),
+			id: imgId
+		});
 	}
 
 	scores.sort(function(a, b){
@@ -69,6 +70,7 @@ co(function*(){
 			var imgPath = getPath(imgId);
 			var img = yield getBasePixels(imgPath);
 			imgsById[imgId] = img;
+			timesUsed[imgId] = 0;
 		}
 	}
 
