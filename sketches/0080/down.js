@@ -94,8 +94,7 @@ co(function*(){
 		catch(err){}
 	}
 
-	var i = 0;
-	//for(var i=0; i<imgIds.length; i++){
+	for(var i=0; i<imgIds.length; i++){
 		var pixels = ndarray([], [640, 640, 3]);
 
 		var currentId = null;
@@ -119,7 +118,7 @@ co(function*(){
 			console.log('\t', (100/imgIds.length)*i+'%');
 		}
 
-	//}
+	}
 
 }).then(sketchSaver).catch(function(err){
 	console.log(err.message);
