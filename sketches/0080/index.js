@@ -36,23 +36,27 @@ var findNext = function(currentId, imgIds, imgsById, x){
 
 	for(var i=0; i<imgIds.length; i++){
 		var imgId = imgIds[i];
-		var score = 0;
-		for(var y=0; y<640; y++){
-			for(var c=0; c<3; c++){
-				var left = imgsById[currentId].get(x, y, c);
-				var right = imgsById[imgId].get(x, y, c);
-				score += Math.abs(left-right);
+		if(imgId !== currentId){
+			var score = 0;
+			for(var y=0; y<640; y++){
+				for(var c=0; c<3; c++){
+					var left = imgsById[currentId].get(x, y, c);
+					var right = imgsById[imgId].get(x, y, c);
+					score += Math.abs(left-right);
+				}
 			}
+			scores.push({
+				value: score * (timesUsed[imgId]+1),
+				id: imgId
+			});
 		}
-		scores.push({
-			value: score * (timesUsed[imgId]+1),
-			id: imgId
-		});
 	}
 
 	scores.sort(function(a, b){
 		return a.value - b.value;
 	});
+
+	console.log(scores[0]);
 
 	return scores[0].id;
 }
