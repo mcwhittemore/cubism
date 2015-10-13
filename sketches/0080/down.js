@@ -80,15 +80,18 @@ co(function*(){
 		var i = Math.floor(Math.random()*listOfImages.length);
 		var imgId = listOfImages[i];
 		var imgPath = getPath(imgId);
-		var img = yield getBasePixels(imgPath);
-		listOfImages.splice(i,1);
-		imgIds.push(imgId);
-		imgsById[imgId] = img;
-		timesUsed[imgId] = 0;
+		try{
+			var img = yield getBasePixels(imgPath);
+			listOfImages.splice(i,1);
+			imgIds.push(imgId);
+			imgsById[imgId] = img;
+			timesUsed[imgId] = 0;
 
-		if(imgIds.length % 30 === 0){
-			console.log('\t', (100/NUM_IMAGES)*imgIds.length+'%');
+			if(imgIds.length % 30 === 0){
+				console.log('\t', (100/NUM_IMAGES)*imgIds.length+'%');
+			}
 		}
+		catch(err){}
 	}
 
 	var i = 0;
@@ -113,7 +116,7 @@ co(function*(){
 		yield saveImage(pixels, imgIds[i])
 
 		if(i % 30 === 0){
-			console.log('\t', (100/NUM_IMAGES)*i+'%');
+			console.log('\t', (100/imgIds.length)*i+'%');
 		}
 
 	//}
