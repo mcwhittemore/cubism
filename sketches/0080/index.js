@@ -7,7 +7,7 @@ var getPixels = require("get-pixels");
 var savePixels = require("save-pixels");
 var ndarray = require('ndarray');
 
-var NUM_IMAGES = 300;
+var NUM_IMAGES = 'ALL';
 var STRIPE_SIZE = 5;
 var STARTER_ID = '7LGTA1q57n';
 
@@ -31,7 +31,7 @@ var getPath = function(imgId){
 var timesUsed = {};
 
 var findNext = function(currentId, imgIds, imgsById, x){
-	console.log('\tfinding...');
+	console.error('\tfinding...');
 	var scores = [];
 	timesUsed[currentId]+=STRIPE_SIZE;
 
@@ -57,37 +57,34 @@ var findNext = function(currentId, imgIds, imgsById, x){
 		return a.value - b.value;
 	});
 
-	console.log('\tfound');
+	console.error('\tfound');
 	return scores[0].id;
-}
-
-var isWhite = function(img, x, y){
-	return img.get(x, y, 0) > 250 && img.get(x, y, 1) > 250 && img.get(x, y, 2) > 250;
 }
 
 co(function*(){
 
 	var imgsById = {};
 
-	console.log('loading images');
+	console.error('loading images');
 	var imgIds = [STARTER_ID];
 	imgsById[STARTER_ID] = yield getBasePixels(getPath(STARTER_ID));
 	timesUsed[STARTER_ID] = 0
-	while(imgIds.length < NUM_IMAGES){
+	listOfImages.splice(listOfImages.indexOf(STARTER_ID), 1);
+
+	NUM_IMAGES = NUM_IMAGES === 'ALL' ? listOfImages.length : NUM_IMAGES;
+
+	while(imgIds.length < NUM_IMAGES && listOfImages.length > 0){
 		var i = Math.floor(Math.random()*listOfImages.length);
 		var imgId = listOfImages[i];
-		if(imgIds.indexOf(imgId) === -1){
-			var imgPath = getPath(imgId);
-			var img = yield getBasePixels(imgPath);
-			if(!isWhite(img, 320, 0) && !isWhite(img, 0, 320)){
-				listOfImages.splice(i,1);
-				imgIds.push(imgId);
-				imgsById[imgId] = img;
-				timesUsed[imgId] = 0;
-			}
-			else{
-				listOfImages.splice(i,1);
-			}
+		var imgPath = getPath(imgId);
+		var img = yield getBasePixels(imgPath);
+		listOfImages.splice(i,1);
+		imgIds.push(imgId);
+		imgsById[imgId] = img;
+		timesUsed[imgId] = 0;
+
+		if(imgIds.length % 30 === 0){
+			console.log('\t', (100/NUM_IMAGES)*imgIds.length+'%');
 		}
 	}
 
@@ -96,7 +93,7 @@ co(function*(){
 	var currentId = null;
 
 	for(var xBase=0; xBase<640-STRIPE_SIZE; xBase+=STRIPE_SIZE){
-		console.log('drawing', xBase);
+		console.error('drawing', xBase);
 		currentId = currentId ? findNext(currentId, imgIds, imgsById, xBase) : STARTER_ID;
 		var img = imgsById[currentId];
 		for(var xAdd = 0; xAdd < STRIPE_SIZE; xAdd++){
