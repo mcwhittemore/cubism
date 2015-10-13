@@ -7,7 +7,7 @@ var getPixels = require("get-pixels");
 var savePixels = require("save-pixels");
 var ndarray = require('ndarray');
 
-var NUM_IMAGES = 50;
+var NUM_IMAGES = 300;
 var STRIPE_SIZE = 5;
 var STARTER_ID = '7LGTA1q57n';
 
@@ -31,6 +31,7 @@ var getPath = function(imgId){
 var timesUsed = {};
 
 var findNext = function(currentId, imgIds, imgsById, x){
+	console.log('\tfinding...');
 	var scores = [];
 	timesUsed[currentId]+=STRIPE_SIZE;
 
@@ -56,6 +57,7 @@ var findNext = function(currentId, imgIds, imgsById, x){
 		return a.value - b.value;
 	});
 
+	console.log('\tfound');
 	return scores[0].id;
 }
 
@@ -67,6 +69,7 @@ co(function*(){
 
 	var imgsById = {};
 
+	console.log('loading images');
 	var imgIds = [STARTER_ID];
 	imgsById[STARTER_ID] = yield getBasePixels(getPath(STARTER_ID));
 	timesUsed[STARTER_ID] = 0
@@ -89,6 +92,7 @@ co(function*(){
 	var currentId = null;
 
 	for(var xBase=0; xBase<640-STRIPE_SIZE; xBase+=STRIPE_SIZE){
+		console.log('drawing', xBase);
 		currentId = currentId ? findNext(currentId, imgIds, imgsById, xBase) : STARTER_ID;
 		var img = imgsById[currentId];
 		for(var xAdd = 0; xAdd < STRIPE_SIZE; xAdd++){
