@@ -53,7 +53,7 @@ var findNext = function(currentId, imgIds, imgsById, x){
 }
 
 co(function*(){
-	var NUM_IMAGES = 20;
+	var NUM_IMAGES = 50;
 	var STRIPE_SIZE = 2;
 	var STARTER_ID = '7LGTA1q57n';
 
