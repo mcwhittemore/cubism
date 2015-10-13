@@ -31,7 +31,6 @@ var getPath = function(imgId){
 var timesUsed = {};
 
 var findNext = function(currentId, imgIds, imgsById, x){
-	console.error('\tfinding...');
 	var scores = [];
 	timesUsed[currentId]+=STRIPE_SIZE;
 
@@ -47,7 +46,7 @@ var findNext = function(currentId, imgIds, imgsById, x){
 				}
 			}
 			scores.push({
-				value: score * (timesUsed[imgId]+1),
+				value: score,
 				id: imgId
 			});
 		}
@@ -57,7 +56,6 @@ var findNext = function(currentId, imgIds, imgsById, x){
 		return a.value - b.value;
 	});
 
-	console.error('\tfound');
 	return scores[0].id;
 }
 
@@ -73,19 +71,16 @@ co(function*(){
 
 	NUM_IMAGES = NUM_IMAGES === 'ALL' ? listOfImages.length : NUM_IMAGES;
 
-	while(imgIds.length < NUM_IMAGES && listOfImages.length > 0){
-		var i = Math.floor(Math.random()*listOfImages.length);
-		var imgId = listOfImages[i];
+	var imgs = yield Promise.all(listOfImages.map(function(imgId){
 		var imgPath = getPath(imgId);
-		var img = yield getBasePixels(imgPath);
-		listOfImages.splice(i,1);
-		imgIds.push(imgId);
-		imgsById[imgId] = img;
-		timesUsed[imgId] = 0;
+		return getBasePixels(imgPath);
+	}));
 
-		if(imgIds.length % 30 === 0){
-			console.log('\t', (100/NUM_IMAGES)*imgIds.length+'%');
-		}
+	for(var i=0; i<listOfImages.length; i++){
+		var imgId = listOfImages[i];
+		imgIds.push(imgId);
+		imgsById[imgId] = imgs[i];
+		timesUsed[imgId] = 0;
 	}
 
 	var pixels = ndarray([], [640, 640, 3]);
