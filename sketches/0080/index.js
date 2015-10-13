@@ -39,7 +39,8 @@ co(function*(){
 
 	var imgsById = {};
 
-	var imgIds = [];
+	var imgIds = ['7LGTA1q57n'];
+	imgsById['7LGTA1q57n'] = yield getBasePixels(getPath('7LGTA1q57n'));
 	while(imgIds.length < NUM_IMAGES){
 		var i = Math.floor(Math.random()*listOfImages.length);
 		var imgId = listOfImages[i];
@@ -57,7 +58,7 @@ co(function*(){
 
 	for(var xBase=0; xBase<640-STRIPE_SIZE; xBase+=STRIPE_SIZE){
 		var img = imgsById[currentId];
-		for(var xAdd = 0; xAdd < STRIPE_SIZE; x++){
+		for(var xAdd = 0; xAdd < STRIPE_SIZE; xAdd++){
 			var x = xBase + xAdd;
 			for(var y = 0; y<640; y++){
 				pixels.set(x, y, 0, img.get(x, y, 0));
