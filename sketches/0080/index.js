@@ -8,7 +8,7 @@ var savePixels = require("save-pixels");
 var ndarray = require('ndarray');
 
 var NUM_IMAGES = 'ALL';
-var STRIPE_SIZE = 1;
+var STRIPE_SIZE = 5;
 var STARTER_ID = '7LGTA1q57n';
 
 var getBasePixels = function*(imgPath){
@@ -31,6 +31,7 @@ var getPath = function(imgId){
 var timesUsed = {};
 
 var findNext = function(currentId, imgIds, imgsById, x){
+	console.error('\tfinding...');
 	var scores = [];
 	timesUsed[currentId]+=STRIPE_SIZE;
 
@@ -46,7 +47,7 @@ var findNext = function(currentId, imgIds, imgsById, x){
 				}
 			}
 			scores.push({
-				value: score,
+				value: score * (timesUsed[imgId]+1),
 				id: imgId
 			});
 		}
@@ -56,6 +57,7 @@ var findNext = function(currentId, imgIds, imgsById, x){
 		return a.value - b.value;
 	});
 
+	console.error('\tfound');
 	return scores[0].id;
 }
 
@@ -71,16 +73,19 @@ co(function*(){
 
 	NUM_IMAGES = NUM_IMAGES === 'ALL' ? listOfImages.length : NUM_IMAGES;
 
-	var imgs = yield Promise.all(listOfImages.map(function(imgId){
-		var imgPath = getPath(imgId);
-		return getBasePixels(imgPath);
-	}));
-
-	for(var i=0; i<listOfImages.length; i++){
+	while(imgIds.length < NUM_IMAGES && listOfImages.length > 0){
+		var i = Math.floor(Math.random()*listOfImages.length);
 		var imgId = listOfImages[i];
+		var imgPath = getPath(imgId);
+		var img = yield getBasePixels(imgPath);
+		listOfImages.splice(i,1);
 		imgIds.push(imgId);
-		imgsById[imgId] = imgs[i];
+		imgsById[imgId] = img;
 		timesUsed[imgId] = 0;
+
+		if(imgIds.length % 30 === 0){
+			console.log('\t', (100/NUM_IMAGES)*imgIds.length+'%');
+		}
 	}
 
 	var pixels = ndarray([], [640, 640, 3]);
