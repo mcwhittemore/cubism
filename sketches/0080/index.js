@@ -72,6 +72,7 @@ co(function*(){
 	savePixels(pixels, "jpg").pipe(fs.createWriteStream("./end.jpg"));
 
 }).then(sketchSaver).catch(function(err){
-	console.log(err);
+	console.log(err.message);
+	console.log(err.stack);
 	sketchSaver();
 });
