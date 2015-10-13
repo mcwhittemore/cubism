@@ -8,7 +8,7 @@ var savePixels = require("save-pixels");
 var ndarray = require('ndarray');
 
 var NUM_IMAGES = 50;
-var STRIPE_SIZE = 2;
+var STRIPE_SIZE = 5;
 var STARTER_ID = '7LGTA1q57n';
 
 var getBasePixels = function*(imgPath){
@@ -55,8 +55,6 @@ var findNext = function(currentId, imgIds, imgsById, x){
 	scores.sort(function(a, b){
 		return a.value - b.value;
 	});
-
-	console.log(scores[0]);
 
 	return scores[0].id;
 }
