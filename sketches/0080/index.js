@@ -41,7 +41,7 @@ var findNext = function(currentId, imgIds, imgsById, x){
 			}
 		}
 		scores.push({
-			value: score * (timesUsed[currentId]+1),
+			value: score * (timesUsed[imgId]+1),
 			id: imgId
 		});
 	}
