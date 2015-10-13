@@ -7,6 +7,10 @@ var getPixels = require("get-pixels");
 var savePixels = require("save-pixels");
 var ndarray = require('ndarray');
 
+var NUM_IMAGES = 50;
+var STRIPE_SIZE = 2;
+var STARTER_ID = '7LGTA1q57n';
+
 var getBasePixels = function*(imgPath){
 	return new Promise(function(accept, reject){
 		getPixels(imgPath, function(err, pixels) {
@@ -28,7 +32,7 @@ var timesUsed = {};
 
 var findNext = function(currentId, imgIds, imgsById, x){
 	var scores = [];
-	timesUsed[currentId]++;
+	timesUsed[currentId]+=STRIPE_SIZE;
 
 	for(var i=0; i<imgIds.length; i++){
 		var imgId = imgIds[i];
@@ -54,9 +58,6 @@ var findNext = function(currentId, imgIds, imgsById, x){
 }
 
 co(function*(){
-	var NUM_IMAGES = 50;
-	var STRIPE_SIZE = 2;
-	var STARTER_ID = '7LGTA1q57n';
 
 	var imgsById = {};
 
