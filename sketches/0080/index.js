@@ -40,11 +40,11 @@ var findNext = function(currentId, imgIds, imgsById, x){
 		if(imgId !== currentId){
 			var score = 0;
 			for(var y=0; y<640; y++){
-				for(var c=0; c<3; c++){
-					var left = imgsById[currentId].get(x, y, c);
-					var right = imgsById[imgId].get(x, y, c);
+				//for(var c=0; c<3; c++){
+					var left = imgsById[currentId].get(x, y, 1);
+					var right = imgsById[imgId].get(x, y, 1);
 					score += Math.abs(left-right);
-				}
+				//}
 			}
 			scores.push({
 				value: score * (timesUsed[imgId]+1),
