@@ -113,12 +113,10 @@ co(function*(){
 		values.sort(function(a, b){ return a-b; });
 
 		var minEdgeValue = values[top3Percent];
-		console.log('min', minEdgeValue);
 
 		for(var j=0; j<imgIds.length; j++){
 			var inner = imgIds[j];
 			if(scoresByImg[inner] >= minEdgeValue){
-				console.log('add', outer, inner);
 				graph.addLink(outer, inner, scoresByImg[inner]);
 			}
 		}
