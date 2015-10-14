@@ -69,7 +69,7 @@ co(function*(){
 			v.push(data[0]);
 		}
 		return v;
-	}, []).splice(0, 10);
+	}, []);
 
 	var top3Percent = Math.floor(imgIds.length * .97);
 
