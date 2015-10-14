@@ -46,8 +46,6 @@ var score = function(dataById, imgIds){
 			return v;
 		}, 0);
 
-		console.log(value, imgIds.length);
-
 		return value / imgIds.length;
 	}
 }
