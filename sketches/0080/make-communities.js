@@ -114,7 +114,7 @@ co(function*(){
 		values.sort(function(a, b){ return a-b; });
 
 		var minEdgeValue = values[top3Percent];
-		console.log(minEdgeValue);
+		console.log('min', minEdgeValue);
 
 		for(var j=0; j<imgIds.length; j++){
 			var inner = imgIds[j];
