@@ -119,7 +119,7 @@ co(function*(){
 		for(var j=0; j<imgIds.length; j++){
 			var inner = imgIds[j];
 			if(scoresByImg[inner] > minEdgeValue){
-				console.log(outer, inner);
+				console.log('add', outer, inner);
 				graph.addLink(outer, inner, scoresByImg[inner]);
 			}
 		}
