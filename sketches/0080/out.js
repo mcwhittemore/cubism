@@ -64,6 +64,7 @@ co(function*(){
 		var pixels = ndarray([], [640, 640, 3]);
 
 		for(var x = 0; x<640; x++){
+			console.log('\trow', x);
 			for(var y = 0; y<640; y++){
 				var red = 0;
 				var green = 0;
@@ -76,10 +77,6 @@ co(function*(){
 					red += img.get(x, y, 0);
 					green += img.get(x, y, 1);
 					blue += img.get(x, y, 2);
-
-					if(j%30==0){
-						console.log('\t -', (100/commImgs.length) * j);
-					}
 				}
 
 				red = Math.floor(red/commImgs.length);
