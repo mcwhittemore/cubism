@@ -65,7 +65,7 @@ co(function*(){
 			v.push(data[0]);
 		}
 		return v;
-	}, []);
+	}, []).splice(0, 10);
 
 	var top3Percent = Math.floor(imgIds.length * .97);
 
@@ -113,6 +113,7 @@ co(function*(){
 		for(var j=0; j<imgIds.length; j++){
 			var inner = imgIds[j];
 			if(scoresByImg[inner] > minEdgeValue){
+				console.log(outer, inner);
 				graph.addLink(outer, inner, scoresByImg[inner]);
 			}
 		}
