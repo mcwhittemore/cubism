@@ -65,7 +65,7 @@ co(function*(){
 			v.push(data[0]);
 		}
 		return v;
-	}, []).splice(0, 5);
+	}, []);
 
 	var top3Percent = Math.floor(imgIds.length * .97);
 
@@ -80,10 +80,8 @@ co(function*(){
 		var img = yield getBasePixels(imgPath);
 
 		var data = [];
-		for(var x = 0; x < 640; x += STRIPE_SIZE){
-			for(var y = 0; y < 640; y += STRIPE_SIZE){
-				data.push(img.get(x+2, y+2, 1));
-			}
+		for(var p = 0; p < 640; p += STRIPE_SIZE){
+			data.push(img.get(p+2, p+2, 1));
 		}
 
 		dataById[imgId] = data;
@@ -119,7 +117,7 @@ co(function*(){
 			}
 		}
 
-		if(i%30 === 0){
+		if(i%5 === 0){
 			console.log((100/imgIds.length) * i);
 		}
 	}
