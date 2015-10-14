@@ -117,6 +117,7 @@ co(function*(){
 
 		for(var j=0; j<imgIds.length; j++){
 			var inner = imgIds[j];
+			console.log(inn, scoresByImg[inner], minEdgeValue);
 			if(scoresByImg[inner] > minEdgeValue){
 				console.log('add', outer, inner);
 				graph.addLink(outer, inner, scoresByImg[inner]);
