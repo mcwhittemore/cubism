@@ -39,7 +39,7 @@ var saveImage = function(pixels, imgId){
 var score = function(dataById, imgIds){
 	return function(inner, outer){
 		var value = imgIds.reduce(function(v, imgId){
-			return v + (255 - Math.abs(dataById[inner] - dataById[outer])/255);
+			return v + 255 - Math.abs(dataById[inner] - dataById[outer]);
 		}, 0);
 
 		console.log(value, imgIds.length);
