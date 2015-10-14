@@ -41,27 +41,34 @@ co(function*(){
 	var imgIds = Object.keys(communities);
 	var imgsById = {};
 
+	console.log('loading communities');
 	for(var i=0; i<imgIds.length; i++){
 		var imgId = imgIds[i];
 		imgsById[imgId] = yield getBasePixels(getPath(imgId));
 		var comm = communities[imgId] + '';
 		imgIdsByCommunity[comm] = imgIdsByCommunity[comm] || [];
 		imgIdsByCommunity[comm].push(imgId);
+
+		if(i%30 === 0){
+			console.log('\t -', (100/imgIds.length)*i);
+		}
 	}
 
 	var commIds = Object.keys(imgIdsByCommunity);
 
 	for(var i=0; i<commIds.length; i++){
 		var comm = commIds[i];
+		console.log('building image', comm);
 		var commImgs = imgIdsByCommunity[comm];
 
-		var pixels = ndarray([], 640, 640, 3);
+		var pixels = ndarray([], [640, 640, 3]);
 
 		for(var x = 0; x<640; x++){
 			for(var y = 0; y<640; y++){
 				var red = 0;
 				var green = 0;
 				var blue = 0;
+
 				for(var j =0; j<commImgs.length; j++){
 					var imgId = commImgs[j];
 					var img = imgsById[imgId];
@@ -69,6 +76,10 @@ co(function*(){
 					red += img.get(x, y, 0);
 					green += img.get(x, y, 1);
 					blue += img.get(x, y, 2);
+
+					if(j%30==0){
+						console.log('\t -', (100/commImgs.length) * j);
+					}
 				}
 
 				red = Math.floor(red/commImgs.length);
