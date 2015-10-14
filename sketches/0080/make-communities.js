@@ -102,6 +102,7 @@ co(function*(){
 		for(var j=0; j<imgIds.length; j++){
 			var inner = imgIds[j];
 			var value = inner !== outer ? scorer(outer, inner) : 0;
+			console.log(value);
 			values.push(value);
 			scoresByImg[inner] = value;
 		}
