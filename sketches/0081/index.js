@@ -40,7 +40,7 @@ var findNext = function(imgs){
 
 			if(img !== imgs[i]){
 				var info = img.math.findSectionMostLikeSection(section, imgs[i].math, function(score, section){
-					var distance = 1 - Math.abs(percentCovered - ((1/img.math.numSections) * section));
+					var distance = Math.pow(1 - Math.abs(percentCovered - ((1/img.math.numSections) * section)), 2);
 					return score * distance;
 				});
 
@@ -104,18 +104,40 @@ co(function*(){
 		console.log('making', saveId, i, 'of', imgs.length);
 
 		var imgSection = 0;
-		for(var xBase=0; xBase<width; xBase+=STRIPE_SIZE) {
+		for(var xBase=0; xBase<=width/2; xBase+=STRIPE_SIZE) {
 			var percentCovered = (1/width) * xBase;
 			if(xBase>0){
-				var nextSection = imgSection + 1 === NUM_SECTIONS ? 0 : imgSection + 1;
-				var next = finder(img, nextSection, percentCovered);
+				var next = finder(img, imgSection, percentCovered);
 				img = next.img;
 				imgSection = next.section;
 			}
 
 			for(var xAdd = 0; xAdd < STRIPE_SIZE; xAdd++){
 				var x = xBase + xAdd;
-				var xSection = (imgSection * STRIPE_SIZE) + xBase;
+				var xSection = (imgSection * STRIPE_SIZE) + xAdd;
+				for(var y = 0; y<640; y++){
+					pixels.set(x, y, 0, img.raw.get(xSection, y, 0));
+					pixels.set(x, y, 1, img.raw.get(xSection, y, 1));
+					pixels.set(x, y, 2, img.raw.get(xSection, y, 2));
+				}
+			}
+
+			if(xBase % 50 === 0){
+				console.log((100/width)*xBase);
+			}
+		}
+
+		var imgSection = NUM_SECTIONS-1;
+		for(var xBase=width-STRIPE_SIZE; xBase>width/2; xBase-=STRIPE_SIZE) {
+			var percentCovered = (1/width) * xBase;
+
+			var next = finder(img, imgSection, percentCovered);
+			img = next.img;
+			imgSection = next.section;
+
+			for(var xAdd = 0; xAdd < STRIPE_SIZE; xAdd++){
+				var x = xBase + xAdd;
+				var xSection = (imgSection * STRIPE_SIZE) + xAdd;
 				for(var y = 0; y<640; y++){
 					pixels.set(x, y, 0, img.raw.get(xSection, y, 0));
 					pixels.set(x, y, 1, img.raw.get(xSection, y, 1));

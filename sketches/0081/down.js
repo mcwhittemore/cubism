@@ -1,127 +1,156 @@
-// var sketchSaver = require("../../lib/sketch-saver");
-// var co = require("co");
-// var listOfImages = require("./image-ids.json");
-// var fs = require("fs");
-// var path = require("path");
-// var getPixels = require("get-pixels");
-// var savePixels = require("save-pixels");
-// var ndarray = require('ndarray');
+var sketchSaver = require("../../lib/sketch-saver");
+var co = require("co");
+var fs = require("fs");
+var path = require("path");
+var getPixels = require("get-pixels");
+var savePixels = require("save-pixels");
+var ndarray = require('ndarray');
+var mathImg = require('./math-img');
 
-// var NUM_IMAGES = 'ALL';
-// var STRIPE_SIZE = 5;
-// var STARTER_ID = '7LGTA1q57n';
+var STRIPE_SIZE = 5;
+var NUM_SECTIONS = Math.floor(1920 / STRIPE_SIZE);
 
-// var getBasePixels = function*(imgPath){
-// 	return new Promise(function(accept, reject){
-// 		getPixels(imgPath, function(err, pixels) {
-// 			if(err) {
-// 				reject(err);
-// 			}
-// 			else{
-// 				accept(pixels);
-// 			}
-// 		});
-// 	});
-// }
+var getBasePixels = function*(imgPath){
+	return new Promise(function(accept, reject){
+		getPixels(imgPath, function(err, pixels) {
+			if(err) {
+				reject(err);
+			}
+			else{
+				accept(pixels);
+			}
+		});
+	});
+}
 
-// var getPath = function(imgId){
-// 	return path.join(__dirname, "data", imgId+".jpg");
-// }
+var getPath = function(imgId){
+	return path.join(__dirname, "data", imgId+".jpg");
+}
 
-// var timesUsed = {};
+var findNext = function(imgs){
 
-// var findNext = function(currentId, imgIds, imgsById, y){
-// 	var scores = [];
-// 	timesUsed[currentId]+=STRIPE_SIZE;
+	return function(img, section, percentCovered){
 
-// 	for(var i=0; i<imgIds.length; i++){
-// 		var imgId = imgIds[i];
-// 		if(imgId !== currentId){
-// 			var score = 0;
-// 			for(var x=0; x<640; x++){
-// 				var left = imgsById[currentId].get(x, y, 1);
-// 				var right = imgsById[imgId].get(x, y, 1);
-// 				score += Math.abs(left-right);
-// 			}
-// 			scores.push({
-// 				value: score * (timesUsed[imgId]+1),
-// 				id: imgId
-// 			});
-// 		}
-// 	}
+		var bestImg = null;
+		var bestSection = null;
+		var score = 0;
 
-// 	scores.sort(function(a, b){
-// 		return a.value - b.value;
-// 	});
+		for(var i=0; i<imgs.length; i++){
 
-// 	return scores[0].id;
-// }
+			if(img !== imgs[i]){
+				var info = img.math.findSectionMostLikeSection(section, imgs[i].math, function(score, section){
+					var distance = 1 - Math.abs(percentCovered - ((1/img.math.numSections) * section));
+					return score * distance;
+				});
 
-// var saveImage = function(pixels, imgId){
-// 	savePixels(pixels, "jpg").pipe(fs.createWriteStream("./down/"+imgId+".jpg"));
-// 	return new Promise(function(resolve){
-// 		setTimeout(resolve, 200);
-// 	});
-// }
+				if(info.score > score){
+					bestImg = i;
+					bestSection = info.section;
+					score = info.score;
+				}
+			}
 
-// co(function*(){
+		}
 
-// 	var imgsById = {};
+		return {
+			img: imgs[bestImg],
+			section: bestSection
+		}
 
-// 	console.error('loading images');
-// 	var imgIds = [STARTER_ID];
-// 	imgsById[STARTER_ID] = yield getBasePixels(getPath(STARTER_ID));
-// 	timesUsed[STARTER_ID] = 0
-// 	listOfImages.splice(listOfImages.indexOf(STARTER_ID), 1);
+	}
 
-// 	NUM_IMAGES = NUM_IMAGES === 'ALL' ? listOfImages.length : NUM_IMAGES;
+}
 
-// 	while(imgIds.length < NUM_IMAGES && listOfImages.length > 0){
-// 		var i = Math.floor(Math.random()*listOfImages.length);
-// 		var imgId = listOfImages[i];
-// 		var imgPath = getPath(imgId);
-// 		try{
-// 			var img = yield getBasePixels(imgPath);
-// 			listOfImages.splice(i,1);
-// 			imgIds.push(imgId);
-// 			imgsById[imgId] = img;
-// 			timesUsed[imgId] = 0;
+var saveImage = function(pixels, imgId){
+	savePixels(pixels, "jpg").pipe(fs.createWriteStream("./down/"+imgId+".jpg"));
+	return new Promise(function(resolve){
+		setTimeout(resolve, 200);
+	});
+}
 
-// 			if(imgIds.length % 30 === 0){
-// 				console.log('\t', (100/NUM_IMAGES)*imgIds.length+'%');
-// 			}
-// 		}
-// 		catch(err){}
-// 	}
+co(function*(){
 
-// 	for(var i=0; i<imgIds.length; i++){
-// 		var pixels = ndarray([], [640, 640, 3]);
+	var listOfImages = (yield new Promise(function(resolve, reject){
+		fs.readdir(path.join(__dirname, "data"), function(err, files){
+			if(err){
+				reject(err);
+			}
+			else{
+				resolve(files);
+			}
+		});
+	})).reduce(function(v, name){
+		var data = name.split('.');
+		if(data[1] === 'jpg'){
+			v.push(data[0]);
+		}
+		return v;
+	}, []);
 
-// 		var currentId = null;
+	var imgs = [];
 
-// 		for(var yBase=0; yBase<640-STRIPE_SIZE; yBase+=STRIPE_SIZE){
-// 			currentId = currentId ? findNext(currentId, imgIds, imgsById, yBase) : imgIds[i];
-// 			var img = imgsById[currentId];
-// 			for(var yAdd = 0; yAdd < STRIPE_SIZE; yAdd++){
-// 				var y = yBase + yAdd;
-// 				for(var x = 0; x<640; x++){
-// 					pixels.set(x, y, 0, img.get(x, y, 0));
-// 					pixels.set(x, y, 1, img.get(x, y, 1));
-// 					pixels.set(x, y, 2, img.get(x, y, 2));
-// 				}
-// 			}
-// 		}
+	console.log('loading images');
+	for(var i=0; i<listOfImages.length; i++){
+		var imgId = listOfImages[i];
+		var imgPath = getPath(imgId);
+		var rawImg = yield getBasePixels(imgPath);
+		var math = mathImg(rawImg, STRIPE_SIZE, 'across');
+		imgs.push({
+			raw: rawImg,
+			math: math,
+			id: imgId
+		});
 
-// 		yield saveImage(pixels, imgIds[i])
+		if(i % 30 === 0){
+			console.log('\t', (100/listOfImages.length)*i);
+		}
+	}
 
-// 		if(i % 30 === 0){
-// 			console.log('\t', (100/imgIds.length)*i+'%');
-// 		}
+	var finder = findNext(imgs);
 
-// 	}
+	var width = 1280;
 
-// }).then(sketchSaver).catch(function(err){
-// 	console.log(err.message);
-// 	console.log(err.stack);
-// 	sketchSaver();
-// });
+	for(var i=0; i<imgs.length; i++){
+		console.time('startImg');
+		var pixels = ndarray([], [1920, width, 3]);
+
+		var img = imgs[i];
+		var saveId = img.id;
+
+		console.log('making', saveId, i, 'of', imgs.length);
+
+		var imgSection = 0;
+		for(var yBase=0; yBase<width; yBase+=STRIPE_SIZE) {
+			var percentCovered = (1/width) * yBase;
+			if(yBase>0){
+				var nextSection = imgSection + 1 === NUM_SECTIONS ? 0 : imgSection + 1;
+				var next = finder(img, nextSection, percentCovered);
+				img = next.img;
+				imgSection = next.section;
+			}
+
+			for(var yAdd = 0; yAdd < STRIPE_SIZE; yAdd++){
+				var y = yBase + yAdd;
+				var ySection = (imgSection * STRIPE_SIZE) + yAdd;
+				for(var x = 0; x<1920; x++){
+					pixels.set(x, y, 0, img.raw.get(x, ySection, 0));
+					pixels.set(x, y, 1, img.raw.get(x, ySection, 1));
+					pixels.set(x, y, 2, img.raw.get(x, ySection, 2));
+				}
+			}
+
+			if(yBase % 50 === 0){
+				console.log((100/width)*yBase);
+			}
+		}
+
+		console.timeEnd('startImg');
+		console.log('\n---\n');
+		yield saveImage(pixels, saveId);
+	}
+
+}).then(sketchSaver).catch(function(err){
+	console.log(err.message);
+	console.log(err.stack);
+	sketchSaver();
+});
