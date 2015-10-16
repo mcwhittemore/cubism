@@ -1,9 +1,8 @@
 var ndarray = require('ndarray');
 
-var NUM_BITS = 3;
-var COLORS_PER_NUMBER = 10;
-var SHIFT_START = 28;
-var NUM_BIT_BLOCKS = Math.ceil(640/COLORS_PER_NUMBER);
+var NUM_BITS = 6;
+var COLORS_PER_NUMBER = 5;
+var SHIFT_START = 25;
 
 var encode = function(nums){
 	var out = 0;
@@ -35,12 +34,16 @@ var compare = function(a, b){
 
 module.exports = function(img, stripSize, stripDirection){
 
-	var numStripSections = Math.floor(640/stripSize);
+	var chunkSize = stripDirection === 'down' ? img.shape[0] : img.shape[1];
 
-	var data = ndarray([], [numStripSections, NUM_BIT_BLOCKS]);
+	var numBitsPerBlock = Math.ceil(chunkSize/COLORS_PER_NUMBER);
+
+	var numStripSections = Math.floor(chunkSize/stripSize);
+
+	var data = ndarray([], [numStripSections, numBitsPerBlock]);
 
 	for(var i = 0; i < numStripSections; i++){
-		for(var j = 0; j < NUM_BIT_BLOCKS; j++){
+		for(var j = 0; j < numBitsPerBlock; j++){
 
 			var units = [];
 
@@ -58,24 +61,29 @@ module.exports = function(img, stripSize, stripDirection){
 					x = (j * COLORS_PER_NUMBER) + k;
 				}
 
-				var max = Math.max(img.get(x, y, 0), img.get(x, y, 1), img.get(x, y, 2));
+				var max = img.get(x, y, 1); //Math.max(img.get(x, y, 0), img.get(x, y, 1), img.get(x, y, 2));
 
-				units.push(Math.floor(((max+1)/32)-1));
+				units.push(Math.floor(((max+1)/4)-1));
 			}
 
 			data.set(i, j, encode(units));
 		}
 	}
 
+	var halfCache = [];
+
 	return {
-		findSectionMostLikeSection: function(baseSection, mathImg){
+		numSections: numStripSections,
+		findSectionMostLikeSection: function(baseSection, other, fn){
 			var bestMatch = 0;
 			var bestScore = 0;
 			for(var i=0; i<numStripSections; i++){
 				var val = 0;
-				for(var j=0; j<NUM_BIT_BLOCKS; j++){
-					val += compare(data.get(baseSection, j) ^ mathImg.get(i, j));
+				for(var j=0; j<numBitsPerBlock; j++){
+					val += compare(data.get(baseSection, j), other.get(i, j));
 				}
+
+				val = val(val, i);
 
 				if(val > bestScore){
 					bestScore = val;
