@@ -1,126 +1,124 @@
-// var sketchSaver = require("../../lib/sketch-saver");
-// var co = require("co");
-// var listOfImages = require("./image-ids.json");
-// var fs = require("fs");
-// var path = require("path");
-// var getPixels = require("get-pixels");
-// var savePixels = require("save-pixels");
-// var ndarray = require('ndarray');
+var sketchSaver = require("../../lib/sketch-saver");
+var co = require("co");
+var listOfImages = require("./image-ids.json");
+var fs = require("fs");
+var path = require("path");
+var getPixels = require("get-pixels");
+var savePixels = require("save-pixels");
+var ndarray = require('ndarray');
 
-// var NUM_IMAGES = 'ALL';
-// var STRIPE_SIZE = 5;
-// var STARTER_ID = '7LGTA1q57n';
+var STRIPE_SIZE = 5;
 
-// var getBasePixels = function*(imgPath){
-// 	return new Promise(function(accept, reject){
-// 		getPixels(imgPath, function(err, pixels) {
-// 			if(err) {
-// 				reject(err);
-// 			}
-// 			else{
-// 				accept(pixels);
-// 			}
-// 		});
-// 	});
-// }
+var getBasePixels = function*(imgPath){
+	return new Promise(function(accept, reject){
+		getPixels(imgPath, function(err, pixels) {
+			if(err) {
+				reject(err);
+			}
+			else{
+				accept(pixels);
+			}
+		});
+	});
+}
 
-// var getPath = function(imgId){
-// 	return path.join(__dirname, "../../instagrams", imgId+".jpg");
-// }
+var getPath = function(imgId){
+	return path.join(__dirname, "../../instagrams", imgId+".jpg");
+}
 
-// var timesUsed = {};
+var findNext = function(imgs){
 
-// var findNext = function(currentId, imgIds, imgsById, x){
-// 	var scores = [];
-// 	timesUsed[currentId]+=STRIPE_SIZE;
+	return function(img, section){
 
-// 	for(var i=0; i<imgIds.length; i++){
-// 		var imgId = imgIds[i];
-// 		if(imgId !== currentId){
-// 			var score = 0;
-// 			for(var y=0; y<640; y++){
-// 				//for(var c=0; c<3; c++){
-// 					var left = imgsById[currentId].get(x, y, 1);
-// 					var right = imgsById[imgId].get(x, y, 1);
-// 					score += Math.abs(left-right);
-// 				//}
-// 			}
-// 			scores.push({
-// 				value: score * (timesUsed[imgId]+1),
-// 				id: imgId
-// 			});
-// 		}
-// 	}
+		var bestImg = null;
+		var bestSection = null;
+		var score = 0;
 
-// 	scores.sort(function(a, b){
-// 		return a.value - b.value;
-// 	});
+		for(var i=0; i<imgs.length; i++){
+			if(imgs[i] !== img){
+				var info = img.math.findSectionMostLikeSection(section, imgs[i].math);
 
-// 	return scores[0].id;
-// }
+				if(info.score > score){
+					bestImg = i;
+					bestSection = info.section;
+					score = info.score;
+				}
+			}
+		}
 
-// var saveImage = function(pixels, imgId){
-// 	savePixels(pixels, "jpg").pipe(fs.createWriteStream("./data/"+imgId+".jpg"));
-// 	return new Promise(function(resolve){
-// 		setTimeout(resolve, 200);
-// 	});
-// }
+		return {
+			img: imgs[bestImg],
+			section: bestSection
+		}
 
-// co(function*(){
+	}
 
-// 	var imgsById = {};
+}
 
-// 	console.error('loading images');
-// 	var imgIds = [STARTER_ID];
-// 	imgsById[STARTER_ID] = yield getBasePixels(getPath(STARTER_ID));
-// 	timesUsed[STARTER_ID] = 0
-// 	listOfImages.splice(listOfImages.indexOf(STARTER_ID), 1);
+var saveImage = function(pixels, imgId){
+	savePixels(pixels, "jpg").pipe(fs.createWriteStream("./data/"+imgId+".jpg"));
+	return new Promise(function(resolve){
+		setTimeout(resolve, 200);
+	});
+}
 
-// 	NUM_IMAGES = NUM_IMAGES === 'ALL' ? listOfImages.length : NUM_IMAGES;
+co(function*(){
 
-// 	while(imgIds.length < NUM_IMAGES && listOfImages.length > 0){
-// 		var i = Math.floor(Math.random()*listOfImages.length);
-// 		var imgId = listOfImages[i];
-// 		var imgPath = getPath(imgId);
-// 		var img = yield getBasePixels(imgPath);
-// 		listOfImages.splice(i,1);
-// 		imgIds.push(imgId);
-// 		imgsById[imgId] = img;
-// 		timesUsed[imgId] = 0;
+	var imgs = [];
 
-// 		if(imgIds.length % 30 === 0){
-// 			console.log('\t', (100/NUM_IMAGES)*imgIds.length+'%');
-// 		}
-// 	}
+	console.log('loading images');
+	for(var i=0; i<listOfImages.length; i++){
+		var imgId = listOfImages[i];
+		var imgPath = getPath(imgId);
+		var rawImg = yield getBasePixels(imgPath);
+		var mathImg = mathImg(rawImg, STRIPE_SIZE, 'down');
+		imgs.push({
+			raw: rawImg,
+			math: mathImg,
+			id: imgId
+		});
 
-// 	for(var i=0; i<imgIds.length; i++){
-// 		var pixels = ndarray([], [640, 640, 3]);
+		if(i % 30 === 0){
+			console.log('\t', (100/listOfImages.length)*i);
+		}
+	}
 
-// 		var currentId = null;
+	var finder = findNext(imgs);
 
-// 		for(var xBase=0; xBase<640-STRIPE_SIZE; xBase+=STRIPE_SIZE){
-// 			currentId = currentId ? findNext(currentId, imgIds, imgsById, xBase) : imgIds[i];
-// 			var img = imgsById[currentId];
-// 			for(var xAdd = 0; xAdd < STRIPE_SIZE; xAdd++){
-// 				var x = xBase + xAdd;
-// 				for(var y = 0; y<640; y++){
-// 					pixels.set(x, y, 0, img.get(x, y, 0));
-// 					pixels.set(x, y, 1, img.get(x, y, 1));
-// 					pixels.set(x, y, 2, img.get(x, y, 2));
-// 				}
-// 			}
-// 		}
+	for(var i=0; i<imgs.length; i++){
+		var pixels = ndarray([], [640, 640, 3]);
 
-// 		yield saveImage(pixels, imgIds[i])
+		var img = imgs[i];
+		var saveId = img.id;
 
-// 		if(i % 30 === 0){
-// 			console.log('\t', (100/NUM_IMAGES)*i+'%');
-// 		}
+		console.log('making', saveId, i, 'of', imgs.length);
 
-// 	}
+		var imgSection = 0;
+		for(var xBase=0; xBase<640; xBase+=STRIPE_SIZE) {
+			if(xBase>0){
+				var next = finder(img, imgSection);
+				img = next.img;
+				imgSection = next.section;
+			}
 
-// }).then(sketchSaver).catch(function(err){
-// 	console.log(err.message);
-// 	console.log(err.stack);
-// 	sketchSaver();
-// });
+			for(var xAdd = 0; xAdd < STRIPE_SIZE; xAdd++){
+				var x = xBase + xAdd;
+				var xSection = (imgSection * STRIPE_SIZE) + xBase;
+				for(var y = 0; y<640; y++){
+					pixels.set(x, y, 0, img.raw.get(xSection, y, 0));
+					pixels.set(x, y, 1, img.raw.get(xSection, y, 1));
+					pixels.set(x, y, 2, img.raw.get(xSection, y, 2));
+				}
+			}
+
+			console.log('\t', xBase);
+		}
+
+		yield saveImage(pixels, saveId);
+	}
+
+}).then(sketchSaver).catch(function(err){
+	console.log(err.message);
+	console.log(err.stack);
+	sketchSaver();
+});

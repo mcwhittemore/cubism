@@ -1,9 +1,5 @@
 var ndarray = require('ndarray');
 
-// img is an ndarray of rgb values
-// stripSize is how large the stripe should be
-// stripDirection is either down or across
-
 var NUM_BITS = 3;
 var COLORS_PER_NUMBER = 10;
 var SHIFT_START = 28;
@@ -30,10 +26,12 @@ var decode = function(input){
 }
 
 var compare = function(a, b){
-	var xor = a ^ b;
-	var hold = (xor & a) ^ xor;
-	return (hold >>> 0).toString(2);
+	return decode((((a & b) | (~a & ~b)) << 1) >>> 1).reduce(function(v, p){ return v+p; }, 0);
 }
+
+// img is an ndarray of rgb values
+// stripSize is how large the stripe should be
+// stripDirection is either down or across
 
 module.exports = function(img, stripSize, stripDirection){
 
