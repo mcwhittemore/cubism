@@ -43,7 +43,7 @@ co(function*(){
 	for(var i=0; i<imgIds.length; i++){
 		var imgId = imgIds[i];
 		imgsById[imgId] = yield getBasePixels(getPath(imgId));
-		var comm = communities[imgId] + '';
+		var comm = Math.floor(communities[imgId] / 5) + '';
 		imgIdsByCommunity[comm] = imgIdsByCommunity[comm] || [];
 		imgIdsByCommunity[comm].push(imgId);
 
