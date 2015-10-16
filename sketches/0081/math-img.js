@@ -83,7 +83,7 @@ module.exports = function(img, stripSize, stripDirection){
 					val += compare(data.get(baseSection, j), other.get(i, j));
 				}
 
-				val = val(val, i);
+				val = fn(val, i);
 
 				if(val > bestScore){
 					bestScore = val;
