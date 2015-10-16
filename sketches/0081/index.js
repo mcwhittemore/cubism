@@ -6,6 +6,7 @@ var path = require("path");
 var getPixels = require("get-pixels");
 var savePixels = require("save-pixels");
 var ndarray = require('ndarray');
+var mathImg = require('./math-img');
 
 var STRIPE_SIZE = 5;
 
