@@ -104,8 +104,8 @@ co(function*(){
 		var x = 0;
 		var y = 0;
 
-		for(var i=0; i<blocksPerImg; i++){
-			var baseBlock = mine[i];
+		for(var k=0; k<blocksPerImg; k++){
+			var baseBlock = mine[k];
 			var score = 0;
 			var bestMatch = null;
 
