@@ -1,6 +1,6 @@
 var sketchSaver = require("../../lib/sketch-saver");
 var co = require("co");
-var listOfImages = require("./image-ids.json").splice(0, 200);
+var listOfImages = require("./image-ids.json").splice(0, 10);
 var fs = require("fs");
 var path = require("path");
 var getPixels = require("get-pixels");
@@ -92,7 +92,7 @@ co(function*(){
 
 	var finder = findNext(imgs);
 
-	var width = 1920;
+	var width = 640;
 
 	for(var i=0; i<imgs.length; i++){
 		console.time('startImg');

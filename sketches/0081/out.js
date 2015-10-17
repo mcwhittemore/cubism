@@ -59,11 +59,11 @@ co(function*(){
 		console.log('building image', comm);
 		var commImgs = imgIdsByCommunity[comm];
 
-		var pixels = ndarray([], [1920, 1280, 3]);
+		var pixels = ndarray([], [640, 640, 3]);
 
-		for(var x = 0; x<1920; x++){
+		for(var x = 0; x<640; x++){
 			console.log('\trow', x);
-			for(var y = 0; y<1280; y++){
+			for(var y = 0; y<640; y++){
 				var red = 0;
 				var green = 0;
 				var blue = 0;

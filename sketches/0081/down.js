@@ -8,7 +8,7 @@ var ndarray = require('ndarray');
 var mathImg = require('./math-img');
 
 var STRIPE_SIZE = 5;
-var NUM_SECTIONS = Math.floor(1920 / STRIPE_SIZE);
+var NUM_SECTIONS = Math.floor(640 / STRIPE_SIZE);
 
 var getBasePixels = function*(imgPath){
 	return new Promise(function(accept, reject){
@@ -108,11 +108,11 @@ co(function*(){
 
 	var finder = findNext(imgs);
 
-	var width = 1280;
+	var width = 640;
 
 	for(var i=0; i<imgs.length; i++){
 		console.time('startImg');
-		var pixels = ndarray([], [1920, width, 3]);
+		var pixels = ndarray([], [640, width, 3]);
 
 		var img = imgs[i];
 		var saveId = img.id;
@@ -132,7 +132,7 @@ co(function*(){
 			for(var yAdd = 0; yAdd < STRIPE_SIZE; yAdd++){
 				var y = yBase + yAdd;
 				var ySection = (imgSection * STRIPE_SIZE) + yAdd;
-				for(var x = 0; x<1920; x++){
+				for(var x = 0; x<640; x++){
 					pixels.set(x, y, 0, img.raw.get(x, ySection, 0));
 					pixels.set(x, y, 1, img.raw.get(x, ySection, 1));
 					pixels.set(x, y, 2, img.raw.get(x, ySection, 2));
