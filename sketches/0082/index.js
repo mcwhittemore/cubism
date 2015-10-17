@@ -108,7 +108,7 @@ co(function*(){
 				var otherBlock = others[j];
 				var val = colors.compare(baseBlock.color, otherBlock.color);
 				if(val>score){
-					bestMatch = otherBlock.img;
+					bestMatch = otherBlock
 					score = val;
 				}
 			}
