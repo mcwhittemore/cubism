@@ -1,6 +1,6 @@
 var sketchSaver = require("../../lib/sketch-saver");
 var co = require("co");
-var listOfImages = require("./image-ids.json").splice(0, 50);
+var listOfImages = require("./image-ids.json").splice(0, 5);
 var fs = require("fs");
 var path = require("path");
 var getPixels = require("get-pixels");
@@ -8,7 +8,7 @@ var savePixels = require("save-pixels");
 var ndarray = require('ndarray');
 var colors = require('./colors');
 
-var BLOCK_SIZE = 20;
+var BLOCK_SIZE = 10;
 
 var getBasePixels = function*(imgPath){
 	return new Promise(function(accept, reject){
@@ -37,12 +37,15 @@ var saveImage = function(pixels, imgId){
 co(function*(){
 
 	var blocks = [];
+	var imgsById = {};
 
 	console.log('loading images');
 	for(var i=0; i<listOfImages.length; i++){
 		var imgId = listOfImages[i];
 		var imgPath = getPath(imgId);
 		var rawImg = yield getBasePixels(imgPath);
+
+		imgsById[imgId] = rawImg;
 
 		for(var xBase=0; xBase<640; xBase+=BLOCK_SIZE){
 			for(var yBase = 0; yBase < 640; yBase+=BLOCK_SIZE){
@@ -51,22 +54,11 @@ co(function*(){
 				var greenAll = 0;
 				var blueAll = 0;
 
-				var smallPic = ndarray([], [BLOCK_SIZE, BLOCK_SIZE, 3]);
-
 				for(var xAdd = 0; xAdd < BLOCK_SIZE; xAdd++){
 					for(var yAdd = 0; yAdd < BLOCK_SIZE; yAdd++){
-						var red = rawImg.get(xBase+xAdd, yBase+yAdd, 0);
-						var green = rawImg.get(xBase+xAdd, yBase+yAdd, 1);
-						var blue = rawImg.get(xBase+xAdd, yBase+yAdd, 2);
-
-						smallPic.set(xAdd, yAdd, 0, red);
-						smallPic.set(xAdd, yAdd, 1, green);
-						smallPic.set(xAdd, yAdd, 2, blue);
-
-						redAll += red;
-						greenAll += green;
-						blueAll += blue;
-
+						redAll += rawImg.get(xBase+xAdd, yBase+yAdd, 0);
+						greenAll += rawImg.get(xBase+xAdd, yBase+yAdd, 1);
+						blueAll += rawImg.get(xBase+xAdd, yBase+yAdd, 2);
 					}
 				}
 
@@ -77,7 +69,8 @@ co(function*(){
 				blocks.push({
 					imgId: imgId,
 					color: colors.encode(red, green, blue),
-					img: smallPic
+					x: xBase,
+					y: yBase
 				});
 			}
 		}
@@ -120,11 +113,13 @@ co(function*(){
 				}
 			}
 
+			var img = imgsById[bestMatch.imgId];
+
 			for(var xAdd=0; xAdd < BLOCK_SIZE; xAdd++){
 				for(var yAdd = 0; yAdd < BLOCK_SIZE; yAdd++){
-					pixels.set(x+xAdd, y+yAdd, 0, bestMatch.get(xAdd, yAdd, 0));
-					pixels.set(x+xAdd, y+yAdd, 1, bestMatch.get(xAdd, yAdd, 1));
-					pixels.set(x+xAdd, y+yAdd, 2, bestMatch.get(xAdd, yAdd, 2));
+					pixels.set(x+xAdd, y+yAdd, 0, img.get(bestMatch.x + xAdd, bestMatch.y + yAdd, 0));
+					pixels.set(x+xAdd, y+yAdd, 1, img.get(bestMatch.x + xAdd, bestMatch.y + yAdd, 1));
+					pixels.set(x+xAdd, y+yAdd, 2, img.get(bestMatch.x + xAdd, bestMatch.y + yAdd, 2));
 				}
 			}
 
