@@ -1,6 +1,6 @@
 var sketchSaver = require("../../lib/sketch-saver");
 var co = require("co");
-var listOfImages = require("./image-ids.json").splice(0, 10);
+var listOfImages = require("./image-ids.json").splice(0, 50);
 var fs = require("fs");
 var path = require("path");
 var getPixels = require("get-pixels");
@@ -8,7 +8,7 @@ var savePixels = require("save-pixels");
 var ndarray = require('ndarray');
 var colors = require('./colors');
 
-var BLOCK_SIZE = 10;
+var BLOCK_SIZE = 20;
 
 var getBasePixels = function*(imgPath){
 	return new Promise(function(accept, reject){
