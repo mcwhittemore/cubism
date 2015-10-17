@@ -44,8 +44,6 @@ co(function*(){
 		var imgPath = getPath(imgId);
 		var rawImg = yield getBasePixels(imgPath);
 
-		imgsById[imgId] = rawImg;
-
 		for(var xBase=0; xBase<640; xBase+=BLOCK_SIZE){
 			for(var yBase = 0; yBase < 640; yBase+=BLOCK_SIZE){
 
