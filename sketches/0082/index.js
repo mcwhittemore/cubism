@@ -37,7 +37,6 @@ var saveImage = function(pixels, imgId){
 co(function*(){
 
 	var blocks = [];
-	var imgsById = {};
 
 	console.log('loading images');
 	for(var i=0; i<listOfImages.length; i++){
@@ -88,50 +87,52 @@ co(function*(){
 		if(i % 30 === 0){
 			console.log('\t', (100/listOfImages.length)*i);
 		}
+
+		rawImg = null;
 	}
 
 	var numBlocks = blocks.length;
+
+	var blocksPerImg = BLOCK_SIZE * BLOCK_SIZE;
 
 	for(var i=0; i<listOfImages.length; i++){
 		var imgId = listOfImages[i];
 		console.log('building image', imgId);
 
-		var pixels = ndarray([], [640*BLOCK_SIZE, 640*BLOCK_SIZE, 3]);
+		var pixels = ndarray([], [640, 640, 3]);
+		var others = [].concat(blocks);
+		var mine = others.splice(i*blocksPerImg, i*blocksPerImg+blocksPerImg);
 
-		var img = imgsById[imgId];
+		var x = 0;
+		var y = 0;
 
-		for(var x=0; x<640; x++){
-			for(var y=640; y<640; y++){
-				var color = colors.encode(img.get(x, y, 0), img.get(x, y, 1), img.get(x, y, 2));
-				var score = 0;
-				var bestBlock = null;
+		for(var i=0; i<blocksPerImg; i++){
+			var baseBlock = mine[i];
+			var score = 0;
+			var bestMatch = null;
 
-				console.log('\tfinding block', x, y);
-				for(var j=0; j<numBlocks; j++){
-					var block = blocks[j];
-					if(block.imgId != imgId){
-						var tempScore = colors.compare(color, block.color);
-						if(tempScore > score){
-							bestBlock = block;
-							score = tempScore;
-						}
-					}
-
-					if(j % 30 === 0){
-						console.log('\t\t', (100/numBlocks)*i);
-					}
+			for(var j=0; j<others.length; j++){
+				var otherBlock = others[j];
+				var val = colors.compare(baseBlock.color, otherBlock.color);
+				if(val>score){
+					bestMatch = otherBlock.img;
+					score = val;
 				}
+			}
 
-				var xBase = x * BLOCK_SIZE;
-				var yBase = y * BLOCK_SIZE;
-
-				for(var xAdd = 0; xAdd < BLOCK_SIZE; xAdd++){
-					for(var yAdd = 0; yAdd < BLOCK_SIZE; yAdd++){
-						pixels.set(xBase+xAdd, yBase+yAdd, 0, bestBlock.img.get(xAdd, yAdd, 0));
-						pixels.set(xBase+xAdd, yBase+yAdd, 1, bestBlock.img.get(xAdd, yAdd, 1));
-						pixels.set(xBase+xAdd, yBase+yAdd, 2, bestBlock.img.get(xAdd, yAdd, 2));
-					}
+			for(var xAdd=0; xAdd < BLOCK_SIZE; xAdd++){
+				for(var yAdd = 0; yAdd < BLOCK_SIZE; yAdd++){
+					pixels.set(x+xAdd, y+yAdd, 0, bestMatch.get(xAdd, yAdd, 0));
+					pixels.set(x+xAdd, y+yAdd, 1, bestMatch.get(xAdd, yAdd, 1));
+					pixels.set(x+xAdd, y+yAdd, 2, bestMatch.get(xAdd, yAdd, 2));
 				}
+			}
+
+			x += BLOCK_SIZE;
+
+			if(x >= 640){
+				x = 0;
+				y += BLOCK_SIZE;
 			}
 		}
 
