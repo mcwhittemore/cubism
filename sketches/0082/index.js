@@ -8,8 +8,7 @@ var savePixels = require("save-pixels");
 var ndarray = require('ndarray');
 var colors = require('./colors');
 
-var STRIPE_SIZE = 5;
-var NUM_SECTIONS = Math.floor(640 / STRIPE_SIZE);
+var BLOCK_SIZE = 5;
 
 var getBasePixels = function*(imgPath){
 	return new Promise(function(accept, reject){
