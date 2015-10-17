@@ -8,7 +8,7 @@ var savePixels = require("save-pixels");
 var ndarray = require('ndarray');
 var colors = require('./colors');
 
-var BLOCK_SIZE = 5;
+var BLOCK_SIZE = 10;
 
 var getBasePixels = function*(imgPath){
 	return new Promise(function(accept, reject){
@@ -91,7 +91,9 @@ co(function*(){
 
 	var numBlocks = blocks.length;
 
-	var blocksPerImg = BLOCK_SIZE * BLOCK_SIZE;
+	var blocksPerImg = Math.pow(Math.floor(640 / BLOCK_SIZE), 2);
+
+	console.log(blocksPerImg);
 
 	for(var i=0; i<listOfImages.length; i++){
 		var imgId = listOfImages[i];
@@ -126,19 +128,19 @@ co(function*(){
 				}
 			}
 
-			x += BLOCK_SIZE;
+			y += BLOCK_SIZE;
 
-			if(x >= 640){
-				x = 0;
-				y += BLOCK_SIZE;
+			if(y >= 640){
+				y = 0;
+				x += BLOCK_SIZE;
+			}
+
+			if(k % 30 === 0){
+				console.log('\t', (100/blocksPerImg)*k);
 			}
 		}
 
 		yield saveImage(pixels, imgId);
-
-		if(i % 30 === 0){
-			console.log('\t', (100/listOfImages.length)*i);
-		}
 	}
 
 
