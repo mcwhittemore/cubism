@@ -10,7 +10,7 @@ var colors = require('./colors');
 var ngraph = require('ngraph.graph');
 var Modularity = require('ngraph.modularity');
 
-var BLOCK_SIZE = 64;
+var BLOCK_SIZE = 32;
 
 var getBasePixels = function*(imgPath){
 	return new Promise(function(accept, reject){
@@ -38,24 +38,20 @@ var saveImage = function(pixels, imgId){
 
 var compareCommunities = function(outer, inner){
 	var total = 0;
-	var setObj = outer.imgIds.concat(inner.imgIds).filter(function(v, id){
-		if(v[id]){
+	var numUnique = 0;
+	var setObj = outer.imgIds.concat(inner.imgIds).reduce(function(v, id){
+		if(v[id] === 1){
 			v[id] = 2;
+			numUnique--;
 		}
-		else{
+		else if(v[id] === undefined){
 			total++;
+			numUnique++;
 			v[id] = 1;
 		}
 
 		return v;
-	});
-
-	var numUnique = outer.imgIds.concat(inner.imgIds).reduce(function(v, id){
-		if(setObj[id] === 1){
-			v++;
-		}
-		return v;
-	}, 0);
+	}, {});
 
 	return (1/total)*(total-numUnique);
 }
