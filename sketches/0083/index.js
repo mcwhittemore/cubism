@@ -1,6 +1,6 @@
 var sketchSaver = require("../../lib/sketch-saver");
 var co = require("co");
-var listOfImages = require("./image-ids.json").splice(0, 100);
+var listOfImages = require("./image-ids.json").splice(0, 50);
 var fs = require("fs");
 var path = require("path");
 var getPixels = require("get-pixels");
@@ -10,7 +10,7 @@ var colors = require('./colors');
 var ngraph = require('ngraph.graph');
 var Modularity = require('ngraph.modularity');
 
-var BLOCK_SIZE = 32;
+var BLOCK_SIZE = 64;
 
 var getBasePixels = function*(imgPath){
 	return new Promise(function(accept, reject){
@@ -178,6 +178,7 @@ co(function*(){
 
 	console.log('merging communities', allCommunities.length);
 	var allCommLowPoint = Math.floor(allCommunities.length * .9);
+	var startTime = process.hrtime();
 	for(var i=0; i<allCommunities.length; i++){
 
 		var outer = allCommunities[i];
@@ -208,7 +209,26 @@ co(function*(){
 		}
 
 		if(i % 30 === 0){
-			console.log('\t', (100/allCommunities.length)*i);
+			var diff = process.hrtime(startTime);
+			var secondsPer = ((diff[0] * 1e9 + diff[1]) / 1000000) / i;
+			var timeLeft = secondsPer * (allCommunities.length - i);
+			var showTime = 0;
+			var showUnit = 0;
+
+			if(timeLeft > 3600){
+				showTime = (timeLeft / 3600).toFixed(4);
+				showUnit = 'hours';
+			}
+			else if(timeLeft > 60){
+				showTime = (timeLeft / 60).toFixed(2);
+				showUnit = 'minutes';
+			}
+			else{
+				showTime = timeLeft;
+				showUnit = 'seconds';
+			}
+
+			console.log('\t', ((100/allCommunities.length)*i).toFixed(4), showTime, showUnit);
 		}
 	}
 
@@ -248,6 +268,18 @@ co(function*(){
 		for(var xBase=0; xBase < numBlocksPerDimention; xBase++){
 			for(var yBase = 0; yBase < numBlocksPerDimention; yBase++){
 				var community = communitiesByBlock.get(xBase, yBase) || [];
+
+				if(community.length === 0){
+					for(var xAdd = 0; xAdd < BLOCK_SIZE; xAdd++){
+						var x = (xBase * BLOCK_SIZE) + xAdd;
+						for(var yAdd = 0; yAdd < BLOCK_SIZE; yAdd++){
+							var y = (yBase * BLOCK_SIZE) + yAdd;
+							pixels.set(x, y, 0, 0);
+							pixels.set(x, y, 1, 255);
+							pixels.set(x, y, 2, 0);
+						}
+					}
+				}
 
 				for(var j=0; j<community.length; j++){
 					var imgId = community[j];
