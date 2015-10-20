@@ -228,7 +228,7 @@ co(function*(){
 				showUnit = 'seconds';
 			}
 
-			console.log('\t', ((100/allCommunities.length)*i).toFixed(4), showTime, showUnit);
+			console.log('\t', ((100/allCommunities.length)*i).toFixed(4)+'%', '----', showTime, showUnit);
 		}
 	}
 
