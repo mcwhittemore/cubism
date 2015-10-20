@@ -162,12 +162,14 @@ co(function*(){
 			for(var i=0; i<commKeys.length; i++){
 				var key = commKeys[i];
 
-				var allCommId = xBase+'-'+yBase+'-'+i;
+				var allCommId = allCommunities.length + '';
 
 				allCommunitiesGraph.addNode(allCommId);
 
 				allCommunities.push({
 					id: allCommId,
+					xBase: xBase,
+					yBase: yBase,
 					imgIds: imgsByComm[key]
 				});
 			}
@@ -213,10 +215,63 @@ co(function*(){
 	var modularity = new Modularity();
 	var allCommunitiesGrouped = modularity.execute(allCommunitiesGraph);
 
-	console.log(allCommunitiesGrouped);
+	var finalImageGroups = {};
 
+	var allCommunityIds = Object.keys(allCommunitiesGrouped);
 
-	//yield saveImage(pixels, imgId);
+	for(var i=0; i<allCommunityIds.length; i++){
+		var id = allCommunityIds[i];
+		var commId = allCommunitiesGrouped[id] + '';
+		finalImageGroups[commId] = finalImageGroups[commId] || [];
+		finalImageGroups[commId].push(id);
+	}
+
+	var finalImageGroupIds = Object.keys(finalImageGroups);
+
+	for(var i=0; i<finalImageGroupIds.length; i++){
+		var id = finalImageGroupIds[i];
+		console.log('building image', id);
+		var allCommunityIds = finalImageGroups[id];
+
+		var communitiesByBlock = ndarray([], [numBlocksPerDimention, numBlocksPerDimention]);
+
+		for(var j=0; j<allCommunityIds.length; j++){
+			var allCommId = parseInt(allCommunityIds[j]);
+			var comm = allCommunities[allCommId];
+			var imgIds = communitiesByBlock.get(comm.xBase, comm.yBase) || [];
+			imgIds = imgIds.concat(comm.imgIds);
+			communitiesByBlock.set(comm.xBase, comm.yBase, imgIds)
+		}
+
+		var pixels = ndarray([], [640, 640, 3]);
+
+		for(var xBase=0; xBase < numBlocksPerDimention; xBase++){
+			for(var yBase = 0; yBase < numBlocksPerDimention; yBase++){
+				var community = communitiesByBlock.get(xBase, yBase) || [];
+
+				for(var j=0; j<community.length; j++){
+					var imgId = community[j];
+					var img = imgsById[imgId];
+
+					for(var xAdd = 0; xAdd < BLOCK_SIZE; xAdd++){
+						var x = (xBase * BLOCK_SIZE) + xAdd;
+						for(var yAdd = 0; yAdd < BLOCK_SIZE; yAdd++){
+							var y = (yBase * BLOCK_SIZE) + yAdd;
+
+							for(var c=0; c<3; c++){
+								var current = pixels.get(x, y, c) || 0;
+								var imgColor = img.get(x, y, c) * (1/community.length);
+								var after = current + imgColor;
+								pixels.set(x, y, c, after);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		yield saveImage(pixels, id);
+	}
 
 
 }).then(sketchSaver).catch(function(err){
