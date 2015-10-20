@@ -1,6 +1,6 @@
 var sketchSaver = require("../../lib/sketch-saver");
 var co = require("co");
-var listOfImages = require("./image-ids.json").splice(0, 50);
+var listOfImages = require("./image-ids.json").splice(0, 200);
 var fs = require("fs");
 var path = require("path");
 var getPixels = require("get-pixels");
@@ -10,7 +10,7 @@ var colors = require('./colors');
 var ngraph = require('ngraph.graph');
 var Modularity = require('ngraph.modularity');
 
-var BLOCK_SIZE = 64;
+var BLOCK_SIZE = 32;
 
 var getBasePixels = function*(imgPath){
 	return new Promise(function(accept, reject){
@@ -65,7 +65,7 @@ co(function*(){
 
 	var blocksByImgAndLoc = ndarray([], [listOfImages.length, numBlocksPerDimention, numBlocksPerDimention]);
 
-	console.log('loading images');
+	console.log('loading images', listOfImages.length);
 	for(var i=0; i<listOfImages.length; i++){
 		var imgId = listOfImages[i];
 		var imgPath = getPath(imgId);
@@ -109,7 +109,7 @@ co(function*(){
 	var allCommunities = [];
 	var allCommunitiesGraph = ngraph();
 	for(var xBase = 0; xBase < numBlocksPerDimention; xBase++){
-		console.time('xBaseSection');
+		console.time('\t - xBaseSection');
 		console.log('\t set', xBase, 100/numBlocksPerDimention*xBase);
 		for(var yBase = 0; yBase < numBlocksPerDimention; yBase++){
 
@@ -171,17 +171,20 @@ co(function*(){
 
 				var allCommId = allCommunities.length + '';
 
-				allCommunitiesGraph.addNode(allCommId);
+				if(imgsByComm[key].length > 2){
+					allCommunitiesGraph.addNode(allCommId);
 
-				allCommunities.push({
-					id: allCommId,
-					xBase: xBase,
-					yBase: yBase,
-					imgIds: imgsByComm[key]
-				});
+					allCommunities.push({
+						id: allCommId,
+						xBase: xBase,
+						yBase: yBase,
+						imgIds: imgsByComm[key]
+					});
+				}
+
 			}
 		}
-		console.timeEnd('xBaseSection');
+		console.timeEnd('\t - xBaseSection');
 	}
 
 	console.log('merging communities', allCommunities.length);
