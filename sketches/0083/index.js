@@ -36,6 +36,30 @@ var saveImage = function(pixels, imgId){
 	});
 }
 
+var compareCommunities = function(outer, inner){
+	var total = 0;
+	var setObj = outer.imgIds.concat(inner.imgIds).filter(function(v, id){
+		if(v[id]){
+			v[id] = 2;
+		}
+		else{
+			total++;
+			v[id] = 1;
+		}
+
+		return v;
+	});
+
+	var numUnique = outer.imgIds.concat(inner.imgIds).reduce(function(v, id){
+		if(setObj[id] === 1){
+			v++;
+		}
+		return v;
+	}, 0);
+
+	return (1/total)*(total-numUnique);
+}
+
 co(function*(){
 
 	var imgsById = {};
@@ -139,8 +163,6 @@ co(function*(){
 
 			var commKeys = Object.keys(imgsByComm);
 
-			console.log(commKeys);
-
 			for(var i=0; i<commKeys.length; i++){
 				var key = commKeys[i];
 
@@ -168,7 +190,7 @@ co(function*(){
 		for(var j=0; j<allCommunities.length; j++){
 			var inner = allCommunities[j];
 
-			var score = 0;
+			var score = inner.id === outer.id ? 0 : compareCommunities(outer, inner);
 
 			scoresByAllCommId[inner.id] = score;
 			values.push(score);
