@@ -220,11 +220,11 @@ co(function*(){
 				showUnit = 'hours';
 			}
 			else if(timeLeft > 60){
-				showTime = (timeLeft / 60).toFixed(2);
+				showTime = (timeLeft / 60).toFixed(4);
 				showUnit = 'minutes';
 			}
 			else{
-				showTime = timeLeft;
+				showTime = timeLeft.toFixed(4);
 				showUnit = 'seconds';
 			}
 
