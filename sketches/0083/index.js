@@ -132,7 +132,7 @@ co(function*(){
 
 			for(var i=0; i<listOfImages.length; i++){
 				var imgId = listOfImages[i];
-				var comm = communities[imgsById] + '';
+				var comm = communities[imgId] + '';
 				imgsByComm[comm] = imgsByComm[comm] || [];
 				imgsByComm[comm].push(imgId);
 			}
