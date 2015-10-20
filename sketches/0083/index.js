@@ -109,9 +109,16 @@ co(function*(){
 	var allCommunities = [];
 	var allCommunitiesGraph = ngraph();
 	for(var xBase = 0; xBase < numBlocksPerDimention; xBase++){
+		console.time('xBaseSection');
+		console.log('\t set', xBase, 100/numBlocksPerDimention*xBase);
 		for(var yBase = 0; yBase < numBlocksPerDimention; yBase++){
 
 			var graph = ngraph();
+
+			for(var i=0; i<listOfImages.length; i++){
+				var imgId = listOfImages[i];
+				graph.addNode(imgId);
+			}
 
 			for(var i=0; i<listOfImages.length; i++){
 
@@ -174,6 +181,7 @@ co(function*(){
 				});
 			}
 		}
+		console.timeEnd('xBaseSection');
 	}
 
 	console.log('merging communities', allCommunities.length);
