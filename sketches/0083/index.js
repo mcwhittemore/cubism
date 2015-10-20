@@ -1,6 +1,6 @@
 var sketchSaver = require("../../lib/sketch-saver");
 var co = require("co");
-var listOfImages = require("./image-ids.json").splice(0, 3);
+var listOfImages = require("./image-ids.json").splice(0, 10);
 var fs = require("fs");
 var path = require("path");
 var getPixels = require("get-pixels");
