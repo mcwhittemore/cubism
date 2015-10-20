@@ -128,8 +128,6 @@ co(function*(){
 			var modularity = new Modularity();
 			var communities = modularity.execute(graph);
 
-			console.log(communities);
-
 			var imgsByComm = {};
 
 			for(var i=0; i<listOfImages.length; i++){
@@ -140,6 +138,8 @@ co(function*(){
 			}
 
 			var commKeys = Object.keys(imgsByComm);
+
+			console.log(commKeys);
 
 			for(var i=0; i<commKeys.length; i++){
 				var key = commKeys[i];
