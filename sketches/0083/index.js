@@ -210,7 +210,7 @@ co(function*(){
 
 		if(i % 30 === 0){
 			var diff = process.hrtime(startTime);
-			var secondsPer = ((diff[0] * 1e9 + diff[1]) / 1000000) / i;
+			var secondsPer = ((diff[0] * 1e9 + diff[1]) / 1000000000) / i;
 			var timeLeft = secondsPer * (allCommunities.length - i);
 			var showTime = 0;
 			var showUnit = 0;
