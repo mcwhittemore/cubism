@@ -288,24 +288,6 @@ co(function*(){
 
 				if(community.length > 0){
 					pixelBlock = pixelBuilder(imgsById, community, xBase, yBase, BLOCK_SIZE, 8);
-					// for(var j=0; j<community.length; j++){
-					// 	var imgId = community[j];
-					// 	var img = imgsById[imgId];
-
-					// 	for(var xAdd = 0; xAdd < BLOCK_SIZE; xAdd++){
-					// 		var x = (xBase * BLOCK_SIZE) + xAdd;
-					// 		for(var yAdd = 0; yAdd < BLOCK_SIZE; yAdd++){
-					// 			var y = (yBase * BLOCK_SIZE) + yAdd;
-
-					// 			for(var c=0; c<3; c++){
-					// 				var current = pixelBlock.get(xAdd, yAdd, c) || 0;
-					// 				var imgColor = img.get(x, y, c) * (1/community.length);
-					// 				var after = current + imgColor;
-					// 				pixelBlock.set(xAdd, yAdd, c, after);
-					// 			}
-					// 		}
-					// 	}
-					// }
 				}
 				else {
 					pixelBlock = greenBlock;

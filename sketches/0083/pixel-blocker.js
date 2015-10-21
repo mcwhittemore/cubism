@@ -14,10 +14,10 @@ module.exports = function(imgsById, community, xBase, yBase, baseBlockSize, unit
 				var y = (yBase * baseBlockSize) + yAdd;
 
 				for(var c=0; c<3; c++){
-					var current = basePixels.get(x, y, c) || 0;
+					var current = pixelBlock.get(xAdd, yAdd, c) || 0;
 					var imgColor = img.get(x, y, c) * (1/community.length);
 					var after = current + imgColor;
-					basePixels.set(xAdd, yAdd, c, after);
+					pixelBlock.set(xAdd, yAdd, c, after);
 				}
 			}
 		}
