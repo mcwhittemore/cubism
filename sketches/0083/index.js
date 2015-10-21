@@ -12,7 +12,7 @@ var Modularity = require('ngraph.modularity');
 var pixelBuilder = require('./pixel-blocker');
 
 var BLOCK_SIZE = 128;
-var TOP_LINE = .98;
+var TOP_LINE = .8;
 var UNIT_BLOCK_SIZE = 16;
 
 var getBasePixels = function*(imgPath){
@@ -174,7 +174,7 @@ co(function*(){
 
 				var allCommId = allCommunities.length + '';
 
-				if(imgsByComm[key].length > 2){
+				if(imgsByComm[key].length > 0){
 					allCommunitiesGraph.addNode(allCommId);
 
 					allCommunities.push({
