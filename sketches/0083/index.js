@@ -11,8 +11,8 @@ var ngraph = require('ngraph.graph');
 var Modularity = require('ngraph.modularity');
 var pixelBuilder = require('./pixel-blocker');
 
-var BLOCK_SIZE = 32;
-var TOP_LINE = .5;
+var BLOCK_SIZE = 16;
+var TOP_LINE = .25;
 var UNIT_BLOCK_SIZE = 4;
 var MIN_IMGS_TO_BE_NODE = 2;
 
