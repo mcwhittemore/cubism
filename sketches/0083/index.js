@@ -1,6 +1,7 @@
 var sketchSaver = require("../../lib/sketch-saver");
 var co = require("co");
 var listOfImages = require("./image-ids.json");
+var fs = require("fs");
 var path = require("path");
 var getPixels = require("get-pixels");
 var savePixels = require("save-pixels");
@@ -171,7 +172,7 @@ co(function*(){
 
 				var allCommId = allCommunities.length + '';
 
-				if(imgsByComm[key].length > 0){
+				if(imgsByComm[key].length > 2){
 					allCommunitiesGraph.addNode(allCommId);
 
 					allCommunities.push({
@@ -260,8 +261,6 @@ co(function*(){
 
 	var finalImageGroupIds = Object.keys(finalImageGroups);
 
-	var greenBlock = ndarray([], [BLOCK_SIZE, BLOCK_SIZE, 3]);
-
 	for(var i=0; i<finalImageGroupIds.length; i++){
 		var id = finalImageGroupIds[i];
 		console.log('building image', id);
@@ -269,12 +268,26 @@ co(function*(){
 
 		var communitiesByBlock = ndarray([], [numBlocksPerDimention, numBlocksPerDimention]);
 
+		var allImgIdsForGroup = [];
+
 		for(var j=0; j<allCommunityIds.length; j++){
 			var allCommId = parseInt(allCommunityIds[j]);
 			var comm = allCommunities[allCommId];
 			var imgIds = communitiesByBlock.get(comm.xBase, comm.yBase) || [];
-			imgIds = imgIds.concat(comm.imgIds);
-			communitiesByBlock.set(comm.xBase, comm.yBase, imgIds)
+
+			for(var k=0; k<comm.imgIds.length; k++){
+				var imgId = comm.imgIds[k];
+				if(imgIds.indexOf(imgId) === -1){
+					imgIds.push(imgId);
+				}
+
+				if(allImgIdsForGroup.indexOf(imgId) === -1){
+					allImgIdsForGroup.push(imgId);
+				}
+			}
+
+			communitiesByBlock.set(comm.xBase, comm.yBase, imgIds);
+
 		}
 
 		var pixels = ndarray([], [640, 640, 3]);
@@ -289,7 +302,7 @@ co(function*(){
 					pixelBlock = pixelBuilder(imgsById, community, xBase, yBase, BLOCK_SIZE, 8);
 				}
 				else {
-					pixelBlock = greenBlock;
+					pixelBlock = pixelBuilder(imgsById, allImgIdsForGroup, xBase, yBase, BLOCK_SIZE, 8);
 				}
 
 				for(var xAdd = 0; xAdd < BLOCK_SIZE; xAdd++){
