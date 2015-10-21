@@ -79,10 +79,12 @@ module.exports = function(imgsById, community, xBase, yBase, baseBlockSize, unit
 				}
 			}
 
-			for(var x = 0; x < unitBlockSize; x++){
-				for(var y = 0; y < unitBlockSize; y++){
+			for(var xDeep = 0; xDeep < unitBlockSize; xDeep++){
+				var x = (xAdd * unitBlockSize) + xDeep;
+				for(var yDeep = 0; yDeep < unitBlockSize; yDeep++){
+					var y = (yAdd * unitBlockSize) + yDeep;
 					for(var c = 0; c < 3; c++){
-						finalPixels.set(x, y, c, bestMatch.get(x, y, c));
+						finalPixels.set(x, y, c, bestMatch.get(xDeep, yDeep, c));
 					}
 				}
 			}
