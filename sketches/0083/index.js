@@ -259,6 +259,8 @@ co(function*(){
 
 	var finalImageGroupIds = Object.keys(finalImageGroups);
 
+	var greenBlock = ndarray([], [BLOCK_SIZE, BLOCK_SIZE, 3]);
+
 	for(var i=0; i<finalImageGroupIds.length; i++){
 		var id = finalImageGroupIds[i];
 		console.log('building image', id);
@@ -280,33 +282,38 @@ co(function*(){
 			for(var yBase = 0; yBase < numBlocksPerDimention; yBase++){
 				var community = communitiesByBlock.get(xBase, yBase) || [];
 
-				if(community.length === 0){
-					for(var xAdd = 0; xAdd < BLOCK_SIZE; xAdd++){
-						var x = (xBase * BLOCK_SIZE) + xAdd;
-						for(var yAdd = 0; yAdd < BLOCK_SIZE; yAdd++){
-							var y = (yBase * BLOCK_SIZE) + yAdd;
-							pixels.set(x, y, 0, 0);
-							pixels.set(x, y, 1, 255);
-							pixels.set(x, y, 2, 0);
+				var pixelBlock = ndarray([], [BLOCK_SIZE, BLOCK_SIZE, 3]);
+
+				if(community.length > 0){
+					for(var j=0; j<community.length; j++){
+						var imgId = community[j];
+						var img = imgsById[imgId];
+
+						for(var xAdd = 0; xAdd < BLOCK_SIZE; xAdd++){
+							var x = (xBase * BLOCK_SIZE) + xAdd;
+							for(var yAdd = 0; yAdd < BLOCK_SIZE; yAdd++){
+								var y = (yBase * BLOCK_SIZE) + yAdd;
+
+								for(var c=0; c<3; c++){
+									var current = pixelBlock.get(xAdd, yAdd, c) || 0;
+									var imgColor = img.get(x, y, c) * (1/community.length);
+									var after = current + imgColor;
+									pixelBlock.set(xAdd, yAdd, c, after);
+								}
+							}
 						}
 					}
 				}
+				else {
+					pixelBlock = greenBlock;
+				}
 
-				for(var j=0; j<community.length; j++){
-					var imgId = community[j];
-					var img = imgsById[imgId];
-
-					for(var xAdd = 0; xAdd < BLOCK_SIZE; xAdd++){
-						var x = (xBase * BLOCK_SIZE) + xAdd;
-						for(var yAdd = 0; yAdd < BLOCK_SIZE; yAdd++){
-							var y = (yBase * BLOCK_SIZE) + yAdd;
-
-							for(var c=0; c<3; c++){
-								var current = pixels.get(x, y, c) || 0;
-								var imgColor = img.get(x, y, c) * (1/community.length);
-								var after = current + imgColor;
-								pixels.set(x, y, c, after);
-							}
+				for(var xAdd = 0; xAdd < BLOCK_SIZE; xAdd++){
+					var x = (xBase * BLOCK_SIZE) + xAdd;
+					for(var yAdd = 0; yAdd < BLOCK_SIZE; yAdd++){
+						var y = (yBase * BLOCK_SIZE) + yAdd;
+						for(var c=0; c<3; c++){
+							pixels.set(x, y, c, pixelBlock.get(xAdd, yAdd, c));
 						}
 					}
 				}
