@@ -16,7 +16,8 @@ module.exports = function(imgsById, community, xBase, yBase, baseBlockSize, unit
 		for(var xAdd = 0; xAdd < numUnitsPerBaseSide; xAdd++){
 			for(var yAdd = 0; yAdd < numUnitsPerBaseSide; yAdd++){
 
-				//red, green, blue
+				var toEncode = [0, 0, 0];
+				var miniImg = ndarray([], [unitBlockSize, unitBlockSize, 3]);
 
 				for(var xDeep = 0; xDeep < unitBlockSize; xDeep++){
 					var xSub = (xAdd * unitBlockSize) + xDeep;;
@@ -26,13 +27,24 @@ module.exports = function(imgsById, community, xBase, yBase, baseBlockSize, unit
 						var y = (yBase * baseBlockSize) + ySub;
 
 						for(var c=0; c<3; c++){
+
+							var realColor = img.get(x, y, c);
+
 							var current = basePixels.get(xSub, ySub, c) || 0;
-							var imgColor = img.get(x, y, c) * (1/community.length);
+							var imgColor = realColor * (1/community.length);
 							var after = current + imgColor;
 							basePixels.set(xSub, ySub, c, after);
+
+							toEncode[c] += realColor / (unitBlockSize * unitBlockSize);
+							miniImg.set(xDeep, yDeep, c, realColor);
 						}
 					}
 				}
+
+				allUnits.push({
+					img: miniImg,
+					color: colors.encode(toEncode[0], toEncode[1], toEncode[2])
+				});
 			}
 		}
 	}
