@@ -11,7 +11,7 @@ var ngraph = require('ngraph.graph');
 var Modularity = require('ngraph.modularity');
 var pixelBuilder = require('./pixel-blocker');
 
-var BLOCK_SIZE = 32;
+var BLOCK_SIZE = 128;
 
 var getBasePixels = function*(imgPath){
 	return new Promise(function(accept, reject){
@@ -222,8 +222,8 @@ co(function*(){
 
 		if(i % 30 === 0){
 			var diff = process.hrtime(startTime);
-			var secondsPer = ((diff[0] * 1e9 + diff[1]) / 1000000000) / i;
-			var timeLeft = secondsPer * (allCommunities.length - i);
+			var secondsPer = ((diff[0] * 1e9 + diff[1]) / 1000000000) / (i + 1);
+			var timeLeft = secondsPer * (allCommunities.length - (i + 1));
 			var showTime = 0;
 			var showUnit = 0;
 
@@ -244,6 +244,7 @@ co(function*(){
 		}
 	}
 
+	console.log('doing some stats');
 	var modularity = new Modularity();
 	var allCommunitiesGrouped = modularity.execute(allCommunitiesGraph);
 
@@ -286,25 +287,25 @@ co(function*(){
 				var pixelBlock = ndarray([], [BLOCK_SIZE, BLOCK_SIZE, 3]);
 
 				if(community.length > 0){
-					pixelBlock = pixelBuilder(imgsById, community, xBase, yBase, BLOCK_SIZE, 8);
-					// for(var j=0; j<community.length; j++){
-					// 	var imgId = community[j];
-					// 	var img = imgsById[imgId];
+					//pixelBlock = pixelBuilder(imgsById, community, xBase, yBase, BLOCK_SIZE, 8);
+					for(var j=0; j<community.length; j++){
+						var imgId = community[j];
+						var img = imgsById[imgId];
 
-					// 	for(var xAdd = 0; xAdd < BLOCK_SIZE; xAdd++){
-					// 		var x = (xBase * BLOCK_SIZE) + xAdd;
-					// 		for(var yAdd = 0; yAdd < BLOCK_SIZE; yAdd++){
-					// 			var y = (yBase * BLOCK_SIZE) + yAdd;
+						for(var xAdd = 0; xAdd < BLOCK_SIZE; xAdd++){
+							var x = (xBase * BLOCK_SIZE) + xAdd;
+							for(var yAdd = 0; yAdd < BLOCK_SIZE; yAdd++){
+								var y = (yBase * BLOCK_SIZE) + yAdd;
 
-					// 			for(var c=0; c<3; c++){
-					// 				var current = pixelBlock.get(xAdd, yAdd, c) || 0;
-					// 				var imgColor = img.get(x, y, c) * (1/community.length);
-					// 				var after = current + imgColor;
-					// 				pixelBlock.set(xAdd, yAdd, c, after);
-					// 			}
-					// 		}
-					// 	}
-					// }
+								for(var c=0; c<3; c++){
+									var current = pixelBlock.get(xAdd, yAdd, c) || 0;
+									var imgColor = img.get(x, y, c) * (1/community.length);
+									var after = current + imgColor;
+									pixelBlock.set(xAdd, yAdd, c, after);
+								}
+							}
+						}
+					}
 				}
 				else {
 					pixelBlock = greenBlock;
@@ -315,8 +316,7 @@ co(function*(){
 					for(var yAdd = 0; yAdd < BLOCK_SIZE; yAdd++){
 						var y = (yBase * BLOCK_SIZE) + yAdd;
 						for(var c=0; c<3; c++){
-							var val = pixelBlock.get(xAdd, yAdd, c) || c === 1 ? 255 : 0;
-							pixels.set(x, y, c, val);
+							pixels.set(x, y, c, pixelBlock.get(xAdd, yAdd, c));
 						}
 					}
 				}
