@@ -12,7 +12,7 @@ var Modularity = require('ngraph.modularity');
 var pixelBuilder = require('./pixel-blocker');
 
 var BLOCK_SIZE = 10;
-var TOP_LINE = .95;
+var TOP_LINE = .90;
 var UNIT_BLOCK_SIZE = 2;
 var MIN_IMGS_TO_BE_NODE = 2;
 
