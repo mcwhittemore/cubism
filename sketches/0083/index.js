@@ -14,7 +14,7 @@ var pixelBuilder = require('./pixel-blocker');
 var BLOCK_SIZE = 32;
 var TOP_LINE = .5;
 var UNIT_BLOCK_SIZE = 4;
-var MIN_IMGS_TO_BE_NODE = 1;
+var MIN_IMGS_TO_BE_NODE = 2;
 
 var getBasePixels = function*(imgPath){
 	return new Promise(function(accept, reject){
