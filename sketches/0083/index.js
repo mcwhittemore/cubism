@@ -1,7 +1,6 @@
 var sketchSaver = require("../../lib/sketch-saver");
 var co = require("co");
-var listOfImages = require("./image-ids.json").splice(0, 200);
-var fs = require("fs");
+var listOfImages = require("./image-ids.json");
 var path = require("path");
 var getPixels = require("get-pixels");
 var savePixels = require("save-pixels");
@@ -172,7 +171,7 @@ co(function*(){
 
 				var allCommId = allCommunities.length + '';
 
-				if(imgsByComm[key].length > 2){
+				if(imgsByComm[key].length > 0){
 					allCommunitiesGraph.addNode(allCommId);
 
 					allCommunities.push({
