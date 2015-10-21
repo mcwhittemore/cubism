@@ -11,7 +11,9 @@ var ngraph = require('ngraph.graph');
 var Modularity = require('ngraph.modularity');
 var pixelBuilder = require('./pixel-blocker');
 
-var BLOCK_SIZE = 32;
+var BLOCK_SIZE = 128;
+var TOP_LINE = .98;
+var UNIT_BLOCK_SIZE = 16;
 
 var getBasePixels = function*(imgPath){
 	return new Promise(function(accept, reject){
@@ -143,11 +145,11 @@ co(function*(){
 				}
 
 				values.sort(function(a, b){ return a - b; });
-				var minInGraph = values[(listOfImages.length*.9)-1];
+				var minInGraph = values[(listOfImages.length*TOP_LINE)];
 
 				for(var j=0; j<listOfImages.length; j++){
 					var imgId = listOfImages[j];
-					if(valuesByImg[imgId] > minInGraph){
+					if(valuesByImg[imgId] >= minInGraph){
 						graph.addLink(outer.imgId, imgId, valuesByImg[imgId]);
 					}
 				}
@@ -189,7 +191,7 @@ co(function*(){
 	}
 
 	console.log('merging communities', allCommunities.length);
-	var allCommLowPoint = Math.floor(allCommunities.length * .9);
+	var allCommLowPoint = Math.floor(allCommunities.length * TOP_LINE);
 	var startTime = process.hrtime();
 	for(var i=0; i<allCommunities.length; i++){
 
@@ -261,6 +263,8 @@ co(function*(){
 
 	var finalImageGroupIds = Object.keys(finalImageGroups);
 
+	var avgNumImgsPerBlock = [];
+
 	for(var i=0; i<finalImageGroupIds.length; i++){
 		var id = finalImageGroupIds[i];
 		console.log('building image', id);
@@ -298,11 +302,13 @@ co(function*(){
 
 				var pixelBlock = ndarray([], [BLOCK_SIZE, BLOCK_SIZE, 3]);
 
+				avgNumImgsPerBlock.push(community.length);
+
 				if(community.length > 0){
-					pixelBlock = pixelBuilder(imgsById, community, xBase, yBase, BLOCK_SIZE, 8);
+					pixelBlock = pixelBuilder(imgsById, community, xBase, yBase, BLOCK_SIZE, UNIT_BLOCK_SIZE);
 				}
 				else {
-					pixelBlock = pixelBuilder(imgsById, allImgIdsForGroup, xBase, yBase, BLOCK_SIZE, 8);
+					pixelBlock = pixelBuilder(imgsById, allImgIdsForGroup, xBase, yBase, BLOCK_SIZE, UNIT_BLOCK_SIZE);
 				}
 
 				for(var xAdd = 0; xAdd < BLOCK_SIZE; xAdd++){
@@ -318,6 +324,16 @@ co(function*(){
 		}
 
 		yield saveImage(pixels, id);
+	}
+
+	avgNumImgsPerBlock.sort(function(a, b){ return a-b; });
+
+	console.log('num imgs per block stats');
+	console.log('total:', avgNumImgsPerBlock.length);
+	console.log('min:', avgNumImgsPerBlock[0]);
+	console.log('max:', avgNumImgsPerBlock[avgNumImgsPerBlock.length-1]);
+	for(var i=1; i<4; i++){
+		console.log('\t q'+i+':', avgNumImgsPerBlock[Math.floor(avgNumImgsPerBlock.length/100 * (25 * i))]);
 	}
 
 
