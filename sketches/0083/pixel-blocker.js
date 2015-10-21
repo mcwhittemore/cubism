@@ -49,29 +49,49 @@ module.exports = function(imgsById, community, xBase, yBase, baseBlockSize, unit
 		}
 	}
 
-	// var baseColorsByUnit = ndarray([], [numUnitsPerBaseSide, numUnitsPerBaseSide]);
+	var finalPixels = ndarray([], [baseBlockSize, baseBlockSize, 3]);
 
-	// for(var xAdd = 0; xAdd < numUnitsPerBaseSide; xAdd++){
-	// 	for(var yAdd = 0; yAdd < numUnitsPerBaseSide; yAdd++){
-	// 		var red = 0;
-	// 		var blue = 0;
-	// 		var green = 0;
+	for(var xAdd = 0; xAdd < numUnitsPerBaseSide; xAdd++){
+		for(var yAdd = 0; yAdd < numUnitsPerBaseSide; yAdd++){
+			var red = 0;
+			var green = 0;
+			var blue = 0;
 
-	// 		for(var xDeep = 0; xDeep < unitBlockSize; xDeep++){
-	// 			var x = (xAdd * unitBlockSize) + xDeep;
-	// 			for(var yDeep = 0; yDeep < unitBlockSize; yDeep++){
-	// 				var y = (yAdd * unitBlockSize) + yDeep;
-	// 				red += basePixels.get(x, y, 0) / (unitBlockSize * unitBlockSize);
-	// 				green += basePixels.get(x, y, 1) / (unitBlockSize * unitBlockSize);
-	// 				blue += basePixels.get(x, y, 2) / (unitBlockSize * unitBlockSize);
-	// 			}
-	// 		}
+			for(var xDeep = 0; xDeep < unitBlockSize; xDeep++){
+				var x = (xAdd * unitBlockSize) + xDeep;
+				for(var yDeep = 0; yDeep < unitBlockSize; yDeep++){
+					var y = (yAdd * unitBlockSize) + yDeep;
+					red += basePixels.get(x, y, 0) / (unitBlockSize * unitBlockSize);
+					green += basePixels.get(x, y, 1) / (unitBlockSize * unitBlockSize);
+					blue += basePixels.get(x, y, 2) / (unitBlockSize * unitBlockSize);
+				}
+			}
 
-	// 		baseColorsByUnit.set(xAdd, yAdd, colors.encode(red, green, blue));
-	// 	}
-	// }
+			var color = colors.encode(red, green, blue);
+			var topScore = 0;
+			var bestMatch = null;
+
+			for(var i=0; i<allUnits.length; i++){
+				var score = colors.compare(color, allUnits[i].color);
+				if(score > topScore){
+					topScore = score;
+					bestMatch = allUnits[i].img;
+				}
+			}
+
+			for(var xDeep = 0; xDeep < unitBlockSize; xDeep++){
+				var x = (xAdd * unitBlockSize) + xDeep;
+				for(var yDeep = 0; yDeep < unitBlockSize; yDeep++){
+					var y = (yAdd * unitBlockSize) + yDeep;
+					for(var c = 0; c < 3; c++){
+						finalPixels.set(x, y, c, bestMatch.get(x, y, c));
+					}
+				}
+			}
+		}
+	}
 
 
-	return basePixels;
+	return finalPixels;
 
 }
