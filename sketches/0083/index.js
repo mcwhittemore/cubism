@@ -11,7 +11,7 @@ var ngraph = require('ngraph.graph');
 var Modularity = require('ngraph.modularity');
 var pixelBuilder = require('./pixel-blocker');
 
-var BLOCK_SIZE = 64;
+var BLOCK_SIZE = 32;
 
 var getBasePixels = function*(imgPath){
 	return new Promise(function(accept, reject){
@@ -315,7 +315,7 @@ co(function*(){
 					for(var yAdd = 0; yAdd < BLOCK_SIZE; yAdd++){
 						var y = (yBase * BLOCK_SIZE) + yAdd;
 						for(var c=0; c<3; c++){
-							var val = pixelBlock.get(xAdd, yAdd, c); // || c === 1 ? 255 : 0;
+							var val = pixelBlock.get(xAdd, yAdd, c) || c === 1 ? 255 : 0;
 							pixels.set(x, y, c, val);
 						}
 					}
