@@ -9,6 +9,7 @@ var ndarray = require('ndarray');
 var colors = require('./colors');
 var ngraph = require('ngraph.graph');
 var Modularity = require('ngraph.modularity');
+var pixelBuilder = require('./pixel-blocker');
 
 var BLOCK_SIZE = 64;
 
@@ -285,24 +286,25 @@ co(function*(){
 				var pixelBlock = ndarray([], [BLOCK_SIZE, BLOCK_SIZE, 3]);
 
 				if(community.length > 0){
-					for(var j=0; j<community.length; j++){
-						var imgId = community[j];
-						var img = imgsById[imgId];
+					pixelBlock = pixelBuilder(imgsById, community, xBase, yBase, BLOCK_SIZE, 8);
+					// for(var j=0; j<community.length; j++){
+					// 	var imgId = community[j];
+					// 	var img = imgsById[imgId];
 
-						for(var xAdd = 0; xAdd < BLOCK_SIZE; xAdd++){
-							var x = (xBase * BLOCK_SIZE) + xAdd;
-							for(var yAdd = 0; yAdd < BLOCK_SIZE; yAdd++){
-								var y = (yBase * BLOCK_SIZE) + yAdd;
+					// 	for(var xAdd = 0; xAdd < BLOCK_SIZE; xAdd++){
+					// 		var x = (xBase * BLOCK_SIZE) + xAdd;
+					// 		for(var yAdd = 0; yAdd < BLOCK_SIZE; yAdd++){
+					// 			var y = (yBase * BLOCK_SIZE) + yAdd;
 
-								for(var c=0; c<3; c++){
-									var current = pixelBlock.get(xAdd, yAdd, c) || 0;
-									var imgColor = img.get(x, y, c) * (1/community.length);
-									var after = current + imgColor;
-									pixelBlock.set(xAdd, yAdd, c, after);
-								}
-							}
-						}
-					}
+					// 			for(var c=0; c<3; c++){
+					// 				var current = pixelBlock.get(xAdd, yAdd, c) || 0;
+					// 				var imgColor = img.get(x, y, c) * (1/community.length);
+					// 				var after = current + imgColor;
+					// 				pixelBlock.set(xAdd, yAdd, c, after);
+					// 			}
+					// 		}
+					// 	}
+					// }
 				}
 				else {
 					pixelBlock = greenBlock;
@@ -313,7 +315,7 @@ co(function*(){
 					for(var yAdd = 0; yAdd < BLOCK_SIZE; yAdd++){
 						var y = (yBase * BLOCK_SIZE) + yAdd;
 						for(var c=0; c<3; c++){
-							var val = pixelBlock.get(xAdd, yAdd, c) || c === 1 ? 255 : 0;
+							var val = pixelBlock.get(xAdd, yAdd, c); // || c === 1 ? 255 : 0;
 							pixels.set(x, y, c, val);
 						}
 					}
