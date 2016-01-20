@@ -43,8 +43,6 @@ var pickBlock = function*(id){
 
 co(function*(){
 
-	//yield processImages(pattern, listOfImages, blockLength, db);
-
 	var pixels = ndarray([], [640, 640, 3]);
 	for(var i=0; i<pattern.length; i+=blockLength){
 		var block = yield pickBlock("B-"+i);
