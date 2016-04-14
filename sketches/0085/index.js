@@ -57,7 +57,7 @@ co(function*(){
 		}
 	}
 
-	console.log('connecting nodes');
+	console.log('connecting nodes', setOfColors.length);
 	var connections = [500, 800];
 	var size = 3;
 	for (var i=1; i<size; i++) {
