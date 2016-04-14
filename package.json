@@ -25,8 +25,10 @@
     "get-pixels": "^3.2.2",
     "instagram-node": "^0.5.7",
     "ndarray": "^1.0.17",
+    "ngraph.forcelayout.v2": "0.0.27",
     "ngraph.graph": "0.0.12",
     "ngraph.modularity": "^1.0.5",
+    "ngraph.physics.simulator": "0.0.12",
     "random-seed": "^0.2.0",
     "request": "^2.65.0",
     "save-pixels": "^2.2.0"
