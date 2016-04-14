@@ -28,24 +28,20 @@ co(function*(){
 		var imgPath = getPath(imgId);
 		var rawImg = yield getBasePixels(imgPath);
 
-		var x = 0;
-		var y = 0;
-		while(x<640) {
-			while(y<640) {
+		for (var x = 0; x<640; x+=5) {
+			for (var y = 0; y<640; y+=5) {
 				var red = 0;
 				var green = 0;
 				var blue = 0;
 				var xStart = x;
 				var yStart = y;
-				for(x = xStart; x<xStart+BLOCK_SIZE && x<640; x++) {
-					for(; y<yStart+BLOCK_SIZE && y<640; y++) {
+				for(x = xStart; x<xStart+BLOCK_SIZE; x++) {
+					for(x = xStart; x<xStart+BLOCK_SIZE; x++) {
 						red += rawImg.get(x, y, 0);
 						green += rawImg.get(x, y, 1);
 						blue += rawImg.get(x, y, 2);
 					}
-					y = yStart;
 				}
-				y += BLOCK_SIZE;
 				var color = colorTools.encode(
 					Math.floor(red / (BLOCK_SIZE*BLOCK_SIZE)),
 					Math.floor(green / (BLOCK_SIZE*BLOCK_SIZE)),
