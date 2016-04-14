@@ -19,6 +19,8 @@ co(function*(){
 
 	var theGraph = ngraph();
 
+	var BLOCK_SIZE = 5;
+
 	console.log('adding images to graph');
 	var count = 0;
 	for(var i=0; i<listOfImages.length; i++){
@@ -26,12 +28,27 @@ co(function*(){
 		var imgPath = getPath(imgId);
 		var rawImg = yield getBasePixels(imgPath);
 
-		for (var x = 0; x<640; x+=5) {
-			for (var y = 0; y<640; y+=5) {
-				var red = rawImg.get(x, y, 0);
-				var green = rawImg.get(x, y, 1);
-				var blue = rawImg.get(x, y, 2);
-				var color = colorTools.encode(red, green, blue);
+		var x = 0;
+		var y = 0;
+		while(x<640) {
+			while(y<640) {
+				var red = 0;
+				var green = 0;
+				var blue = 0;
+				var xStart = x;
+				var yStart = y;
+				for(x = xStart; x<xStart+BLOCK_SIZE && x<640; x++) {
+					for(y = yStart; y<yStart+BLOCK_SIZE && y<640; y++) {
+						red += rawImg.get(x, y, 0);
+						green += rawImg.get(x, y, 1);
+						blue += rawImg.get(x, y, 2);
+					}
+				}
+				var color = colorTools.encode(
+					Math.floor(red / (BLOCK_SIZE*BLOCK_SIZE)),
+					Math.floor(green / (BLOCK_SIZE*BLOCK_SIZE)),
+					Math.floor(blue / (BLOCK_SIZE*BLOCK_SIZE))
+				);
 
 				var id = setOfColors.length
 				setOfColors.push(color);
@@ -41,8 +58,8 @@ co(function*(){
 	}
 
 	console.log('connecting nodes');
-	var connections = [100, 200];
-	var size = 20;
+	var connections = [500, 800];
+	var size = 3;
 	for (var i=1; i<size; i++) {
 		connections.push(connections[i-1] + connections[i]);
 	}
@@ -64,7 +81,7 @@ co(function*(){
 
 	console.log('doing some clustering');
 	var modularity = new Modularity();
-	var communities = modularity.execute(graph);
+	var communities = modularity.execute(theGraph);
 
 	console.log('doing some physics');
 	var layout = forcelayout(theGraph);
