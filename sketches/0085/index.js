@@ -19,7 +19,7 @@ co(function*(){
 
 	var theGraph = ngraph();
 
-	var BLOCK_SIZE = 5;
+	var BLOCK_SIZE = 2;
 
 	console.log('adding images to graph');
 	var count = 0;
@@ -85,10 +85,10 @@ co(function*(){
 
 	console.log('doing some physics');
 	var layout = forcelayout(theGraph);
-	for (var frame = 0; frame < 5; frame++) {
-		console.log('frame', frame, 'of', 5);
-		layout.step();
-	}
+	// for (var frame = 0; frame < 5; frame++) {
+	// 	console.log('frame', frame, 'of', 5);
+	// 	layout.step();
+	// }
 
 
 	console.log('projecting nodes into image size');
