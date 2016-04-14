@@ -113,6 +113,7 @@ co(function*(){
 	for (var x = 0; x<640; x++) {
 		for (var y = 0; y<640; y++) {
 			var num = pixels.get(x, y, 3);
+			console.log(x, y, num);
 			for (var c = 0; c < 3; c++) {
 				pixels.set(x, y, c, Math.floor(holdPixels.get(x, y, c) / num));
 			}
