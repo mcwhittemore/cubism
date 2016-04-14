@@ -28,8 +28,8 @@ co(function*(){
 		var imgPath = getPath(imgId);
 		var rawImg = yield getBasePixels(imgPath);
 
-		for (var x = 0; x<640; x+=5) {
-			for (var y = 0; y<640; y+=5) {
+		for (var x = 0; x<640; x+=10) {
+			for (var y = 0; y<640; y+=10) {
 				var red = 0;
 				var green = 0;
 				var blue = 0;
@@ -57,7 +57,7 @@ co(function*(){
 
 	console.log('connecting nodes', setOfColors.length);
 	var connections = [500, 800];
-	var size = 3;
+	var size = 5;
 	for (var i=1; i<size; i++) {
 		connections.push(connections[i-1] + connections[i]);
 	}
