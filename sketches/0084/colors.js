@@ -1,11 +1,18 @@
+var rc = 0.2126;
+var gc = 0.7152;
+var bc = 0.0722;
+
 var encode = function(r,g,b){
+	r = Math.floor(r * rc);
+	g = Math.floor(g * gc);
+	b = Math.floor(b * bc);
 	return r | g << 8 | b << 16;
 }
 
 var decode = function(num){
-	var b = num >> 16;
-	var g = (num - (b << 16)) >> 8;
-	var r = num - (b << 16) - (g << 8);
+	var b = (num >> 16) / rc;
+	var g = ((num - (b << 16)) >> 8) / gc;
+	var r = (num - (b << 16) - (g << 8)) / bc;
 	return [r, g, b];
 }
 
