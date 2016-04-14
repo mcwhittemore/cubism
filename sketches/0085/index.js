@@ -85,10 +85,10 @@ co(function*(){
 
 	console.log('doing some physics');
 	var layout = forcelayout(theGraph);
-	// for (var frame = 0; frame < 5; frame++) {
-	// 	console.log('frame', frame, 'of', 5);
-	// 	layout.step();
-	// }
+	for (var frame = 0; frame < 5; frame++) {
+		console.log('frame', frame, 'of', 5);
+		layout.step();
+	}
 
 
 	console.log('projecting nodes into image size');
