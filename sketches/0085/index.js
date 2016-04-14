@@ -41,7 +41,7 @@ co(function*(){
 
 	console.log('connecting nodes');
 	var connections = [100, 200];
-	var size = 10;
+	var size = 20;
 	for (var i=1; i<size; i++) {
 		connections.push(connections[i-1] + connections[i]);
 	}
