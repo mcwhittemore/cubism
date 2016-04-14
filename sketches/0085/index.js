@@ -40,7 +40,12 @@ co(function*(){
 	}
 
 	console.log('connecting nodes');
-	var connections = [300, 500, 800, 1300];
+	var connections = [100, 200];
+	var size = 10;
+	for (var i=1; i<size; i++) {
+		connections.push(connections[i-1] + connections[i]);
+	}
+	console.log(connections);
 	for (var i=0; i < setOfColors.length - connections[0]; i++) {
 		var color = setOfColors[i];
 		for (var j=0; j<connections.length; j++) {
