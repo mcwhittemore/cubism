@@ -58,7 +58,7 @@ co(function*(){
 
 	console.log('doing some physics');
 	var layout = forcelayout(theGraph);
-	for (var frame = 0; frame < 3; frame++) {
+	for (var frame = 0; frame < 30; frame++) {
 		console.log('frame', frame, 'of', 30);
 		layout.step();
 	}
