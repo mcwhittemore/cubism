@@ -104,7 +104,7 @@ co(function*(){
 		color.push(1);
 
 		for(var c = 0; c<4; c++) {
-			holdPixels.set(x, y, c, holdPixels.get(x, y, c) + color[c]);
+			holdPixels.set(x, y, c, (holdPixels.get(x, y, c) || 0) + color[c]);
 		}
 	}
 
