@@ -116,9 +116,6 @@ co(function*(){
 
 			for (var c = 0; c < 3; c++) {
 				var val = holdPixels.get(x, y, c);
-				if (x === 482 && y === 243) {
-					console.log(x, y, c, val, num);
-				}
 				pixels.set(x, y, c, Math.floor(val / num));
 			}
 		}
