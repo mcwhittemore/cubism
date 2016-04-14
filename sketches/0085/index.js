@@ -2,6 +2,7 @@ var path = require('path');
 var co = require("co");
 var ndarray = require('ndarray');
 var ngraph = require('ngraph.graph');
+var Modularity = require('ngraph.modularity');
 var forcelayout = require('ngraph.forcelayout.v2');
 
 var colorTools = require('../../lib/color-tools');
@@ -61,12 +62,16 @@ co(function*(){
 		}
 	}
 
+	console.log('doing some clustering');
+	var modularity = new Modularity();
+	var communities = modularity.execute(graph);
+
 	console.log('doing some physics');
 	var layout = forcelayout(theGraph);
-	for (var frame = 0; frame < 30; frame++) {
-		console.log('frame', frame, 'of', 30);
-		layout.step();
-	}
+	// for (var frame = 0; frame < 5; frame++) {
+	// 	console.log('frame', frame, 'of', 5);
+	// 	layout.step();
+	// }
 
 
 	console.log('projecting nodes into image size');
