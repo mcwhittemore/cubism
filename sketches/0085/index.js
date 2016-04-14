@@ -30,18 +30,9 @@ co(function*(){
 
 		for (var x = 0; x<640; x+=10) {
 			for (var y = 0; y<640; y+=10) {
-				var red = 0;
-				var green = 0;
-				var blue = 0;
-				var xStart = x;
-				var yStart = y;
-				for(x = xStart; x<xStart+BLOCK_SIZE; x++) {
-					for(x = xStart; x<xStart+BLOCK_SIZE; x++) {
-						red += rawImg.get(x, y, 0);
-						green += rawImg.get(x, y, 1);
-						blue += rawImg.get(x, y, 2);
-					}
-				}
+				var red = rawImg.get(x, y, 0);
+				var green = rawImg.get(x, y, 1);
+				var blue = rawImg.get(x, y, 2);
 				var color = colorTools.encode(
 					Math.floor(red / (BLOCK_SIZE*BLOCK_SIZE)),
 					Math.floor(green / (BLOCK_SIZE*BLOCK_SIZE)),
