@@ -19,7 +19,7 @@ co(function*(){
 
 	var theGraph = ngraph();
 
-	var BLOCK_SIZE = 1;
+	var BLOCK_SIZE = 5;
 
 	console.log('adding images to graph');
 	var count = 0;
@@ -38,12 +38,14 @@ co(function*(){
 				var xStart = x;
 				var yStart = y;
 				for(x = xStart; x<xStart+BLOCK_SIZE && x<640; x++) {
-					for(y = yStart; y<yStart+BLOCK_SIZE && y<640; y++) {
+					for(; y<yStart+BLOCK_SIZE && y<640; y++) {
 						red += rawImg.get(x, y, 0);
 						green += rawImg.get(x, y, 1);
 						blue += rawImg.get(x, y, 2);
 					}
+					y = yStart;
 				}
+				y += BLOCK_SIZE;
 				var color = colorTools.encode(
 					Math.floor(red / (BLOCK_SIZE*BLOCK_SIZE)),
 					Math.floor(green / (BLOCK_SIZE*BLOCK_SIZE)),
