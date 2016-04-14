@@ -19,7 +19,7 @@ co(function*(){
 
 	var theGraph = ngraph();
 
-	var BLOCK_SIZE = 5;
+	var BLOCK_SIZE = 1;
 
 	console.log('adding images to graph');
 	var count = 0;
