@@ -19,7 +19,7 @@ co(function*(){
 
 	var theGraph = ngraph();
 
-	var BLOCK_SIZE = 5;
+	var BLOCK_SIZE = 16;
 
 	console.log('adding images to graph');
 	var count = 0;
@@ -28,16 +28,12 @@ co(function*(){
 		var imgPath = getPath(imgId);
 		var rawImg = yield getBasePixels(imgPath);
 
-		for (var x = 0; x<640; x+=10) {
-			for (var y = 0; y<640; y+=10) {
+		for (var x = 0; x<640; x+=BLOCK_SIZE) {
+			for (var y = 0; y<640; y+=BLOCK_SIZE) {
 				var red = rawImg.get(x, y, 0);
 				var green = rawImg.get(x, y, 1);
 				var blue = rawImg.get(x, y, 2);
-				var color = colorTools.encode(
-					Math.floor(red / (BLOCK_SIZE*BLOCK_SIZE)),
-					Math.floor(green / (BLOCK_SIZE*BLOCK_SIZE)),
-					Math.floor(blue / (BLOCK_SIZE*BLOCK_SIZE))
-				);
+				var color = colorTools.encode(red, green, blue)
 
 				var id = setOfColors.length
 				setOfColors.push(color);
@@ -48,8 +44,8 @@ co(function*(){
 
 	console.log('connecting nodes', setOfColors.length);
 	var connections = [500, 800];
-	var size = 5;
-	for (var i=1; i<size; i++) {
+	var size = 3;
+	for (var i=1; i<size-1; i++) {
 		connections.push(connections[i-1] + connections[i]);
 	}
 	console.log(connections);
