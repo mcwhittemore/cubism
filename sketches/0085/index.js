@@ -33,7 +33,7 @@ co(function*(){
 				var red = rawImg.get(x, y, 0);
 				var green = rawImg.get(x, y, 1);
 				var blue = rawImg.get(x, y, 2);
-				var color = colorTools.encode(red, green, blue)
+				var color = colorTools.encode(red, green, blue);
 
 				var id = setOfColors.length
 				setOfColors.push(color);
@@ -129,7 +129,7 @@ co(function*(){
 			for (var c = 0; c < 3; c++) {
 				var val = (holdPixels.get(x, y, c) || 0)
 				if (val / num > 0) {
-					console.log(x, y, c, val / num);
+					console.log(x, y, c, num, val / num);
 				}
 				pixels.set(x, y, c, Math.floor(val / num));
 			}
