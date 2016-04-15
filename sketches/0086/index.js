@@ -6,6 +6,7 @@ var path = require("path");
 var getPixels = require("get-pixels");
 var savePixels = require("save-pixels");
 var groupCrome = require("../../lib/filters/group-crome");
+var colorTools = require("../../lib/color-tools");
 var pattern = require("../../patterns/fork");
 
 var getBasePixels = function*(imgPath){
@@ -83,8 +84,11 @@ co(function*(){
 	var mash = function(a){
 		var out = 0;
 
-		for(var i=0; i<a.length; i++){
-			out += a[i]
+		for(var i=0; i<a.length; i+=3){
+			var colors = colorTools.luminanceWeight(a[i], a[i+1], a[1+2]);
+			out += out[0];
+			out += out[1];
+			out += out[2];
 		}
 
 		return out;
