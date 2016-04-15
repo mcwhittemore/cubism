@@ -86,12 +86,12 @@ co(function*(){
 
 		for(var i=0; i<a.length; i+=3){
 			var colors = colorTools.luminanceWeight(a[i], a[i+1], a[i+2]);
-			out += out[0];
-			out += out[1];
-			out += out[2];
+			out += colors[0];
+			out += colors[1];
+			out += colors[2];
 		}
 
-		return Math.floor(out);
+		return Math.floor(out/5);
 	}
 
 	var numImgs = listOfImages.length;
