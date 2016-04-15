@@ -49,7 +49,7 @@ co(function*(){
 	var connections = [1, 2];
 	var size = 15;
 	for (var i=1; i<size-1; i++) {
-		connections.push(connections[i-1] + connections[i]);
+		connections.push(connections[i] + 1);
 	}
 	console.log(connections);
 	for (var i=0; i < setOfColors.length - connections[0]; i++) {
