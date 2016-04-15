@@ -104,7 +104,7 @@ co(function*(){
 		}
 	}
 
-	var IMAGE_SIZE = 122;
+	var IMAGE_SIZE = 211;
 
 	var scale = IMAGE_SIZE / Math.max((maxX - minX), (maxY - minY));
 
