@@ -19,7 +19,7 @@ co(function*(){
 
 	var theGraph = ngraph();
 
-	var BLOCK_SIZE = 8;
+	var BLOCK_SIZE = 5;
 
 	console.log('adding images to graph');
 	var count = 0;
@@ -47,11 +47,10 @@ co(function*(){
 
 	console.log('connecting nodes', setOfColors.length);
 	var connections = [1, 2];
-	var size = 45;
-	for (var i=1; i<size-1; i++) {
+	var size = 30;
+	for (var i=1; i<size-1; i+=2) {
 		connections.push(connections[i] + 1);
 	}
-	console.log(connections);
 	for (var i=0; i < setOfColors.length - connections[0]; i++) {
 		var color = setOfColors[i];
 		for (var j=0; j<connections.length; j++) {
