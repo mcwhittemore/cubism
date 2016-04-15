@@ -124,10 +124,13 @@ co(function*(){
 	var pixels = ndarray([], [640, 640, 3]);
 	for (var x = 0; x<640; x++) {
 		for (var y = 0; y<640; y++) {
-			var num = holdPixels.get(x, y, 3);
+			var num = (holdPixels.get(x, y, 3) || 1)
 
 			for (var c = 0; c < 3; c++) {
-				var val = holdPixels.get(x, y, c);
+				var val = (holdPixels.get(x, y, c) || 0)
+				if (val / num > 0) {
+					console.log(x, y, c, val / num);
+				}
 				pixels.set(x, y, c, Math.floor(val / num));
 			}
 		}
