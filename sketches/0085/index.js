@@ -19,7 +19,7 @@ co(function*(){
 
 	var theGraph = ngraph();
 
-	var BLOCK_SIZE = 16;
+	var BLOCK_SIZE = 8;
 
 	console.log('adding images to graph');
 	var count = 0;
@@ -104,9 +104,11 @@ co(function*(){
 		}
 	}
 
-	var scale = 62 / Math.max((maxX - minX), (maxY - minY));
+	var IMAGE_SIZE = 122;
 
-	var holdPixels = ndarray([], [62, 62, 4]);
+	var scale = IMAGE_SIZE / Math.max((maxX - minX), (maxY - minY));
+
+	var holdPixels = ndarray([], [IMAGE_SIZE, IMAGE_SIZE, 4]);
 
 	for (var i = 0; i < setOfColors.length; i++) {
 		var position = layout.getNodePosition(i);
@@ -121,9 +123,9 @@ co(function*(){
 	}
 
 	console.log('merging colors and saving')
-	var pixels = ndarray([], [62, 62, 3]);
-	for (var x = 0; x<62; x++) {
-		for (var y = 0; y<62; y++) {
+	var pixels = ndarray([], [IMAGE_SIZE, IMAGE_SIZE, 3]);
+	for (var x = 0; x<IMAGE_SIZE; x++) {
+		for (var y = 0; y<IMAGE_SIZE; y++) {
 			var num = (holdPixels.get(x, y, 3) || 1)
 
 			for (var c = 0; c < 3; c++) {
