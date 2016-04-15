@@ -129,9 +129,12 @@ co(function*(){
 			for (var c = 0; c < 3; c++) {
 				var val = (holdPixels.get(x, y, c) || 0)
 				if (val / num > 0) {
-					console.log(x, y, c, num, val / num);
+					pixels.set(x, y, c, Math.floor(val / num));
 				}
-				pixels.set(x, y, c, Math.floor(val / num));
+				else {
+					pixels.set(x, y, c, 255);
+				}
+
 			}
 		}
 	}
