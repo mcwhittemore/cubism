@@ -1,4 +1,4 @@
-# Cubsim
+# Cubism
 
 ![](./works/two/full/web.jpg)
 
